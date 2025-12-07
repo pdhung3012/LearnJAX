@@ -19,8 +19,7 @@ splits = dataset_all.train_test_split(test_size=0.2, seed=42)  # 20% test
 train_ds = splits["train"]
 test_ds  = splits["test"]
 
-model_name = "/home/hungphd/git/CodeLlama-7b-Instruct-hf/"
-output_path="/home/hungphd/git/finetuned/CodeLlama-7b-Instruct-hf/"
+model_name = "/work/LAS/jannesar-lab/hungphd/git/pretrained_open_llms/CodeLlama-7b-hf/"
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
@@ -88,4 +87,4 @@ trainer = Trainer(
 )
 
 trainer.train()
-trainer.save_model(output_path)
+trainer.save_model("./finetuned-llm")

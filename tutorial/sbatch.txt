@@ -18,9 +18,9 @@
 
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
-cd /work/LAS/jannesar-lab/hungphd/git/
+cd /work/LAS/jannesar-lab/hungphd/colab/
 module load python
 source hungpy39/bin/activate
 echo "abc"
-cd /work/LAS/jannesar-lab/hungphd/git/POTracker_FinalVersion/src/fine-tune/
-python fine-tune-org-v2.py
+cd /work/LAS/jannesar-lab/hungphd/colab/LearnJAX/tutorial/
+python fine-tune.py
