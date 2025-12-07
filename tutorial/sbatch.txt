@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Copy/paste this job script into a text file and submit with the command:
+#    sbatch thefilename
+
+#SBATCH --time=00:15:00   # walltime limit (HH:MM:SS)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --ntasks-per-node=8   # 8 processor core(s) per node
+#SBATCH --mem=10G   # maximum memory per node
+#SBATCH --gres=gpu:a100:1
+#SBATCH --job-name="data_gen"
+#SBATCH --mail-user=hungphd@iastate.edu   # email address
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --output="hung-out.txt" # job standard output file (%j replaced by job id)
+#SBATCH --error="hung-err.txt" # job standard error file (%j replaced by job id)
+
+
+# LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
+cd /work/LAS/jannesar-lab/hungphd/git/
+module load python
+source hungpy39/bin/activate
+echo "abc"
+cd /work/LAS/jannesar-lab/hungphd/git/POTracker_FinalVersion/src/fine-tune/
+python fine-tune-org-v2.py
