@@ -18,7 +18,7 @@
 
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
-cd /work/LAS/jannesar-lab/hungphd/colab/
+cd /work/LAS/jannesar-lab/hungphd/git/
 module load python
 source hungpy39/bin/activate
 echo "abc"
