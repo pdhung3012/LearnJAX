@@ -12,7 +12,7 @@ import torch
 
 
 # Load sample data
-df = pd.read_csv("sample_data.csv")
+df = pd.read_csv("code_finetuned.csv")
 df["text"] = "### Instruction:\n" + df["prompt"] + "\n\n### Response:\n" + df["response"]
 dataset_all = Dataset.from_pandas(df[["text"]])
 splits = dataset_all.train_test_split(test_size=0.2, seed=42)  # 20% test
