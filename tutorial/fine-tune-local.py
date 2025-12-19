@@ -19,7 +19,7 @@ splits = dataset_all.train_test_split(test_size=0.2, seed=42)  # 20% test
 train_ds = splits["train"]
 test_ds  = splits["test"]
 
-model_name = "/home/hungphd/git/CodeLlama-7b-Instruct-hf/"
+model_name = "/home/hungphd/git/Qwen2.5-3B-Instruct/"
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
