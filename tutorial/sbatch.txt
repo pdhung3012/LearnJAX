@@ -18,9 +18,9 @@
 
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
-cd /work/LAS/jannesar-lab/hungphd/git/
+cd /lustre/hdd/LAS/jannesar-lab/hungphd/git/
 module load python
 source hungpy39/bin/activate
 echo "abc"
-cd /work/LAS/jannesar-lab/hungphd/colab/LearnJAX/tutorial/
+cd /lustre/hdd/LAS/jannesar-lab/hungphd/git/LearnJAX/tutorial/
 python fine-tune-machine.py
