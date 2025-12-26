@@ -22,7 +22,7 @@ test_ds  = splits["test"]
 
 model_name = "/lustre/hdd/LAS/jannesar-lab/hungphd/git/pretrained_models_org/Qwen2.5-32B-Instruct/"
 folder_output="/lustre/hdd/LAS/jannesar-lab/hungphd/git/adapter_weights/"
-arr_model_path='/'.split(model_name)
+arr_model_path=model_name.split('/')
 real_model_name=arr_model_path[-2]
 fop_output_model=folder_output+real_model_name+'/'
 
