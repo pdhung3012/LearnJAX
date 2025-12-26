@@ -18,7 +18,7 @@
 
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
-cd /lustre/hdd/LAS/jannesar-lab/hungphd/git/
+cd /work/LAS/jannesar-lab/hungphd/git/
 module load python
 source hungpy39/bin/activate
 echo "abc"
