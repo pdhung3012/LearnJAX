@@ -23,4 +23,4 @@ module load python
 source hungpy39/bin/activate
 echo "abc"
 cd /work/LAS/jannesar-lab/hungphd/colab/LearnJAX/tutorial/
-python fine-tune.py
+python fine-tune-machine.py

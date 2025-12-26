@@ -9,6 +9,7 @@ import os
 os.environ['PYTORCH_CUDA_ALLOC_CONF']='expandable_segments:True'
 from datasets import Dataset
 import torch
+from utils import *
 
 
 # Load sample data
@@ -19,7 +20,12 @@ splits = dataset_all.train_test_split(test_size=0.2, seed=42)  # 20% test
 train_ds = splits["train"]
 test_ds  = splits["test"]
 
-model_name = "/home/hungphd/git/Qwen2.5-3B-Instruct/"
+model_name = "/lustre/hdd/LAS/jannesar-lab/hungphd/git/pretrained_models_org/Qwen2.5-32B-Instruct/"
+folder_output="/lustre/hdd/LAS/jannesar-lab/hungphd/git/adapter_weights/"
+arr_model_path='/'.split(model_name)
+real_model_name=arr_model_path[-2]
+fop_output_model=folder_output+real_model_name+'/'
+
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
@@ -63,7 +69,7 @@ model = get_peft_model(model, peft_config)
 # train_tokenized, test_tokenized from your script
 
 training_args = TrainingArguments(
-    output_dir="./finetuned-llm",
+    output_dir=fop_output_model,
     per_device_train_batch_size=1,
     gradient_accumulation_steps=4,      # simulate bigger batch
     num_train_epochs=3,
