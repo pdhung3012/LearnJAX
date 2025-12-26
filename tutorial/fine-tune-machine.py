@@ -20,7 +20,7 @@ splits = dataset_all.train_test_split(test_size=0.2, seed=42)  # 20% test
 train_ds = splits["train"]
 test_ds  = splits["test"]
 
-model_name = "/lustre/hdd/LAS/jannesar-lab/hungphd/git/pretrained_models_org/Qwen2.5-32B-Instruct/"
+model_name = "/lustre/hdd/LAS/jannesar-lab/hungphd/git/pretrained_models_org/Qwen2.5-72B-Instruct/"
 folder_output="/lustre/hdd/LAS/jannesar-lab/hungphd/git/adapter_weights/"
 arr_model_path=model_name.split('/')
 real_model_name=arr_model_path[-2]
