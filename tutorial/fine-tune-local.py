@@ -20,6 +20,11 @@ train_ds = splits["train"]
 test_ds  = splits["test"]
 
 model_name = "/home/hungphd/git/Qwen2.5-3B-Instruct/"
+folder_output="/home/hungphd/git/adapter_weights/"
+arr_model_path=model_name.split('/')
+real_model_name=arr_model_path[-2]
+fop_output_model=folder_output+real_model_name+'/'
+
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
@@ -63,7 +68,7 @@ model = get_peft_model(model, peft_config)
 # train_tokenized, test_tokenized from your script
 
 training_args = TrainingArguments(
-    output_dir="./finetuned-llm",
+    output_dir=fop_output_model,
     per_device_train_batch_size=1,
     gradient_accumulation_steps=4,      # simulate bigger batch
     num_train_epochs=3,
@@ -87,4 +92,5 @@ trainer = Trainer(
 )
 
 trainer.train()
-trainer.save_model("./finetuned-llm")
+trainer.save_model(fop_output_model)
+
