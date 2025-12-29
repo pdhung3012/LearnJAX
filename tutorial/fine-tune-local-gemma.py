@@ -21,7 +21,8 @@ test_ds  = splits["test"]
 
 # model_name = "/home/hungphd/git/Qwen2.5-3B-Instruct/"
 # model_name = "/home/hungphd/git/pretrained_open_llms/phi-4/"
-model_name = "/home/hungphd/git/pretrained_open_llms/gemma-3-1b-it/"
+# model_name = "/home/hungphd/git/pretrained_open_llms/gemma-3-1b-it/"
+model_name = "/home/hungphd/git/pretrained_open_llms/Llama3.1-8B-Instruct/"
 folder_output="/home/hungphd/git/adapter_weights/"
 arr_model_path=model_name.split('/')
 real_model_name=arr_model_path[-2]
@@ -89,7 +90,7 @@ trainer = Trainer(
     args=training_args,
     train_dataset=train_tokenized,
     eval_dataset=test_tokenized,
-    processing_class=tokenizer,   # ✅ instead of tokenizer=tokenizer
+    tokenizer=tokenizer,
     data_collator=data_collator,
 )
 
