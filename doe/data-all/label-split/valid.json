@@ -1,0 +1,1368 @@
+[
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 922,
+    "etr": "",
+    "area_name": "25241",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25241-1</ns0:mRID>\n    <ns0:communityDescriptor>Zip code Identifier (will take precedence over geoInfoReference but only zip code is allowed in this field)</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>922</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25241</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 790
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 3108,
+    "etr": "",
+    "area_name": "25213",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n<ns0:Outage>\n<ns0:mRID>OUTAGE-25213-1</ns0:mRID>\n<ns0:communityDescriptor>25213</ns0:communityDescriptor>\n<ns0:cause>Unknown</ns0:cause>\n<ns0:causeKind>Unknown</ns0:causeKind>\n<ns0:metersAffected>0</ns0:metersAffected>\n<ns0:outageKind>outageReported</ns0:outageKind>\n<ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n<ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n<ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n<ns0:actualPeriod>\n<ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n</ns0:actualPeriod>\n<ns0:EstimatedRestorationTime>\n<ns0:ert></ns0:ert>\n</ns0:EstimatedRestorationTime>\n<ns0:OutageArea>\n<ns0:metersServed>3108</ns0:metersServed>\n<ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n</ns0:OutageArea>\n<ns0:Incident>\n<ns0:cause>Pending Investigation</ns0:cause>\n<ns0:Location>\n<ns0:geoInfoReference>25213</ns0:geoInfoReference>\n<ns0:zoneKind>zipcode</ns0:zoneKind>\n</ns0:Location>\n</ns0:Incident>\n<ns0:Names>\n<ns0:name>ENTER UTILITY ID</ns0:name>\n<ns0:nameType>UtilityID</ns0:nameType>\n<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n</ns0:Names>\n<ns0:Names>\n<ns0:name>ENTER UTILITY Name</ns0:name>\n<ns0:nameType>UtilityName</ns0:nameType>\n<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n</ns0:Names>\n</ns0:Outage>\n</ns0:PubOutages>",
+    "index": 364
+  },
+  {
+    "cust_a": {
+      "val": 38
+    },
+    "cust_s": 1021,
+    "etr": "ETR-NULL",
+    "area_name": "24712",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24712-1</ns0:mRID>\n    <ns0:communityDescriptor>24712</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>38</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert>ETR-NULL</ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>1021</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24712</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 171
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 66,
+    "etr": "",
+    "area_name": "25251",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25251</ns0:mRID>\n    <ns0:communityDescriptor>25251</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>66</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25251</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 375
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 243,
+    "etr": "",
+    "area_name": "25879",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25879</ns0:mRID>\n    <ns0:communityDescriptor>25879</ns0:communityDescriptor>\n    <ns0:cause/>\n    <ns0:causeKind/>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind/>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>243</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25879</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>Unknown Utility ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>Unknown Utility Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 530
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 267,
+    "etr": "",
+    "area_name": "25024",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25024</ns0:mRID>\n    <ns0:communityDescriptor>25024</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>267</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>25024</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 267
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 4982,
+    "etr": "",
+    "area_name": "25064",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25064-1</ns0:mRID>\n    <ns0:communityDescriptor>25064</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>4982</ns0:metersServed>\n      <ns0:outageAreaKind>county</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25064</ns0:geoInfoReference>\n        <ns0:zoneKind>county</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 712
+  },
+  {
+    "key": "muni",
+    "name": "LINWOOD CITY",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 3282,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -74.5960460195,
+        39.3202413947,
+        -74.5435288848,
+        39.3682253491
+      ]
+    },
+    "areaId": "ACE|ATLANTIC|LINWOOD CITY|muni",
+    "n_out": 0,
+    "county": "ATLANTIC",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>ACE|ATLANTIC|LINWOOD CITY|muni</ns0:mRID>\n    <ns0:communityDescriptor>ATLANTIC</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>muni</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>3282</ns0:metersServed>\n      <ns0:outageAreaKind>muni</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>ACE|ATLANTIC|LINWOOD CITY|muni</ns0:geoInfoReference>\n        <ns0:zoneKind>muni</ns0:zoneKind>\n        <ns0:boundingBox>-74.5960460195,39.3202413947,-74.5435288848,39.3682253491</ns0:boundingBox>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>LINWOOD CITY</ns0:name>\n      <ns0:nameType>CommunityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:percentCustomersAffected>0.0</ns0:percentCustomersAffected>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 93
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 42,
+    "etr": "",
+    "area_name": "24887",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24887-1</ns0:mRID>\n    <ns0:communityDescriptor>24887</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>unknown</ns0:causeKind>\n    <ns0:metersAffected>42</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>0</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24887</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 658
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 137,
+    "etr": "",
+    "area_name": "25093",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID</ns0:mRID>\n    <ns0:communityDescriptor>25093</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>137</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25093</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 305
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 253,
+    "etr": "",
+    "area_name": "25637",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-25637</ns0:mRID>\n    <ns0:communityDescriptor>25637</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>253</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25637</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 877
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 455,
+    "etr": "",
+    "area_name": "25187",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25187-0001</ns0:mRID>\n    <ns0:communityDescriptor>25187</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>455</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25187</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name></ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority></ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name></ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority></ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 776
+  },
+  {
+    "key": "Township",
+    "name": "NORTH RANDALL",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 673,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.54208821699996,
+        41.424194862000036,
+        -81.51773114999997,
+        41.43989478900005
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|NORTH RANDALL|Township",
+    "n_out": 0,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OE|CUYAHOGA|OHIO|NORTH RANDALL|Township</ns0:mRID>\n    <ns0:communityDescriptor>OE|CUYAHOGA|OHIO|NORTH RANDALL|Township</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>673</ns0:metersServed>\n      <ns0:outageAreaKind>township</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>-81.54208821699996,41.424194862000036,-81.51773114999997,41.43989478900005</ns0:geoInfoReference>\n        <ns0:zoneKind>township</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>NORTH RANDALL</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>CUYAHOGA, OHIO</ns0:name>\n      <ns0:nameType>CountyState</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 27
+  },
+  {
+    "cust_a": {
+      "val": 4,
+      "masked": true
+    },
+    "cust_s": 2044,
+    "etr": "ETR-NULL",
+    "area_name": "25962",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25962-2044-4</ns0:mRID>\n    <ns0:communityDescriptor>25962</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>4</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert>ETR-NULL</ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>2044</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25962</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 556
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 147,
+    "etr": "",
+    "area_name": "25054",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25054-1</ns0:mRID>\n    <ns0:communityDescriptor>25054</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>147</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>25054</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 706
+  },
+  {
+    "key": "ctv",
+    "name": "Union",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 1106,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -89.14785512899994,
+        32.552367848000074,
+        -89.09251188499996,
+        32.631547426000054
+      ]
+    },
+    "areaId": "Boun|Union|ctv",
+    "n_out": 0,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>Boun|Union|ctv</ns0:mRID>\n    <ns0:communityDescriptor>Union</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>1106</ns0:metersServed>\n      <ns0:outageAreaKind>ctv</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>Boun|Union|ctv</ns0:geoInfoReference>\n        <ns0:zoneKind>ctv</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ctv</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Converted from input key</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>Union</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Converted from input name</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 150
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 1,
+    "etr": "",
+    "area_name": "Warren",
+    "hasChildETROverwrite": false,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-Warren-1</ns0:mRID>\n    <ns0:communityDescriptor>Warren</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>unspecified</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>false</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>1</ns0:metersServed>\n      <ns0:outageAreaKind>county</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference/>\n        <ns0:zoneKind>county</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 1036
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 146,
+    "etr": "",
+    "area_name": "25913",
+    "standard_xml": null,
+    "error": "ReadTimeout: HTTPSConnectionPool(host='openrouter.ai', port=443): Read timed out. (read timeout=120)",
+    "index": 540
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 68,
+    "etr": "",
+    "area_name": "24848",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24848-68</ns0:mRID>\n    <ns0:communityDescriptor>Zip code Identifier (will take precedence over geoInfoReference but only zip code is allowed in this field)</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>68</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>0</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24848</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 210
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 3435,
+    "etr": "",
+    "area_name": "25880",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID-25880</ns0:mRID>\n    <ns0:communityDescriptor>25880</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>3435</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25880</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 949
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 195,
+    "etr": "",
+    "area_name": "25876",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID-25876</ns0:mRID>\n    <ns0:communityDescriptor>25876</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2025-10-28T00:00:00Z</ns0:reportedStartTime>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2025-10-28T00:00:00Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>195</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25876</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 528
+  },
+  {
+    "key": "ctv",
+    "name": "Walnut Grove",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 300,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -89.47201134799997,
+        32.576185004000024,
+        -89.45258827799995,
+        32.60936795400005
+      ]
+    },
+    "areaId": "Boun|Walnut Grove|ctv",
+    "n_out": 0,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>Boun|Walnut Grove|ctv</ns0:mRID>\n    <ns0:communityDescriptor>Walnut Grove</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>300</ns0:metersServed>\n      <ns0:outageAreaKind>ctv</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>-89.47201134799997,-89.45258827799995,32.576185004000024,32.60936795400005</ns0:geoInfoReference>\n        <ns0:zoneKind>ctv</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>Walnut Grove</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 165
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 273,
+    "etr": "",
+    "area_name": "25059",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID-25059</ns0:mRID>\n    <ns0:communityDescriptor>25059</ns0:communityDescriptor>\n    <ns0:cause></ns0:cause>\n    <ns0:causeKind></ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind></ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>273</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25059</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 708
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 55,
+    "etr": "",
+    "area_name": "25810",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID-25810</ns0:mRID>\n    <ns0:communityDescriptor>25810</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Event</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>55</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25810</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 490
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 329,
+    "etr": "",
+    "area_name": "25031",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25031-1</ns0:mRID>\n    <ns0:communityDescriptor>25031</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:OutageArea>\n      <ns0:metersServed>329</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>25031</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 271
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 360,
+    "etr": "",
+    "area_name": "25154",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID-25154</ns0:mRID>\n    <ns0:communityDescriptor>25154</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>360</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25154</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 758
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 2113,
+    "etr": "",
+    "area_name": "26059",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-26059</ns0:mRID>\n    <ns0:communityDescriptor>26059</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>2113</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>26059</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 997
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 208,
+    "etr": "",
+    "area_name": "25169",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25169</ns0:mRID>\n    <ns0:communityDescriptor>25169</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>208</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25169</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 767
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 665,
+    "etr": "",
+    "area_name": "25564",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25564-665</ns0:mRID>\n    <ns0:communityDescriptor>25564</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>665</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25564</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 857
+  },
+  {
+    "key": "ctv",
+    "name": "Hattiesburg",
+    "cust_a": {
+      "val": 1
+    },
+    "cust_s": 25427,
+    "percent_cust_a": {
+      "val": 0.01
+    },
+    "etr": "2025-03-07T21:00:00Z",
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -89.43674539799997,
+        31.253704767000045,
+        -89.22920707999998,
+        31.500151113000072
+      ]
+    },
+    "areaId": "Boun|Hattiesburg|ctv",
+    "n_out": 1,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>Boun|Hattiesburg|ctv</ns0:mRID>\n    <ns0:communityDescriptor>Hattiesburg</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>1</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>reported</ns0:statusKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert>2025-03-07T21:00:00Z</ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>25427</ns0:metersServed>\n      <ns0:outageAreaKind>ctv</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>Boun|Hattiesburg|ctv</ns0:geoInfoReference>\n        <ns0:zoneKind>ctv</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>Boun|Hattiesburg|ctv</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>Hattiesburg</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 147
+  },
+  {
+    "key": "county",
+    "name": "Marion",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 74859,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -82.53596095299997,
+        28.959984870000028,
+        -81.63883712799998,
+        29.521548563000067
+      ]
+    },
+    "areaId": "FE|Marion|county",
+    "n_out": 0,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>FE|Marion|county</ns0:mRID>\n    <ns0:communityDescriptor>Marion</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>74859</ns0:metersServed>\n      <ns0:outageAreaKind>county</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>FE|Marion|county</ns0:geoInfoReference>\n        <ns0:zoneKind>county</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 87
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 400,
+    "etr": "",
+    "area_name": "25121",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25121-1</ns0:mRID>\n    <ns0:communityDescriptor>25121</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>400</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25121</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 319
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 359,
+    "etr": "",
+    "area_name": "25818",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25818</ns0:mRID>\n    <ns0:communityDescriptor>25818</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>359</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25818</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 495
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 117,
+    "etr": "",
+    "area_name": "25811",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25811-117</ns0:mRID>\n    <ns0:communityDescriptor>25811</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event</ns0:causeKind>\n    <ns0:metersAffected>117</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>0</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25811</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 491
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 1050,
+    "etr": "",
+    "area_name": "25678",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-GENERATED-ID-1</ns0:mRID>\n    <ns0:communityDescriptor>25678</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-01-01T00:00:00Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-01-01T00:00:00Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>1050</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25678</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 477
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 141,
+    "etr": "",
+    "area_name": "25826",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25826-0001</ns0:mRID>\n    <ns0:communityDescriptor>25826</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>141</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25826</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 499
+  },
+  {
+    "cust_a": {
+      "val": 4,
+      "masked": true
+    },
+    "cust_s": 55217,
+    "etr": "ETR-NULL",
+    "area_name": "Delaware",
+    "standard_xml": null,
+    "error": "ReadTimeout: HTTPSConnectionPool(host='openrouter.ai', port=443): Read timed out. (read timeout=120)",
+    "index": 1061
+  },
+  {
+    "key": "ctv",
+    "name": "Bay St Louis",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 6423,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -89.44190519999995,
+        30.253115278000053,
+        -89.30654550999998,
+        30.35803001000005
+      ]
+    },
+    "areaId": "Boun|Bay St Louis|ctv",
+    "n_out": 0,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>Boun|Bay St Louis|ctv</ns0:mRID>\n    <ns0:communityDescriptor>Bay St Louis</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>unknown</ns0:statusKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>6423</ns0:metersServed>\n      <ns0:outageAreaKind>ctv</ns0:outageAreaKind>\n      <ns0:percentCustomersAffected>0.0</ns0:percentCustomersAffected>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>-89.44190519999995,30.253115278000053,-89.30654550999998,30.35803001000005</ns0:geoInfoReference>\n        <ns0:zoneKind>boundary</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ctv</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>inputJSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>Bay St Louis</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>inputJSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 125
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 69,
+    "etr": "",
+    "area_name": "25936",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID-25936</ns0:mRID>\n    <ns0:communityDescriptor>25936</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>69</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25936</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 968
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 106,
+    "etr": "",
+    "area_name": "25699",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25699</ns0:mRID>\n    <ns0:communityDescriptor>25699</ns0:communityDescriptor>\n    <ns0:cause/>\n    <ns0:causeKind/>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind/>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>106</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause/>\n      <ns0:Location>\n        <ns0:geoInfoReference>25699</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 902
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 574,
+    "etr": "",
+    "area_name": "24818",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID-24818</ns0:mRID>\n    <ns0:communityDescriptor>24818</ns0:communityDescriptor>\n    <ns0:cause/>\n    <ns0:causeKind/>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind/>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>574</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause/>\n      <ns0:Location>\n        <ns0:geoInfoReference>24818</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 616
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 74,
+    "etr": "",
+    "area_name": "25882",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25882-1</ns0:mRID>\n    <ns0:communityDescriptor>25882</ns0:communityDescriptor>\n    <ns0:cause/>\n    <ns0:causeKind/>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>unknown</ns0:statusKind>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>74</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25882</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 950
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 201,
+    "etr": "",
+    "area_name": "25005",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25005</ns0:mRID>\n    <ns0:communityDescriptor>25005</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>201</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25005</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 258
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 6791,
+    "etr": "",
+    "area_name": "Rockbridge",
+    "hasChildETROverwrite": false,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-Rockbridge-1</ns0:mRID>\n    <ns0:communityDescriptor>Rockbridge</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>6791</ns0:metersServed>\n      <ns0:outageAreaKind>county</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>Rockbridge</ns0:geoInfoReference>\n        <ns0:zoneKind>county</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:hasChildETROverwrite>false</ns0:hasChildETROverwrite>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 1051
+  },
+  {
+    "key": "ctv",
+    "name": "Seminary",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 404,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -89.52534316199996,
+        31.541385448000028,
+        -89.46884146999997,
+        31.605597789000058
+      ]
+    },
+    "areaId": "Boun|Seminary|ctv",
+    "n_out": 0,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>Boun|Seminary|ctv</ns0:mRID>\n    <ns0:communityDescriptor>Seminary</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>ctv</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime/>\n    <ns0:OutageArea>\n      <ns0:metersServed>404</ns0:metersServed>\n      <ns0:outageAreaKind>ctv</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>-89.52534316199996,31.541385448000028,-89.46884146999997,31.605597789000058</ns0:geoInfoReference>\n        <ns0:zoneKind>bbox</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>Boun|Seminary|ctv</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>Seminary</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 152
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 518,
+    "etr": "",
+    "area_name": "25275",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID1</ns0:mRID>\n    <ns0:communityDescriptor>25275</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>518</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25275</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 385
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 2366,
+    "etr": "",
+    "area_name": "25545",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25545-1</ns0:mRID>\n    <ns0:communityDescriptor>25545</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>2366</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25545</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 850
+  },
+  {
+    "cust_a": {
+      "val": 5
+    },
+    "cust_s": 507,
+    "etr": "ETR-NULL",
+    "area_name": "24850",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24850-1</ns0:mRID>\n    <ns0:communityDescriptor>24850</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>5</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert>ETR-NULL</ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>507</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24850</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 212
+  },
+  {
+    "key": "Township",
+    "name": "LYNDHURST",
+    "cust_a": {
+      "val": 312
+    },
+    "cust_s": 7324,
+    "percent_cust_a": {
+      "val": 4.26
+    },
+    "etr": "2025-03-07T16:00:00Z",
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.51287720499994,
+        41.501167664000036,
+        -81.47284270199998,
+        41.53785653500006
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|LYNDHURST|Township",
+    "n_out": 1,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OE|CUYAHOGA|OHIO|LYNDHURST|Township</ns0:mRID>\n    <ns0:communityDescriptor>CUYAHOGA, OHIO</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Other</ns0:causeKind>\n    <ns0:metersAffected>312</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>reported</ns0:statusKind>\n    <ns0:utilityDisclaimer>Provided by source</ns0:utilityDisclaimer>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert>2025-03-07T16:00:00Z</ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>7324</ns0:metersServed>\n      <ns0:outageAreaKind>township</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>OE|CUYAHOGA|OHIO|LYNDHURST|Township</ns0:geoInfoReference>\n        <ns0:zoneKind>township</ns0:zoneKind>\n        <ns0:bbox>-81.51287720499994,41.501167664000036,-81.47284270199998,41.53785653500006</ns0:bbox>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>CUYAHOGA</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>LYNDHURST</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:custom>\n      <ns0:percentCustA>4.26</ns0:percentCustA>\n      <ns0:n_out>1</ns0:n_out>\n      <ns0:state>OHIO</ns0:state>\n    </ns0:custom>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 72
+  },
+  {
+    "key": "Township",
+    "name": "NORTH RANDALL",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 673,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.54208821699996,
+        41.424194862000036,
+        -81.51773114999997,
+        41.43989478900005
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|NORTH RANDALL|Township",
+    "n_out": 0,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": null,
+    "error": "ReadTimeout: HTTPSConnectionPool(host='openrouter.ai', port=443): Read timed out. (read timeout=120)",
+    "index": 26
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 62,
+    "etr": "",
+    "area_name": "24843",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24843</ns0:mRID>\n    <ns0:communityDescriptor>24843</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>62</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24843</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 628
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 590,
+    "etr": "",
+    "area_name": "25245",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID-25245</ns0:mRID>\n    <ns0:communityDescriptor>Zip code Identifier (will take precedence over geoInfoReference but only zip code is allowed in this field)</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>590</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>0</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25245</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 372
+  },
+  {
+    "key": "muni",
+    "name": "BUENA BORO",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 2264,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -74.9852713246,
+        39.5057112735,
+        -74.9143360305,
+        39.5563244331
+      ]
+    },
+    "areaId": "ACE|ATLANTIC|BUENA BORO|muni",
+    "n_out": 0,
+    "county": "ATLANTIC",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>ACE|ATLANTIC|BUENA BORO|muni</ns0:mRID>\n    <ns0:communityDescriptor>ATLANTIC</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>reported</ns0:statusKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>2264</ns0:metersServed>\n      <ns0:outageAreaKind>municipality</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>ACE|ATLANTIC|BUENA BORO|muni</ns0:geoInfoReference>\n        <ns0:zoneKind>municipality</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>BUENA BORO</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 103
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 224,
+    "etr": "",
+    "area_name": "25928",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25928</ns0:mRID>\n    <ns0:communityDescriptor>25928</ns0:communityDescriptor>\n    <ns0:cause/>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>224</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>25928</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 549
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 259,
+    "etr": "",
+    "area_name": "25902",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25902</ns0:mRID>\n    <ns0:communityDescriptor>25902</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>reported</ns0:statusKind>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>259</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25902</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 952
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 2113,
+    "etr": "",
+    "area_name": "26059",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-26059-2113</ns0:mRID>\n    <ns0:communityDescriptor>26059</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>2113</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>26059</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 580
+  },
+  {
+    "key": "Township",
+    "name": "CLEVELAND",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 102795,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.87862630299998,
+        41.39047373900007,
+        -81.53304941399995,
+        41.59919148400007
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|CLEVELAND|Township",
+    "n_out": 0,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OE|CUYAHOGA|OHIO|CLEVELAND|Township</ns0:mRID>\n    <ns0:communityDescriptor>CUYAHOGA</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>102795</ns0:metersServed>\n      <ns0:outageAreaKind>township</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>OE|CUYAHOGA|OHIO|CLEVELAND|Township</ns0:geoInfoReference>\n        <ns0:zoneKind>township</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>CLEVELAND</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>OHIO</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 0
+  },
+  {
+    "key": "muni",
+    "name": "BUENA VISTA TWP",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 3592,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -74.9721103172,
+        39.4207817467,
+        -74.8259240164,
+        39.6021483401
+      ]
+    },
+    "areaId": "ACE|ATLANTIC|BUENA VISTA TWP|muni",
+    "n_out": 0,
+    "county": "ATLANTIC",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>ACE|ATLANTIC|BUENA VISTA TWP|muni</ns0:mRID>\n    <ns0:communityDescriptor>ATLANTIC</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>3592</ns0:metersServed>\n      <ns0:outageAreaKind>muni</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>ACE|ATLANTIC|BUENA VISTA TWP|muni</ns0:geoInfoReference>\n        <ns0:zoneKind>muni</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>BUENA VISTA TWP</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>Input</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 104
+  },
+  {
+    "key": "Township",
+    "name": "NORTH ROYALTON",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 15285,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.78527595899999,
+        41.27627955400004,
+        -81.70472237399997,
+        41.35092648500006
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|NORTH ROYALTON|Township",
+    "n_out": 0,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OE|CUYAHOGA|OHIO|NORTH ROYALTON|Township</ns0:mRID>\n    <ns0:communityDescriptor>CUYAHOGA</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>15285</ns0:metersServed>\n      <ns0:outageAreaKind>township</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>OE|CUYAHOGA|OHIO|NORTH ROYALTON|Township</ns0:geoInfoReference>\n        <ns0:zoneKind>township</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>NORTH ROYALTON</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>CUYAHOGA, OHIO</ns0:name>\n      <ns0:nameType>CountyState</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 53
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 338,
+    "etr": "",
+    "area_name": "24817",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24817-338</ns0:mRID>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>338</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>24817</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 615
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 714,
+    "etr": "",
+    "area_name": "25979",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25979-1</ns0:mRID>\n    <ns0:communityDescriptor>25979</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>714</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25979</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)3</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)4</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 981
+  },
+  {
+    "key": "muni",
+    "name": "HAMMONTON TOWN",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 6966,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -74.8591728566,
+        39.5838295987,
+        -74.6758927136,
+        39.7297748864
+      ]
+    },
+    "areaId": "ACE|ATLANTIC|HAMMONTON TOWN|muni",
+    "n_out": 0,
+    "county": "ATLANTIC",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>ACE|ATLANTIC|HAMMONTON TOWN|muni</ns0:mRID>\n    <ns0:communityDescriptor>ATLANTIC</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>6966</ns0:metersServed>\n      <ns0:outageAreaKind>muni</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Unknown</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>ACE|ATLANTIC|HAMMONTON TOWN|muni</ns0:geoInfoReference>\n        <ns0:zoneKind>muni</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ACE</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source: areaId</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>HAMMONTON TOWN</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source: input name</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 112
+  },
+  {
+    "key": "ctv",
+    "name": "Ellisville",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 1626,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -89.24771466499999,
+        31.564656280000065,
+        -89.17239842899994,
+        31.624100232000046
+      ]
+    },
+    "areaId": "Boun|Ellisville|ctv",
+    "n_out": 0,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>Boun|Ellisville|ctv</ns0:mRID>\n    <ns0:communityDescriptor>Ellisville</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:OutageArea>\n      <ns0:metersServed>1626</ns0:metersServed>\n      <ns0:outageAreaKind>ctv</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>Boun|Ellisville|ctv</ns0:geoInfoReference>\n        <ns0:zoneKind>ctv</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>Ellisville</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ctv</ns0:name>\n      <ns0:nameType>AreaKey</ns0:nameType>\n      <ns0:nameTypeAuthority>Source</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 166
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 730,
+    "etr": "",
+    "area_name": "25625",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25625</ns0:mRID>\n    <ns0:communityDescriptor>25625</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>730</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25625</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 451
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 251,
+    "etr": "",
+    "area_name": "24851",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24851-1</ns0:mRID>\n    <ns0:communityDescriptor>24851</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>251</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24851</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 213
+  },
+  {
+    "key": "Township",
+    "name": "GLENWILLOW",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 328,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.48910222599994,
+        41.34924219100003,
+        -81.45058138999997,
+        41.37905127000005
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|GLENWILLOW|Township",
+    "n_out": 0,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OE|CUYAHOGA|OHIO|GLENWILLOW|Township</ns0:mRID>\n    <ns0:communityDescriptor>CUYAHOGA</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>328</ns0:metersServed>\n      <ns0:outageAreaKind>township</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>OE|CUYAHOGA|OHIO|GLENWILLOW|Township</ns0:geoInfoReference>\n        <ns0:zoneKind>township</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>GLENWILLOW</ns0:name>\n      <ns0:nameType>CommunityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Derived from input</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>CUYAHOGA, OHIO</ns0:name>\n      <ns0:nameType>CountyState</ns0:nameType>\n      <ns0:nameTypeAuthority>Derived from input</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 68
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 542,
+    "etr": "",
+    "area_name": "24822",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24822-1</ns0:mRID>\n    <ns0:communityDescriptor>24822</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>542</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24822</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 195
+  },
+  {
+    "key": "Township",
+    "name": "BROADVIEW HEIGHTS",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 9431,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.70504523299996,
+        41.27692660800005,
+        -81.64108685199994,
+        41.35113696500008
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|BROADVIEW HEIGHTS|Township",
+    "n_out": 0,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OE|CUYAHOGA|OHIO|BROADVIEW HEIGHTS|Township</ns0:mRID>\n    <ns0:communityDescriptor>CUYAHOGA</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>current</ns0:statusKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>9431</ns0:metersServed>\n      <ns0:outageAreaKind>township</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>OE|CUYAHOGA|OHIO|BROADVIEW HEIGHTS|Township</ns0:geoInfoReference>\n        <ns0:zoneKind>township</ns0:zoneKind>\n        <ns0:bbox>-81.70504523299996 41.27692660800005 -81.64108685199994 41.35113696500008</ns0:bbox>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>BROADVIEW HEIGHTS</ns0:name>\n      <ns0:nameType>CommunityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Input</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>OHIO</ns0:name>\n      <ns0:nameType>State</ns0:nameType>\n      <ns0:nameTypeAuthority>Input</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 63
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 4445,
+    "etr": "",
+    "area_name": "25508",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25508-4445</ns0:mRID>\n    <ns0:communityDescriptor>25508</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>4445</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>0</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25508</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 410
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 474,
+    "etr": "",
+    "area_name": "24872",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24872-1</ns0:mRID>\n    <ns0:communityDescriptor>24872</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>474</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24872</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 649
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 2797,
+    "etr": "",
+    "area_name": "25813",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25813-2797</ns0:mRID>\n    <ns0:communityDescriptor>25813</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>2797</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>25813</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 493
+  },
+  {
+    "key": "muni",
+    "name": "EGG HARBOR TWP",
+    "cust_a": {
+      "val": 4,
+      "mask": 5
+    },
+    "cust_s": 19483,
+    "percent_cust_a": {
+      "val": 4.99999,
+      "mask": 5.0
+    },
+    "etr": "2025-03-07T19:00:00Z",
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -74.7238274589,
+        39.2923374839,
+        -74.4874261631,
+        39.4669992011
+      ]
+    },
+    "areaId": "ACE|ATLANTIC|EGG HARBOR TWP|muni",
+    "n_out": 1,
+    "county": "ATLANTIC",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>ACE|ATLANTIC|EGG HARBOR TWP|muni|1</ns0:mRID>\n    <ns0:communityDescriptor>ATLANTIC</ns0:communityDescriptor>\n    <ns0:metersAffected>4</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert>2025-03-07T19:00:00Z</ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>19483</ns0:metersServed>\n      <ns0:outageAreaKind>muni</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Unknown</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>ACE|ATLANTIC|EGG HARBOR TWP|muni</ns0:geoInfoReference>\n        <ns0:zoneKind>muni</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>EGG HARBOR TWP</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ACE</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 106
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 627,
+    "etr": "",
+    "area_name": "25501",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25501-1</ns0:mRID>\n    <ns0:communityDescriptor>25501</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Event</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>627</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25501</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 403
+  },
+  {
+    "cust_a": {
+      "val": 71
+    },
+    "cust_s": 2404,
+    "etr": "ETR-NULL",
+    "area_name": "25506",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25506-71</ns0:mRID>\n    <ns0:communityDescriptor>25506</ns0:communityDescriptor>\n    <ns0:metersAffected>71</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert>ETR-NULL</ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>2404</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>25506</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 408
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 625,
+    "etr": "",
+    "area_name": "25854",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25854-1</ns0:mRID>\n    <ns0:communityDescriptor>25854</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind/>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>625</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25854</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>Unknown Utility</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 935
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 2776,
+    "etr": "",
+    "area_name": "25320",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25320-1</ns0:mRID>\n    <ns0:communityDescriptor>25320</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>2776</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25320</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 401
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 32,
+    "etr": "",
+    "area_name": "26032",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-26032-1</ns0:mRID>\n    <ns0:communityDescriptor>26032</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>32</ns0:metersServed>\n      <ns0:outageAreaKind>county</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>26032</ns0:geoInfoReference>\n        <ns0:zoneKind>county</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 572
+  },
+  {
+    "cust_a": {
+      "val": 4,
+      "masked": true
+    },
+    "cust_s": 4521,
+    "etr": "ETR-NULL",
+    "area_name": "25312",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n<ns0:Outage>\n<ns0:mRID>OUTAGE-4521</ns0:mRID>\n<ns0:communityDescriptor>25312</ns0:communityDescriptor>\n<ns0:cause>Unknown</ns0:cause>\n<ns0:causeKind>unknown</ns0:causeKind>\n<ns0:metersAffected>4</ns0:metersAffected>\n<ns0:outageKind>outageReported</ns0:outageKind>\n<ns0:statusKind>masked</ns0:statusKind>\n<ns0:utilityDisclaimer>Data masked: true</ns0:utilityDisclaimer>\n<ns0:actualPeriod>\n<ns0:start/>\n</ns0:actualPeriod>\n<ns0:EstimatedRestorationTime>\n<ns0:ert>ETR-NULL</ns0:ert>\n</ns0:EstimatedRestorationTime>\n<ns0:OutageArea>\n<ns0:metersServed>4</ns0:metersServed>\n<ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n</ns0:OutageArea>\n<ns0:Incident>\n<ns0:cause>Pending Investigation</ns0:cause>\n<ns0:Location>\n<ns0:geoInfoReference>4521</ns0:geoInfoReference>\n<ns0:zoneKind>zipcode</ns0:zoneKind>\n</ns0:Location>\n</ns0:Incident>\n<ns0:Names>\n<ns0:name>4521</ns0:name>\n<ns0:nameType>UtilityID</ns0:nameType>\n<ns0:nameTypeAuthority>Source from input</ns0:nameTypeAuthority>\n</ns0:Names>\n<ns0:Names>\n<ns0:name>Unknown Utility</ns0:name>\n<ns0:nameType>UtilityName</ns0:nameType>\n<ns0:nameTypeAuthority>Input mapping</ns0:nameTypeAuthority>\n</ns0:Names>\n</ns0:Outage>\n</ns0:PubOutages>",
+    "index": 817
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 481,
+    "etr": "",
+    "area_name": "25039",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25039-1</ns0:mRID>\n    <ns0:communityDescriptor>25039</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>481</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25039</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 696
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 2,
+    "etr": "",
+    "area_name": "Bedford",
+    "hasChildETROverwrite": false,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-BEDFORD-1</ns0:mRID>\n    <ns0:communityDescriptor>Bedford</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>2</ns0:metersServed>\n      <ns0:outageAreaKind>county</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>Bedford</ns0:geoInfoReference>\n        <ns0:zoneKind>county</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:hasChildETROverwrite>false</ns0:hasChildETROverwrite>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 1017
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 45,
+    "etr": "",
+    "area_name": "25966",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25966-1</ns0:mRID>\n    <ns0:communityDescriptor>25966</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2025-10-28T00:00:00Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2025-10-28T00:00:00Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>45</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25966</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 974
+  },
+  {
+    "key": "Township",
+    "name": "CHAGRIN FALLS TOWNSHIP",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 106,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.40755057299998,
+        41.43607028300005,
+        -81.39143822099999,
+        41.45253273700007
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|CHAGRIN FALLS TOWNSHIP|Township",
+    "n_out": 0,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OE|CUYAHOGA|OHIO|CHAGRIN FALLS TOWNSHIP|Township</ns0:mRID>\n    <ns0:communityDescriptor>CUYAHOGA, OHIO</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>unknown</ns0:statusKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>106</ns0:metersServed>\n      <ns0:outageAreaKind>township</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>OE|CUYAHOGA|OHIO|CHAGRIN FALLS TOWNSHIP|Township</ns0:geoInfoReference>\n        <ns0:zoneKind>township</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>CHAGRIN FALLS TOWNSHIP</ns0:name>\n      <ns0:nameType>AreaName</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>OE|CUYAHOGA|OHIO|CHAGRIN FALLS TOWNSHIP|Township</ns0:name>\n      <ns0:nameType>AreaID</ns0:nameType>\n      <ns0:nameTypeAuthority>Input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 55
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 134,
+    "etr": "",
+    "area_name": "25152",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25152-1</ns0:mRID>\n    <ns0:communityDescriptor>25152</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>134</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25152</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 757
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 1213,
+    "etr": "",
+    "area_name": "25033",
+    "standard_xml": null,
+    "error": "ReadTimeout: HTTPSConnectionPool(host='openrouter.ai', port=443): Read timed out. (read timeout=120)",
+    "index": 692
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 1022,
+    "etr": "",
+    "area_name": "24951",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24951-1</ns0:mRID>\n    <ns0:communityDescriptor>24951</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-01-01T00:00:00Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-01-01T00:00:00Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>1022</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24951</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 670
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 148,
+    "etr": "",
+    "area_name": "24847",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24847</ns0:mRID>\n    <ns0:communityDescriptor>24847</ns0:communityDescriptor>\n    <ns0:cause></ns0:cause>\n    <ns0:causeKind></ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind></ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>148</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause></ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24847</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name></ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority></ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name></ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority></ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 632
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 129,
+    "etr": "",
+    "area_name": "25875",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25875</ns0:mRID>\n    <ns0:communityDescriptor>25875</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind/>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind/>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>129</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25875</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 527
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 348,
+    "etr": "",
+    "area_name": "25639",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25639-1</ns0:mRID>\n    <ns0:communityDescriptor>25639</ns0:communityDescriptor>\n    <ns0:cause></ns0:cause>\n    <ns0:causeKind></ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind></ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>348</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause></ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25639</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 879
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 162,
+    "etr": "",
+    "area_name": "25057",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25057-1</ns0:mRID>\n    <ns0:communityDescriptor>25057</ns0:communityDescriptor>\n    <ns0:cause>Not provided</ns0:cause>\n    <ns0:causeKind>unspecified</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>162</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25057</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 707
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 43,
+    "etr": "",
+    "area_name": "Page",
+    "hasChildETROverwrite": false,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-Page-43</ns0:mRID>\n    <ns0:communityDescriptor>Page</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>unknown</ns0:causeKind>\n    <ns0:metersAffected>43</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Current</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>0</ns0:metersServed>\n      <ns0:outageAreaKind>county</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>Page</ns0:geoInfoReference>\n        <ns0:zoneKind>county</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>UNKNOWN_UTILITY_ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>UNKNOWN_UTILITY_NAME</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 1031
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 70,
+    "etr": "",
+    "area_name": "25133",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID</ns0:mRID>\n    <ns0:communityDescriptor>25133</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>70</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25133</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Unknown</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 326
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 785,
+    "etr": "",
+    "area_name": "26055",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-26055-785</ns0:mRID>\n    <ns0:communityDescriptor>26055</ns0:communityDescriptor>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>785</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:Location>\n        <ns0:geoInfoReference>26055</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 579
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 107,
+    "etr": "",
+    "area_name": "24831",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-24831-1</ns0:mRID>\n    <ns0:communityDescriptor>24831</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime></ns0:reportedStartTime>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start></ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>107</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>24831</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 624
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 20,
+    "etr": "",
+    "area_name": "25259",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25259-1</ns0:mRID>\n    <ns0:communityDescriptor>25259</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>20</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer></ns0:utilityDisclaimer>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert></ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>0</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25259</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 378
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 98,
+    "etr": "",
+    "area_name": "25921",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25921-1</ns0:mRID>\n    <ns0:communityDescriptor>25921</ns0:communityDescriptor>\n    <ns0:cause/>\n    <ns0:causeKind/>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind/>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>98</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause/>\n      <ns0:Location>\n        <ns0:geoInfoReference>25921</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name/>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority/>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name/>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority/>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 547
+  },
+  {
+    "cust_a": {
+      "val": 13
+    },
+    "cust_s": 39,
+    "etr": "ETR-NULL",
+    "area_name": "25544",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25544-1</ns0:mRID>\n    <ns0:communityDescriptor>25544</ns0:communityDescriptor>\n    <ns0:cause>Cause of Outage</ns0:cause>\n    <ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>\n    <ns0:metersAffected>13</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>\n    <ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>\n    <ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>\n    <ns0:actualPeriod>\n      <ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert>ETR-NULL</ns0:ert>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>39</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25544</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name (preferably from EIA)</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 429
+  },
+  {
+    "key": "ctv",
+    "name": "Columbia",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 3546,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -89.87673574699994,
+        31.22948879300003,
+        -89.78522396299996,
+        31.28802067400005
+      ]
+    },
+    "areaId": "Boun|Columbia|ctv",
+    "n_out": 0,
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>Boun|Columbia|ctv</ns0:mRID>\n    <ns0:communityDescriptor>Columbia</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>ctv</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>3546</ns0:metersServed>\n      <ns0:outageAreaKind>ctv</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>-89.87673574699994,31.22948879300003,-89.78522396299996,31.28802067400005</ns0:geoInfoReference>\n        <ns0:zoneKind>ctv</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>Boun|Columbia|ctv</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>areaId</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>Columbia</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>input:name</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 149
+  },
+  {
+    "key": "Township",
+    "name": "UNIVERSITY HEIGHTS",
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 5363,
+    "percent_cust_a": {
+      "val": 0.0
+    },
+    "etr": null,
+    "etr_confidence": null,
+    "gotoMap": {
+      "bbox": [
+        -81.55610370499994,
+        41.48696376200007,
+        -81.51706237999997,
+        41.50306733000008
+      ]
+    },
+    "areaId": "OE|CUYAHOGA|OHIO|UNIVERSITY HEIGHTS|Township",
+    "n_out": 0,
+    "county": "CUYAHOGA",
+    "state": "OHIO",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OE|CUYAHOGA|OHIO|UNIVERSITY HEIGHTS|Township</ns0:mRID>\n    <ns0:communityDescriptor>CUYAHOGA</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:causeKind>Township</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:ActualPeriod>\n      <ns0:start/>\n    </ns0:ActualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>5363</ns0:metersServed>\n      <ns0:outageAreaKind>township</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>OE|CUYAHOGA|OHIO|UNIVERSITY HEIGHTS|Township</ns0:geoInfoReference>\n        <ns0:zoneKind>township</ns0:zoneKind>\n        <ns0:bbox>-81.55610370499994,-81.51706237999997,41.48696376200007,41.50306733000008</ns0:bbox>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>UNIVERSITY HEIGHTS</ns0:name>\n      <ns0:nameType>CommunityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source: input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>OHIO</ns0:name>\n      <ns0:nameType>State</ns0:nameType>\n      <ns0:nameTypeAuthority>Source: input JSON</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 4
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 149,
+    "etr": "",
+    "area_name": "25060",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25060-1</ns0:mRID>\n    <ns0:communityDescriptor>25060</ns0:communityDescriptor>\n    <ns0:cause>Unknown</ns0:cause>\n    <ns0:causeKind>Unknown</ns0:causeKind>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:reportedStartTime/>\n    <ns0:statusKind>Unknown</ns0:statusKind>\n    <ns0:utilityDisclaimer/>\n    <ns0:actualPeriod>\n      <ns0:start/>\n    </ns0:actualPeriod>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n    <ns0:OutageArea>\n      <ns0:metersServed>149</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25060</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY ID</ns0:name>\n      <ns0:nameType>UtilityID</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n    <ns0:Names>\n      <ns0:name>ENTER UTILITY Name</ns0:name>\n      <ns0:nameType>UtilityName</ns0:nameType>\n      <ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>\n    </ns0:Names>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 288
+  },
+  {
+    "cust_a": {
+      "val": 0
+    },
+    "cust_s": 156,
+    "etr": "",
+    "area_name": "25028",
+    "standard_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:PubOutages xmlns:ns0=\"http://iec.ch/TC57/2014/PubOutages#\">\n  <ns0:Outage>\n    <ns0:mRID>OUTAGE-25028-1</ns0:mRID>\n    <ns0:communityDescriptor>25028</ns0:communityDescriptor>\n    <ns0:cause>Pending Investigation</ns0:cause>\n    <ns0:metersAffected>0</ns0:metersAffected>\n    <ns0:outageKind>outageReported</ns0:outageKind>\n    <ns0:OutageArea>\n      <ns0:metersServed>156</ns0:metersServed>\n      <ns0:outageAreaKind>zipcode</ns0:outageAreaKind>\n    </ns0:OutageArea>\n    <ns0:Incident>\n      <ns0:cause>Pending Investigation</ns0:cause>\n      <ns0:Location>\n        <ns0:geoInfoReference>25028</ns0:geoInfoReference>\n        <ns0:zoneKind>zipcode</ns0:zoneKind>\n      </ns0:Location>\n    </ns0:Incident>\n    <ns0:EstimatedRestorationTime>\n      <ns0:ert/>\n    </ns0:EstimatedRestorationTime>\n  </ns0:Outage>\n</ns0:PubOutages>",
+    "index": 269
+  }
+]
