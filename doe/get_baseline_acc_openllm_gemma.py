@@ -7,7 +7,7 @@ Notes:
   model.safetensors/bin, etc.). Examples: Llama 3 Instruct, Mistral Instruct, Qwen2.5 Instruct.
 - vLLM uses GPU; set CUDA_VISIBLE_DEVICES if needed.
 """
-
+from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer
 import json
 from copy import deepcopy
 from typing import Any, Dict, List, Optional
@@ -15,6 +15,8 @@ from typing import Any, Dict, List, Optional
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
 from utils import *
+# import vllm; print(vllm.__version__)
+# exit()
 
 # ---------------- Hard "no-reasoning" guard ----------------
 NO_REASONING_RULES = """
@@ -115,7 +117,7 @@ def process_items_vllm(
     tmpl = LabelGenerationPromptTemplate()
 
     # Load tokenizer for chat template formatting
-    tokenizer = AutoTokenizer.from_pretrained(fp_local_model, use_fast=True, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(fp_local_model,  trust_remote_code=True)
 
     # Initialize vLLM engine
     llm = LLM(
@@ -123,8 +125,8 @@ def process_items_vllm(
         dtype=dtype,
         tensor_parallel_size=tensor_parallel_size,
         max_model_len=max_model_len,
-        trust_remote_code=True,
         gpu_memory_utilization=gpu_memory_utilization,
+
     )
 
     # Build prompts (batched for efficiency)
@@ -192,8 +194,8 @@ def process_items_vllm(
 if __name__ == "__main__":
     # fp_local_model = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-3B-Instruct/"  # e.g., "/models/Llama-3.1-8B-Instruct"
     # fp_local_model = "/home/hungphd/git/pretrained_open_llms/phi-4/"  # e.g., "/models/Llama-3.1-8B-Instruct"
-    fp_local_model = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
-    # fp_local_model = "/home/hungphd/git/pretrained_open_llms/gemma-3-1b-it/"
+    # fp_local_model = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
+    fp_local_model = "/home/hungphd/git/pretrained_open_llms/gemma-3-1b-it/"
 
     model_name=fp_local_model.split('/')[-2]
     fop_output_result='data-all/results/baselines/'
