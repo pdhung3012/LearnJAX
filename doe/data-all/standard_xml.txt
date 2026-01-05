@@ -1,0 +1,261 @@
+#File 1:
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:PubOutages xmlns:ns0="http://iec.ch/TC57/2014/PubOutages#">
+<ns0:Outage>
+<ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID1</ns0:mRID>
+<ns0:communityDescriptor>County Identifier (will take precedence over geoInfoReference but only FIPS code is allowed in this
+field)</ns0:communityDescriptor>
+<ns0:cause>Cause of Outage</ns0:cause>
+<ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>
+<ns0:metersAffected>7</ns0:metersAffected>
+<ns0:outageKind>outageReported</ns0:outageKind>
+<ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>
+<ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>
+<ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>
+<ns0:actualPeriod>
+<ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>
+</ns0:actualPeriod>
+<ns0:EstimatedRestorationTime>
+<ns0:ert>2021-02-06T16:30:00Z</ns0:ert>
+</ns0:EstimatedRestorationTime>
+<ns0:OutageArea>
+<ns0:metersServed>100</ns0:metersServed>
+<ns0:outageAreaKind>county</ns0:outageAreaKind>
+</ns0:OutageArea>
+<ns0:Incident>
+<ns0:cause>Pending Investigation</ns0:cause>
+<ns0:Location>
+<ns0:geoInfoReference>123452</ns0:geoInfoReference>
+<ns0:zoneKind>county</ns0:zoneKind>
+</ns0:Location>
+</ns0:Incident>
+<ns0:Names>
+<ns0:name>ENTER UTILITY ID (preferably from EIA)3</ns0:name>
+<ns0:nameType>UtilityID</ns0:nameType >
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+<ns0:Names>
+<ns0:name>ENTER UTILITY Name (preferably from EIA)4</ns0:name>
+<ns0:nameType>UtilityName</ns0:nameType>
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+</ns0:Outage>
+</ns0:PubOutages>
+
+
+#File 2
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:PubOutages xmlns:ns0="http://iec.ch/TC57/2014/PubOutages#">
+<ns0:Outage>
+<ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID5</ns0:mRID>
+<ns0:communityDescriptor>Zip code Identifier (will take precedence over geoInfoReference but only zip code is allowed in
+this field)</ns0:communityDescriptor>
+<ns0:cause>Cause of Outage</ns0:cause>
+<ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>
+<ns0:metersAffected>7</ns0:metersAffected>
+<ns0:outageKind>outageReported</ns0:outageKind>
+<ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>
+<ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>
+<ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>
+<ns0:actualPeriod>
+<ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>
+</ns0:actualPeriod>
+<ns0:EstimatedRestorationTime>
+<ns0:ert>2021-02-06T16:30:00Z</ns0:ert>
+</ns0:EstimatedRestorationTime>
+<ns0:OutageArea>
+<ns0:metersServed>100</ns0:metersServed>
+<ns0:outageAreaKind>zipcode</ns0:outageAreaKind>
+</ns0:OutageArea>
+<ns0:Incident>
+<ns0:cause>Pending Investigation</ns0:cause>
+<ns0:Location>
+<ns0:geoInfoReference>923576</ns0:geoInfoReference>7
+<ns0:zoneKind>zipcode</ns0:zoneKind>
+</ns0:Location>
+</ns0:Incident>
+<ns0:Names>
+<ns0:name>ENTER UTILITY ID (preferably from EIA)8</ns0:name>
+<ns0:nameType>UtilityID</ns0:nameType >
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+<ns0:Names>
+<ns0:name>ENTER UTILITY Name (preferably from EIA)9</ns0:name>
+<ns0:nameType>UtilityName</ns0:nameType>
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+</ns0:Outage>
+</ns0:PubOutages>
+
+#File 3
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:PubOutages xmlns:ns0="http://iec.ch/TC57/2014/PubOutages#">
+<ns0:Outage>
+<ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID10</ns0:mRID>
+<ns0:communityDescriptor>Description of the community</ns0:communityDescriptor>
+<ns0:cause>Cause of Outage</ns0:cause>
+<ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>
+<ns0:metersAffected>7</ns0:metersAffected>
+<ns0:outageKind>outageReported</ns0:outageKind>
+<ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>
+<ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>
+<ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>
+<ns0:actualPeriod>
+<ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>
+</ns0:actualPeriod>
+<ns0:EstimatedRestorationTime>
+<ns0:ert>2021-02-06T16:30:00Z</ns0:ert>
+</ns0:EstimatedRestorationTime>
+<ns0:OutageArea>
+<ns0:metersServed>100</ns0:metersServed>
+<ns0:outageAreaKind>SERVICE_AREA</ns0:outageAreaKind>
+</ns0:OutageArea>
+<ns0:Incident>
+<ns0:cause>Pending Investigation</ns0:cause>
+<ns0:Location>
+<ns0:PositionPoints>
+<ns0:sequenceNumber>1</ns0:sequenceNumber>
+<ns0:xPosition>0</ns0:xPosition>
+<ns0:yPosition>0</ns0:yPosition>
+</ns0:PositionPoints>
+</ns0:Location>
+</ns0:Incident>
+<ns0:Names>
+<ns0:name>ENTER UTILITY ID (preferably from EIA)11</ns0:name>
+<ns0:nameType>UtilityID</ns0:nameType >
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+<ns0:Names>
+<ns0:name>ENTER UTILITY Name (preferably from EIA)12</ns0:name>
+<ns0:nameType>UtilityName</ns0:nameType>
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+</ns0:Outage>
+</ns0:PubOutages>
+
+
+#File 4
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:PubOutages xmlns:ns0="http://iec.ch/TC57/2014/PubOutages#">
+<ns0:Outage>
+<ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID13</ns0:mRID>
+<ns0:communityDescriptor>Description of the community</ns0:communityDescriptor>
+<ns0:cause>Cause of Outage</ns0:cause>
+<ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>
+<ns0:metersAffected>7</ns0:metersAffected>
+<ns0:outageKind>outageReported</ns0:outageKind>
+<ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>
+<ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>
+<ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>
+<ns0:actualPeriod>
+<ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>
+</ns0:actualPeriod>
+<ns0:EstimatedRestorationTime>
+<ns0:ert>2021-02-06T16:30:00Z</ns0:ert>
+</ns0:EstimatedRestorationTime>
+<ns0:OutageArea>
+<ns0:metersServed>100</ns0:metersServed>
+<ns0:outageAreaKind>SERVICE_AREA</ns0:outageAreaKind>
+</ns0:OutageArea>
+<ns0:Incident>
+<ns0:cause>Pending Investigation</ns0:cause>
+<ns0:geoInfoReference>Name/Id for the location provided</ns0:geoInfoReference>
+<ns0:Location>
+<ns0:PositionPoints>
+<ns0:sequenceNumber>1</ns0:sequenceNumber>
+<ns0:xPosition>0</ns0:xPosition>
+<ns0:yPosition>0</ns0:yPosition>
+</ns0:PositionPoints>
+<ns0:PositionPoints>
+<ns0:sequenceNumber>2</ns0:sequenceNumber>
+<ns0:xPosition>1</ns0:xPosition>
+<ns0:yPosition>0</ns0:yPosition>
+</ns0:PositionPoints>
+<ns0:PositionPoints>
+<ns0:sequenceNumber>3</ns0:sequenceNumber>
+<ns0:xPosition>1</ns0:xPosition>
+<ns0:yPosition>1</ns0:yPosition>
+</ns0:PositionPoints>
+<ns0:PositionPoints>
+<ns0:sequenceNumber>4</ns0:sequenceNumber>
+<ns0:xPosition>0</ns0:xPosition>
+<ns0:yPosition>1</ns0:yPosition>
+</ns0:PositionPoints>
+<ns0:PositionPoints>
+<ns0:sequenceNumber>5</ns0:sequenceNumber>
+<ns0:xPosition>0</ns0:xPosition>
+<ns0:yPosition>0</ns0:yPosition>
+</ns0:PositionPoints>
+</ns0:Location>
+</ns0:Incident>
+<ns0:Names>
+<ns0:name>ENTER UTILITY ID (preferably from EIA)14</ns0:name>
+<ns0:nameType>UtilityID</ns0:nameType >
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+<ns0:Names>
+<ns0:name>ENTER UTILITY Name (preferably from EIA)15</ns0:name>
+<ns0:nameType>UtilityName</ns0:nameType>
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+</ns0:Outage>
+</ns0:PubOutages>
+
+#File 5:
+<?xml version="1.0" encoding="UTF-8"?>
+<outageEvent objectID="%eventId%">
+<comments>%eventComments%</comments>
+<extensionsList>
+<extensionsItem>
+<extName>primaryCrew</extName>
+<extValue>Primary Crew Name</extValue>
+<extType>string</extType>
+</extensionsItem>
+</extensionsList>
+<objectName>%eventName%</objectName>
+<GMLLocation>
+<coord xmlns="gml_V4.1_Release">
+<X>%gmlX%</X>
+<Y>%gmlY%</Y>
+</coord>
+</GMLLocation>
+<GPSLocation GPSValidity="true">
+<latitude>%latitude%</latitude>
+<longitude>%longitude%</longitude>
+</GPSLocation>
+<gridLocation>TRANSFORMER1</gridLocation>
+<area>District9</area>
+<problemLocation>TRANSFORMER1</problemLocation>
+<deviceID name="TRANSFORMER1" noun="transformerBank" objectID="%deviceId%" utility="" />
+<deviceType>Transformer</deviceType>
+<outagedPhase>A</outagedPhase>
+<substationCode>10</substationCode>
+<feeder>FeederName</feeder>
+<outageStatus>Assumed</outageStatus>
+<startTime>%startTime%</startTime>
+<firstDispatch>%firstDispatch%</firstDispatch>
+<ETOR>%etor%</ETOR>
+<completed />
+<crewsDispatched>
+<crewID>Crew1</crewID>
+</crewsDispatched>
+<customersAffected>%numAffected%</customersAffected>
+<priorityCustomersCount>0</priorityCustomersCount>
+<ODEventCount>1</ODEventCount>
+<customersRestored>%numRestored%</customersRestored>
+<outageReasonCodeList>
+<outageCause>
+<description>Contractor</description>
+<outageReportingCodeList>
+<outageReportingCode reportingBody="Utility Defined">44</outageReportingCode>
+</outageReportingCodeList>
+</outageCause>
+<outageCause>
+<description>Fallen Limb</description>
+<outageReportingCodeList>
+<outageReportingCode reportingBody="Utility Defined">44</outageReportingCode>
+</outageReportingCodeList>
+</outageCause>
+</outageReasonCodeList>
+</outageEvent>
+

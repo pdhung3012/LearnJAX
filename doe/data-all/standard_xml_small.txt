@@ -1,0 +1,88 @@
+#File 1:
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:PubOutages xmlns:ns0="http://iec.ch/TC57/2014/PubOutages#">
+<ns0:Outage>
+<ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID1</ns0:mRID>
+<ns0:communityDescriptor>County Identifier (will take precedence over geoInfoReference but only FIPS code is allowed in this
+field)</ns0:communityDescriptor>
+<ns0:cause>Cause of Outage</ns0:cause>
+<ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>
+<ns0:metersAffected>7</ns0:metersAffected>
+<ns0:outageKind>outageReported</ns0:outageKind>
+<ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>
+<ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>
+<ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>
+<ns0:actualPeriod>
+<ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>
+</ns0:actualPeriod>
+<ns0:EstimatedRestorationTime>
+<ns0:ert>2021-02-06T16:30:00Z</ns0:ert>
+</ns0:EstimatedRestorationTime>
+<ns0:OutageArea>
+<ns0:metersServed>100</ns0:metersServed>
+<ns0:outageAreaKind>county</ns0:outageAreaKind>
+</ns0:OutageArea>
+<ns0:Incident>
+<ns0:cause>Pending Investigation</ns0:cause>
+<ns0:Location>
+<ns0:geoInfoReference>123452</ns0:geoInfoReference>
+<ns0:zoneKind>county</ns0:zoneKind>
+</ns0:Location>
+</ns0:Incident>
+<ns0:Names>
+<ns0:name>ENTER UTILITY ID (preferably from EIA)3</ns0:name>
+<ns0:nameType>UtilityID</ns0:nameType >
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+<ns0:Names>
+<ns0:name>ENTER UTILITY Name (preferably from EIA)4</ns0:name>
+<ns0:nameType>UtilityName</ns0:nameType>
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+</ns0:Outage>
+</ns0:PubOutages>
+
+
+#File 2
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:PubOutages xmlns:ns0="http://iec.ch/TC57/2014/PubOutages#">
+<ns0:Outage>
+<ns0:mRID>EXAMPLE-OUTAGE-UNIQUE-ID5</ns0:mRID>
+<ns0:communityDescriptor>Zip code Identifier (will take precedence over geoInfoReference but only zip code is allowed in
+this field)</ns0:communityDescriptor>
+<ns0:cause>Cause of Outage</ns0:cause>
+<ns0:causeKind>Event Kind to Cause Outage</ns0:causeKind>
+<ns0:metersAffected>7</ns0:metersAffected>
+<ns0:outageKind>outageReported</ns0:outageKind>
+<ns0:reportedStartTime>2021-02-06T14:27:07.1228664Z</ns0:reportedStartTime>
+<ns0:statusKind>Current Status Kind for Outage</ns0:statusKind>
+<ns0:utilityDisclaimer>Utility Disclaimer Text</ns0:utilityDisclaimer>
+<ns0:actualPeriod>
+<ns0:start>2021-02-06T14:27:07.1228664Z</ns0:start>
+</ns0:actualPeriod>
+<ns0:EstimatedRestorationTime>
+<ns0:ert>2021-02-06T16:30:00Z</ns0:ert>
+</ns0:EstimatedRestorationTime>
+<ns0:OutageArea>
+<ns0:metersServed>100</ns0:metersServed>
+<ns0:outageAreaKind>zipcode</ns0:outageAreaKind>
+</ns0:OutageArea>
+<ns0:Incident>
+<ns0:cause>Pending Investigation</ns0:cause>
+<ns0:Location>
+<ns0:geoInfoReference>923576</ns0:geoInfoReference>7
+<ns0:zoneKind>zipcode</ns0:zoneKind>
+</ns0:Location>
+</ns0:Incident>
+<ns0:Names>
+<ns0:name>ENTER UTILITY ID (preferably from EIA)8</ns0:name>
+<ns0:nameType>UtilityID</ns0:nameType >
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+<ns0:Names>
+<ns0:name>ENTER UTILITY Name (preferably from EIA)9</ns0:name>
+<ns0:nameType>UtilityName</ns0:nameType>
+<ns0:nameTypeAuthority>Source for name information (preferably EIA)</ns0:nameTypeAuthority>
+</ns0:Names>
+</ns0:Outage>
+</ns0:PubOutages>
