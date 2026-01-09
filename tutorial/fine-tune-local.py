@@ -18,6 +18,7 @@ dataset_all = Dataset.from_pandas(df[["text"]])
 splits = dataset_all.train_test_split(test_size=0.2, seed=42)  # 20% test
 train_ds = splits["train"]
 test_ds  = splits["test"]
+# print(train_ds)
 
 # model_name = "/home/hungphd/git/Qwen2.5-3B-Instruct/"
 # model_name = "/home/hungphd/git/pretrained_open_llms/phi-4/"

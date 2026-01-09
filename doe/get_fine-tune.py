@@ -10,19 +10,28 @@ os.environ['PYTORCH_CUDA_ALLOC_CONF']='expandable_segments:True'
 from datasets import Dataset
 import torch
 
+model_name = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
+folder_output="/home/hungphd/git/potracker_adapter_weights/"
 
 # Load sample data
-df = pd.read_csv("code_finetuned.csv")
-df["text"] = "### Instruction:\n" + df["prompt"] + "\n\n### Response:\n" + df["response"]
-dataset_all = Dataset.from_pandas(df[["text"]])
-splits = dataset_all.train_test_split(test_size=0.2, seed=42)  # 20% test
-train_ds = splits["train"]
-test_ds  = splits["test"]
+fp_file_tuning_train='/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_train.csv'
+fp_file_tuning_valid='/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_valid.csv'
+df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)
+df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False)
+
+# ✅ Extra safety (in case of weird values)
+for df in (df_train, df_valid):
+    df["prompt"] = df["prompt"].fillna("").astype(str)
+    df["response"] = df["response"].fillna("").astype(str)
+
+df_train["text"] = "### Instruction:\n" + df_train["prompt"] + "\n\n### Response:\n" + df_train["response"]
+df_valid["text"] = "### Instruction:\n" + df_valid["prompt"] + "\n\n### Response:\n" + df_valid["response"]
+
+train_ds = Dataset.from_pandas(df_train[["text"]], preserve_index=False)
+valid_ds = Dataset.from_pandas(df_valid[["text"]], preserve_index=False)
 
 # model_name = "/home/hungphd/git/Qwen2.5-3B-Instruct/"
 # model_name = "/home/hungphd/git/pretrained_open_llms/phi-4/"
-model_name = "/home/hungphd/git/pretrained_open_llms/gemma-3-1b-it/"
-folder_output="/home/hungphd/git/adapter_weights/"
 arr_model_path=model_name.split('/')
 real_model_name=arr_model_path[-2]
 fop_output_model=folder_output+real_model_name+'/'
@@ -32,10 +41,10 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
 
 def tokenize(example):
-    return tokenizer(example["text"],  truncation=True, max_length=8)
+    return tokenizer(example["text"],  truncation=True, max_length=2048)
 
 train_tokenized = train_ds.map(tokenize, batched=True)
-test_tokenized = test_ds.map(tokenize, batched=True)
+test_tokenized = valid_ds.map(tokenize, batched=True)
 
 
 
