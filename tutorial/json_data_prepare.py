@@ -1,6 +1,6 @@
 import json
 import csv
-from prompt_template import BasicPromptTemplate
+from doe.prompt_template import BasicPromptTemplate
 
 file_path = "../kernelbench_pytorch_jax_pairs_inline.jsonl"  # update path if needed
 fp_output = "code_finetuned.csv"  # output CSV
