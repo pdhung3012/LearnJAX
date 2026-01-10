@@ -10,7 +10,7 @@ os.environ['PYTORCH_CUDA_ALLOC_CONF']='expandable_segments:True'
 from datasets import Dataset
 import torch
 
-model_name = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
+model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
 folder_output="/home/hungphd/git/potracker_adapter_weights/"
 
 # Load sample data
