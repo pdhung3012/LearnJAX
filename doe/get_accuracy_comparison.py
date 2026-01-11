@@ -3,8 +3,8 @@ from combined_metrics import *
 from statistics import mean
 
 fp_label_xml='/home/hungphd/git/LearnJAX/doe/data-all/label-split/test.json'
-fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/baselines/test.Qwen2.5-3B-Instruct.json'
-# fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/baselines/test.Llama-3.1-8B.json'
+# fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/baselines/test.Qwen2.5-3B-Instruct.json'
+fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/finetuned_org/test.Qwen2.5-3B-Instruct.json'
 
 list_scores=[]
 list_text_scores=[]
@@ -22,4 +22,4 @@ for i in range(0,len(json_labels)):
     list_text_scores.append(score_obj['text_similarity'])
     list_tag_scores.append(score_obj['tag_similarity'])
 
-print('score avg comb {} text {} tag {}'.format(mean(list_scores),mean(list_text_scores),mean(list_tag_scores)))
+print('score avg comb text tag\n{}\t{}\t{}'.format(mean(list_scores),mean(list_text_scores),mean(list_tag_scores)))

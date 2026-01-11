@@ -138,6 +138,7 @@ def compute_bleu(eval_pred):
 
     pred_texts = tokenizer.batch_decode(pred_ids, skip_special_tokens=True)
     label_texts = tokenizer.batch_decode(labels_for_decode, skip_special_tokens=True)
+    print('aaa {} bbb {}'.format(pred_texts,label_texts))
 
     scores = []
     for p, l in zip(pred_texts, label_texts):
@@ -169,7 +170,7 @@ training_args = TrainingArguments(
     bf16=torch.cuda.is_available(),
     optim="paged_adamw_8bit",
     report_to="none",
-    evaluation_strategy="epoch",  # so BLEU gets computed
+    eval_strategy="epoch",  # so BLEU gets computed
 )
 
 data_collator = DataCollatorForLanguageModeling(
