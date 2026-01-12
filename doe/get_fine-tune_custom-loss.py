@@ -12,6 +12,20 @@ import torch
 import numpy as np
 from combined_metrics import *
 from statistics import mean
+import torch.nn.functional as F
+import numpy as np
+from transformers import Trainer
+
+def _xml_reward(tokenizer, pred_ids, ref_text):
+    pred_text = tokenizer.decode(pred_ids, skip_special_tokens=True)
+    hyp = pred_text.split()
+    ref = [ref_text.split()]
+    if len(hyp) == 0 or len(ref[0]) == 0:
+        return 0.0
+    # print('ref {}\npred {}'.format(ref_text,pred_text))
+    # input('bbb')
+    score_obj = combined_similarity(ref_text, pred_text)
+    return float(score_obj["combined_similarity"])
 
 class POReportSimilarityTrainer(Trainer):
     """
@@ -19,22 +33,139 @@ class POReportSimilarityTrainer(Trainer):
     separately in compute_metrics (see below).
     """
 
+    def __init__(
+            self,
+            *args,
+            rl_weight=0.05,
+            rl_every_n_steps=10,
+            gen_max_new_tokens=256,
+            gen_temperature=0.7,
+            gen_top_p=0.9,
+            **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.rl_weight = rl_weight
+        self.rl_every_n_steps = rl_every_n_steps
+        self.gen_max_new_tokens = gen_max_new_tokens
+        self.gen_temperature = gen_temperature
+        self.gen_top_p = gen_top_p
+
+
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
-        labels = inputs.get("labels")
+        # 1) Normal supervised CE loss (stable)
         outputs = model(**inputs)
-        logits = outputs.logits  # (batch, seq_len, vocab)
+        ce_loss = outputs.loss
 
-        # Shift so that tokens <t> predict <t+1>
-        shift_logits = logits[..., :-1, :].contiguous()
-        shift_labels = labels[..., 1:].contiguous()
+        # Optional: only do RL loss every N steps (saves a LOT of time)
+        do_rl = (self.state.global_step % self.rl_every_n_steps == 0)
 
-        loss_fct = torch.nn.CrossEntropyLoss(ignore_index=-100)
-        loss = loss_fct(
-            shift_logits.view(-1, shift_logits.size(-1)),
-            shift_labels.view(-1),
-        )
+        if (not do_rl) or (self.rl_weight <= 0):
+            return (ce_loss, outputs) if return_outputs else ce_loss
 
-        return (loss, outputs) if return_outputs else loss
+        # 2) SCST reward term (non-differentiable reward -> REINFORCE)
+        # We need prompt-only input for generation; prompt tokens have label == -100
+        input_ids = inputs["input_ids"]
+        attention_mask = inputs["attention_mask"]
+        labels = inputs["labels"]
+
+        batch_size = input_ids.size(0)
+        device = input_ids.device
+
+        rl_losses = []
+        for b in range(batch_size):
+            # Find where response starts: first non -100 in labels
+            lab = labels[b].tolist()
+            try:
+                resp_start = lab.index(next(x for x in lab if x != -100))
+            except StopIteration:
+                # no supervised tokens, skip
+                continue
+
+            prompt_ids = input_ids[b, :resp_start].unsqueeze(0)
+            prompt_mask = attention_mask[b, :resp_start].unsqueeze(0)
+
+            # Reference response text (decode labels excluding -100)
+            ref_ids = [t for t in lab if t != -100 and t != tokenizer.pad_token_id]
+            ref_text = tokenizer.decode(ref_ids, skip_special_tokens=True)
+
+            # --- Baseline: greedy ---
+            with torch.no_grad():
+                greedy = model.generate(
+                    input_ids=prompt_ids,
+                    attention_mask=prompt_mask,
+                    max_new_tokens=self.gen_max_new_tokens,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
+                )
+                greedy_new = greedy[0, resp_start:] if greedy.size(1) > resp_start else greedy[0, resp_start:]
+                r_baseline = _xml_reward(tokenizer, greedy_new.tolist(), ref_text)
+
+            # --- Sampled: stochastic generation (policy) ---
+            sampled = model.generate(
+                input_ids=prompt_ids,
+                attention_mask=prompt_mask,
+                max_new_tokens=self.gen_max_new_tokens,
+                do_sample=True,
+                temperature=self.gen_temperature,
+                top_p=self.gen_top_p,
+                pad_token_id=tokenizer.eos_token_id,
+                eos_token_id=tokenizer.eos_token_id,
+            )
+            sampled_new = sampled[0, resp_start:] if sampled.size(1) > resp_start else sampled[0, resp_start:]
+            r_sample = _xml_reward(tokenizer, sampled_new.tolist(), ref_text)
+
+            advantage = (r_sample - r_baseline)
+
+            # Compute logprob of sampled tokens under current model
+            # seq = prompt + sampled_new (full sampled already contains prompt)
+            seq = sampled.unsqueeze(0) if sampled.dim() == 1 else sampled  # [1, T]
+            seq = seq.to(device)
+
+            out = model(input_ids=seq)
+            logits = out.logits  # [1, T, V]
+
+            # Logprobs for tokens at positions resp_start .. T-1
+            # token at position j is predicted by logits at j-1
+            T = seq.size(1)
+            if resp_start >= T:
+                continue
+
+            token_ids = seq[0, resp_start:T]  # [L]
+            pred_logits = logits[0, resp_start - 1:T - 1, :]  # [L, V]
+
+            log_probs = F.log_softmax(pred_logits, dim=-1)  # [L, V]
+            token_logp = log_probs.gather(1, token_ids.unsqueeze(1)).squeeze(1)  # [L]
+            seq_logp = token_logp.sum() / max(1, token_logp.numel())
+
+            # REINFORCE loss: -advantage * logp
+            rl_loss = -(advantage) * seq_logp
+            rl_losses.append(rl_loss)
+
+        if len(rl_losses) == 0:
+            total_loss = ce_loss
+        else:
+            rl_loss_mean = torch.stack(rl_losses).mean()
+            total_loss = ce_loss + self.rl_weight * rl_loss_mean
+
+        return (total_loss, outputs) if return_outputs else total_loss
+
+    # def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
+    #     labels = inputs.get("labels")
+    #     outputs = model(**inputs)
+    #     logits = outputs.logits  # (batch, seq_len, vocab)
+    #
+    #     # Shift so that tokens <t> predict <t+1>
+    #     shift_logits = logits[..., :-1, :].contiguous()
+    #     shift_labels = labels[..., 1:].contiguous()
+    #
+    #     loss_fct = torch.nn.CrossEntropyLoss(ignore_index=-100)
+    #     loss = loss_fct(
+    #         shift_logits.view(-1, shift_logits.size(-1)),
+    #         shift_labels.view(-1),
+    #     )
+    #
+    #     return (loss, outputs) if return_outputs else loss
 
 # =========================
 # XML metric between labels & outputs
@@ -86,39 +217,76 @@ def compute_po_tracker(eval_pred):
 
 model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
 folder_output="/home/hungphd/git/potracker_customloss_adapter_weights/"
-
-# Load sample data
-fp_file_tuning_train='/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_train.csv'
-fp_file_tuning_valid='/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_valid.csv'
-df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)
-df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False)
-
-# ✅ Extra safety (in case of weird values)
-for df in (df_train, df_valid):
-    df["prompt"] = df["prompt"].fillna("").astype(str)
-    df["response"] = df["response"].fillna("").astype(str)
-
-df_train["text"] = "### Instruction:\n" + df_train["prompt"] + "\n\n### Response:\n" + df_train["response"]
-df_valid["text"] = "### Instruction:\n" + df_valid["prompt"] + "\n\n### Response:\n" + df_valid["response"]
-
-train_ds = Dataset.from_pandas(df_train[["text"]], preserve_index=False)
-valid_ds = Dataset.from_pandas(df_valid[["text"]], preserve_index=False)
-
-# model_name = "/home/hungphd/git/Qwen2.5-3B-Instruct/"
-# model_name = "/home/hungphd/git/pretrained_open_llms/phi-4/"
 arr_model_path=model_name.split('/')
 real_model_name=arr_model_path[-2]
 fop_output_model=folder_output+real_model_name+'/'
 
+# Load sample data
+fp_file_tuning_train='/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_train.csv'
+fp_file_tuning_valid='/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_valid.csv'
 
-tokenizer = AutoTokenizer.from_pretrained(model_name)
+# Load CSVs
+df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)
+df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False)
+
+for df in (df_train, df_valid):
+    df["prompt"] = df["prompt"].fillna("").astype(str)
+    df["response"] = df["response"].fillna("").astype(str)
+
+train_ds = Dataset.from_pandas(df_train[["prompt", "response"]], preserve_index=False)
+valid_ds = Dataset.from_pandas(df_valid[["prompt", "response"]], preserve_index=False)
+
+tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
 tokenizer.pad_token = tokenizer.eos_token
+tokenizer.padding_side = "left"
 
-def tokenize(example):
-    return tokenizer(example["text"],  truncation=True, max_length=2048)
+MAX_LEN = 2048
 
-train_tokenized = train_ds.map(tokenize, batched=True)
-test_tokenized = valid_ds.map(tokenize, batched=True)
+def tokenize_supervised(batch):
+    prompts = batch["prompt"]
+    responses = batch["response"]
+
+    input_ids_list = []
+    attention_mask_list = []
+    labels_list = []
+
+    for p, r in zip(prompts, responses):
+        p_ids = tokenizer.encode(p, add_special_tokens=False)
+        r_ids = tokenizer.encode(r, add_special_tokens=False) + [tokenizer.eos_token_id]
+
+        # input = prompt + response
+        input_ids = p_ids + r_ids
+        input_ids = input_ids[:MAX_LEN]
+
+        # labels: ignore prompt tokens, supervise only response tokens
+        labels = ([-100] * len(p_ids) + r_ids)[:MAX_LEN]
+
+        attn = [1] * len(input_ids)
+
+        input_ids_list.append(input_ids)
+        attention_mask_list.append(attn)
+        labels_list.append(labels)
+
+    return {
+        "input_ids": input_ids_list,
+        "attention_mask": attention_mask_list,
+        "labels": labels_list,
+    }
+
+train_tokenized = train_ds.map(tokenize_supervised, batched=True, remove_columns=train_ds.column_names)
+eval_tokenized  = valid_ds.map(tokenize_supervised, batched=True, remove_columns=valid_ds.column_names)
+
+
+
+
+# tokenizer = AutoTokenizer.from_pretrained(model_name)
+# tokenizer.pad_token = tokenizer.eos_token
+#
+# def tokenize(example):
+#     return tokenizer(example["text"],  truncation=True, max_length=2048)
+#
+# train_tokenized = train_ds.map(tokenize, batched=True)
+# test_tokenized = valid_ds.map(tokenize, batched=True)
 
 
 
@@ -165,19 +333,25 @@ training_args = TrainingArguments(
     report_to="none"
 )
 
-data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
+from transformers import DataCollatorWithPadding
+data_collator = DataCollatorWithPadding(tokenizer=tokenizer, padding=True)
 
 trainer = POReportSimilarityTrainer(
     model=model,
     args=training_args,
     train_dataset=train_tokenized,
-    eval_dataset=test_tokenized,
-    processing_class=tokenizer,   # ✅ instead of tokenizer=tokenizer
+    eval_dataset=eval_tokenized,
+    processing_class=tokenizer,
     data_collator=data_collator,
-    compute_metrics=compute_po_tracker,
-
+    compute_metrics=compute_po_tracker,   # still fine for eval
+    rl_weight=0.05,                       # tune this
+    rl_every_n_steps=10,                  # compute RL loss every 10 steps
+    gen_max_new_tokens=256,               # keep small for speed
 )
 
 
 trainer.train()
+eval_metrics = trainer.evaluate()
+print("Eval metrics:", eval_metrics)
+
 trainer.save_model(fop_output_model)
