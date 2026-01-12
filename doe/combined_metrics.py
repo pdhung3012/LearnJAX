@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-def extract_text_and_tags(xml_string):
+def extract_text_and_tags(xml_string,show_errors=True):
     """Extract text and tag content from an XML string. Return None on failure."""
     try:
         xslt_content = xml_string.encode('ascii')
@@ -22,7 +22,8 @@ def extract_text_and_tags(xml_string):
 
         return ' '.join(texts), ' '.join(tags)
     except Exception:
-        traceback.print_exc()
+        if show_errors:
+            traceback.print_exc()
         return None
 
 
@@ -38,10 +39,10 @@ def tag_similarity(tags1, tags2):
     return difflib.SequenceMatcher(None, tags1, tags2).ratio()
 
 
-def combined_similarity(xml1, xml2, alpha=0.5):
+def combined_similarity(xml1, xml2, alpha=0.5,show_errors=True):
     """Combine text and tag similarity with a weighted alpha parameter."""
-    result1 = extract_text_and_tags(xml1)
-    result2 = extract_text_and_tags(xml2)
+    result1 = extract_text_and_tags(xml1,show_errors)
+    result2 = extract_text_and_tags(xml2,show_errors)
 
     if result1 is None or result2 is None:
         # Fall back to raw text comparison, no tag similarity

@@ -24,7 +24,7 @@ def _xml_reward(tokenizer, pred_ids, ref_text):
         return 0.0
     # print('ref {}\npred {}'.format(ref_text,pred_text))
     # input('bbb')
-    score_obj = combined_similarity(ref_text, pred_text)
+    score_obj = combined_similarity(ref_text, pred_text,show_errors=False)
     return float(score_obj["combined_similarity"])
 
 class POReportSimilarityTrainer(Trainer):
