@@ -1,5 +1,7 @@
 # pip install -U bitsandbytes peft accelerate transformers
 import os
+import traceback
+
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer
 from transformers import DataCollatorForLanguageModeling, BitsAndBytesConfig
@@ -15,6 +17,9 @@ from statistics import mean
 import torch.nn.functional as F
 import numpy as np
 from transformers import Trainer
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Union
+
 
 def _xml_reward(tokenizer, pred_ids, ref_text):
     pred_text = tokenizer.decode(pred_ids, skip_special_tokens=True)
@@ -50,11 +55,12 @@ class POReportSimilarityTrainer(Trainer):
         self.gen_temperature = gen_temperature
         self.gen_top_p = gen_top_p
 
-
+    #
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         # 1) Normal supervised CE loss (stable)
         outputs = model(**inputs)
         ce_loss = outputs.loss
+        # print('go here')
 
         # Optional: only do RL loss every N steps (saves a LOT of time)
         do_rl = (self.state.global_step % self.rl_every_n_steps == 0)
@@ -147,7 +153,7 @@ class POReportSimilarityTrainer(Trainer):
         else:
             rl_loss_mean = torch.stack(rl_losses).mean()
             total_loss = ce_loss + self.rl_weight * rl_loss_mean
-
+        # print('end go here')
         return (total_loss, outputs) if return_outputs else total_loss
 
     # def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
@@ -172,46 +178,29 @@ class POReportSimilarityTrainer(Trainer):
 # =========================
 # chencherry = SmoothingFunction()
 
-
+def preprocess_logits_for_metrics(logits, labels):
+    # logits can be tuple in some models
+    if isinstance(logits, tuple):
+        logits = logits[0]
+    return torch.argmax(logits, dim=-1)  # [batch, seq_len]
 def compute_po_tracker(eval_pred):
-    """
-    eval_pred: (predictions, label_ids) from Trainer
-    Returns: dict with BLEU score.
-    """
-    predictions, labels = eval_pred
-
-    # Trainer sometimes returns a tuple for predictions
-    if isinstance(predictions, tuple):
-        predictions = predictions[0]
-
-    # predictions are logits: [batch, seq_len, vocab]
-    pred_ids = np.argmax(predictions, axis=-1)
-
-    # Replace ignore_index -100 with pad_token_id for decoding
-    if tokenizer.pad_token_id is None:
-        raise ValueError("tokenizer.pad_token_id is None, but needed for decoding labels")
+    pred_ids, labels = eval_pred  # pred_ids is now [batch, seq_len]
 
     labels_for_decode = np.where(labels == -100, tokenizer.pad_token_id, labels)
 
     pred_texts = tokenizer.batch_decode(pred_ids, skip_special_tokens=True)
     label_texts = tokenizer.batch_decode(labels_for_decode, skip_special_tokens=True)
-    # print('aaa {} bbb {}'.format(pred_texts,label_texts))
 
     scores = []
     for p, l in zip(pred_texts, label_texts):
-        hyp = p.split()
-        ref = [l.split()]  # list of references
-
-        if len(hyp) == 0 or len(ref[0]) == 0:
+        if not p.strip() or not l.strip():
             scores.append(0.0)
             continue
-        print('sample rep:\n{}\nhype:\n{}'.format(ref,hyp))
-        score_obj=combined_similarity(ref,hyp)
-        s = score_obj['combined_similarity']
-        scores.append(s)
+        score_obj = combined_similarity(l, p, show_errors=False)  # use strings
+        scores.append(float(score_obj["combined_similarity"]))
 
-    xml_score = float(np.mean(scores)) if scores else 0.0
-    return {"xml": xml_score}
+    return {"xml": float(np.mean(scores)) if scores else 0.0}
+
 
 
 
@@ -240,7 +229,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = "left"
 
-MAX_LEN = 2048
+MAX_LEN = 256
 
 def tokenize_supervised(batch):
     prompts = batch["prompt"]
@@ -326,7 +315,8 @@ training_args = TrainingArguments(
     gradient_accumulation_steps=4,      # simulate bigger batch
     num_train_epochs=3,
     logging_steps=10,
-    save_strategy="epoch",              # avoid saving every step
+    save_strategy="epoch",
+    # eval_strategy="epoch",# avoid saving every step
     fp16=False,                         # use bf16 if available instead
     bf16=torch.cuda.is_available(),     # A100/H100 etc.
     optim="paged_adamw_8bit",           # memory-efficient optimizer
@@ -334,6 +324,7 @@ training_args = TrainingArguments(
 )
 
 from transformers import DataCollatorWithPadding
+# data_collator = CausalLMDataCollatorWithLabelPadding(tokenizer=tokenizer, padding=True)
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer, padding=True)
 
 trainer = POReportSimilarityTrainer(
@@ -343,10 +334,11 @@ trainer = POReportSimilarityTrainer(
     eval_dataset=eval_tokenized,
     processing_class=tokenizer,
     data_collator=data_collator,
+    preprocess_logits_for_metrics=preprocess_logits_for_metrics,
     compute_metrics=compute_po_tracker,   # still fine for eval
     rl_weight=0.05,                       # tune this
     rl_every_n_steps=10,                  # compute RL loss every 10 steps
-    gen_max_new_tokens=256,               # keep small for speed
+    gen_max_new_tokens=MAX_LEN,               # keep small for speed
 )
 
 
