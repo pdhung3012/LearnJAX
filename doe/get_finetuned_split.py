@@ -17,7 +17,7 @@ from peft import LoraConfig, get_peft_model
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
-folder_output = "/home/hungphd/git/potracker_adapter_weights/"
+folder_output = "/home/hungphd/git/orgfinetuned_adapter_weights/"
 
 fp_file_tuning_train = "/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_train.csv"
 fp_file_tuning_valid = "/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_valid.csv"

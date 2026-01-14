@@ -262,13 +262,14 @@ def process_items_vllm(
 
 # ---------------- Example ----------------
 if __name__ == "__main__":
-    fp_local_model = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-3B-Instruct/"  # e.g., "/models/Llama-3.1-8B-Instruct"
+    fp_local_model = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"  # e.g., "/models/Llama-3.1-8B-Instruct"
     # fp_local_model = "/home/hungphd/git/pretrained_open_llms/phi-4/"  # e.g., "/models/Llama-3.1-8B-Instruct"
     # fp_local_model = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
 
     model_name=fp_local_model.split('/')[-2]
     fop_adapter_weight='/home/hungphd/git/potracker_adapter_weights/'+model_name+'/'
-    fop_output_result='data-all/results/finetuned_org/'
+    name_output_folder=fop_adapter_weight.split('/')[-3]
+    fop_output_result='data-all/results/'+name_output_folder+'/'
     fp_output=fop_output_result+'test.'+model_name+'.json'
     fp_input_file='data-all/label-split/test.json'
     input_items =load_list_from_file(fp_input_file)
