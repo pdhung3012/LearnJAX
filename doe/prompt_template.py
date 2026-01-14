@@ -37,22 +37,19 @@ class SamplePromptTemplate:
     system_template='''
 You are an expert in XML generation. Your task is to generate the standard XML from non-standard input JSON, given the context from one to several examples as input/ expected output of the problem. We will give you:
 1. Input non-standard JSON string.
-2. Examples of expected input and output in context (2.1. Example 1. - Input: - Output).
+
 Your task is to provide the output:
-3. Generate the standardize XML from the input as non-standard XML following the JSON file in the context.
+2. Generate the standardize XML from the input as non-standard XML following the JSON file in the context.
 Return the XML file only.        
     '''
     prompt_template='''
-Translating this input to standard XML file following a context file (2 inputs).
+Translating this input to standard XML file following a context file .
 1. Input JSON:
 """
 {INPUT_XML}
 """
 
-2. Examples of input and output.
-{EXAMPLES}
-
-3. Please provide the output as standard XML and return the XML as output only.
+2. Please provide the output as standard XML and return the XML as output only.
 '''
 
 class FineTuningPromptTemplate:

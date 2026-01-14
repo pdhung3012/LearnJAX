@@ -16,7 +16,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
-from utils import *
+from doe.utils import *
 
 # ---------------- Hard "no-reasoning" guard ----------------
 NO_REASONING_RULES = """
@@ -30,29 +30,21 @@ CRITICAL OUTPUT RULES:
 # ---------------- Your prompt template ----------------
 class LabelGenerationPromptTemplate:
     system_template='''
-You are an expert in XML generation. Your task is to generate the standard XML from non-standard input json text. The 5 examples of schema of standard XML are defined in the second part.
+You are an expert in XML generation. Your task is to generate the standard XML from non-standard input json text. 
     '''
     prompt_template='''
-You are an expert in XML generation. Your task is to generate the standard XML from non-standard input json text. The 5 examples of schema of standard XML are defined in the second part.
-Translating this input to standard XML file following a context file (2 inputs).
+You are an expert in XML generation. Your task is to generate the standard XML from non-standard input json text. 
+Translating this input to standard XML file.
 1. Input JSON string:
 """
 {INPUT_XML}
 """
 
-2. The examples of standard XML schema:
-"""
-{EXAMPLES}
-"""
 
-3. Please provide the output as standard XML and return the XML as output only
+2. Please provide the output as standard XML and return the XML as output only.
 '''.strip()
 
 
-fp_examples='data-all/standard_xml_small.txt'
-f1=open(fp_examples,'r')
-str_example=f1.read()
-f1.close()
 
 
 # ---------------- Helpers ----------------
@@ -71,7 +63,7 @@ def build_messages(item: Dict[str, Any], tmpl: LabelGenerationPromptTemplate) ->
     json_str = json.dumps(item, ensure_ascii=False, indent=2)
     # print(json_str)
     # input('aaaa')
-    user_prompt = tmpl.prompt_template.replace("{INPUT_XML}", json_str).replace("{EXAMPLES}", str_example)
+    user_prompt = tmpl.prompt_template.replace("{INPUT_XML}", json_str)
     return [
         {"role": "system", "content": tmpl.system_template},
         {"role": "user", "content": user_prompt},
@@ -263,15 +255,13 @@ def process_items_vllm(
 # ---------------- Example ----------------
 if __name__ == "__main__":
     fp_local_model = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"  # e.g., "/models/Llama-3.1-8B-Instruct"
-    # fp_local_model = "/home/hungphd/git/pretrained_open_llms/phi-4/"  # e.g., "/models/Llama-3.1-8B-Instruct"
-    # fp_local_model = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
 
     model_name=fp_local_model.split('/')[-2]
-    fop_adapter_weight='/home/hungphd/git/orgfinetuned_adapter_weights/'+model_name+'/'
+    fop_adapter_weight='/home/hungphd/git/finetuned_weights_noex_org/'+model_name+'/'
     name_output_folder=fop_adapter_weight.split('/')[-3]
-    fop_output_result='data-all/results/'+name_output_folder+'/'
+    fop_output_result='../data-all/results/'+name_output_folder+'/'
     fp_output=fop_output_result+'test.'+model_name+'.json'
-    fp_input_file='data-all/label-split/test.json'
+    fp_input_file= '../data-all/label-split/test.json'
     input_items =load_list_from_file(fp_input_file)
     # for i in range(0,len(input_items)):
     #     print(input_items[i])

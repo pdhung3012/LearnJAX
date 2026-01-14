@@ -1,5 +1,5 @@
 from utils import *
-from prompt_template import *
+from doe.prompt_template import *
 import csv
 
 fp_examples='data-all/standard_xml_small.txt'

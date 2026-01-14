@@ -211,8 +211,8 @@ real_model_name=arr_model_path[-2]
 fop_output_model=folder_output+real_model_name+'/'
 
 # Load sample data
-fp_file_tuning_train='/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_train.csv'
-fp_file_tuning_valid='/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_valid.csv'
+fp_file_tuning_train= '/doe/data-all/label-split/finetune_train.csv'
+fp_file_tuning_valid= '/doe/data-all/label-split/finetune_valid.csv'
 
 # Load CSVs
 df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)

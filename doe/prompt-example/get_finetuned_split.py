@@ -19,8 +19,8 @@ os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
 folder_output = "/home/hungphd/git/orgfinetuned_adapter_weights/"
 
-fp_file_tuning_train = "/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_train.csv"
-fp_file_tuning_valid = "/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_valid.csv"
+fp_file_tuning_train = "/doe/data-all/label-split/finetune_train.csv"
+fp_file_tuning_valid = "/doe/data-all/label-split/finetune_valid.csv"
 
 df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)
 df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False)

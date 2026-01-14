@@ -11,10 +11,12 @@ Notes:
 import json
 from copy import deepcopy
 from typing import Any, Dict, List, Optional
-
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+from peft import PeftModel
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
-from utils import *
+from doe.utils import *
 
 # ---------------- Hard "no-reasoning" guard ----------------
 NO_REASONING_RULES = """
@@ -28,29 +30,21 @@ CRITICAL OUTPUT RULES:
 # ---------------- Your prompt template ----------------
 class LabelGenerationPromptTemplate:
     system_template='''
-You are an expert in XML generation. Your task is to generate the standard XML from non-standard input json text. The 5 examples of schema of standard XML are defined in the second part.
+You are an expert in XML generation. Your task is to generate the standard XML from non-standard input json text. 
     '''
     prompt_template='''
-You are an expert in XML generation. Your task is to generate the standard XML from non-standard input json text. The 5 examples of schema of standard XML are defined in the second part.
-Translating this input to standard XML file following a context file (2 inputs).
+You are an expert in XML generation. Your task is to generate the standard XML from non-standard input json text. 
+Translating this input to standard XML file.
 1. Input JSON string:
 """
 {INPUT_XML}
 """
 
-2. The examples of standard XML schema:
-"""
-{EXAMPLES}
-"""
 
-3. Please provide the output as standard XML and return the XML as output only
+2. Please provide the output as standard XML and return the XML as output only.
 '''.strip()
 
 
-fp_examples='data-all/standard_xml_small.txt'
-f1=open(fp_examples,'r')
-str_example=f1.read()
-f1.close()
 
 
 # ---------------- Helpers ----------------
@@ -69,7 +63,7 @@ def build_messages(item: Dict[str, Any], tmpl: LabelGenerationPromptTemplate) ->
     json_str = json.dumps(item, ensure_ascii=False, indent=2)
     # print(json_str)
     # input('aaaa')
-    user_prompt = tmpl.prompt_template.replace("{INPUT_XML}", json_str).replace("{EXAMPLES}", str_example)
+    user_prompt = tmpl.prompt_template.replace("{INPUT_XML}", json_str)
     return [
         {"role": "system", "content": tmpl.system_template},
         {"role": "user", "content": user_prompt},
@@ -92,16 +86,58 @@ def format_with_chat_template(tokenizer: AutoTokenizer, messages: List[Dict[str,
     return "\n".join(parts)
 
 
+def ask_batch(prompts,base,model,tokenizer, max_new_tokens=512, do_sample=True, temperature=0.7, top_p=0.9):
+    """
+    prompts: List[str]
+    returns: List[str] (answers only, not including the prompt text)
+    """
+    if isinstance(prompts, str):
+        prompts = [prompts]
+
+    enc = tokenizer(
+        prompts,
+        return_tensors="pt",
+        padding=True,
+        truncation=True,
+    )
+    enc = {k: v.to(model.device) for k, v in enc.items()}
+
+    out = model.generate(
+        **enc,
+        max_new_tokens=max_new_tokens,
+        do_sample=do_sample,
+        temperature=temperature,
+        top_p=top_p,
+        pad_token_id=tokenizer.eos_token_id,
+        eos_token_id=tokenizer.eos_token_id,
+        return_dict_in_generate=False,
+    )
+
+    # Decode full sequences
+    decoded = tokenizer.batch_decode(out, skip_special_tokens=True)
+
+    # Option 1 (recommended): return only newly generated tokens (answer-only)
+    # We do this by slicing off the prompt length (in tokens) per row.
+    input_lens = enc["attention_mask"].sum(dim=1).tolist()
+    answers = []
+    for i, seq in enumerate(out):
+        gen_tokens = seq[input_lens[i]:]  # tokens after the prompt
+        answers.append(tokenizer.decode(gen_tokens, skip_special_tokens=True).strip())
+
+    # If you instead want the full text (prompt + answer), return `decoded`.
+    return answers
+
 # ---------------- vLLM pipeline ----------------
 def process_items_vllm(
     items: List[Dict[str, Any]],
     output_path: str,
     fp_local_model: str,
+    fp_adapter_weight:str,
     *,
     output_field: str = "predicted_xml",
     max_new_tokens: int = 1200,
     temperature: float = 0.0,
-    top_p: float = 0.9,
+    top_p: float = 0.7,
     tensor_parallel_size: int = 1,
     dtype: str = "bfloat16",            # or "float16" / "auto"
     max_model_len: int = 8192,
@@ -114,18 +150,18 @@ def process_items_vllm(
     """
     tmpl = LabelGenerationPromptTemplate()
 
-    # Load tokenizer for chat template formatting
-    tokenizer = AutoTokenizer.from_pretrained(fp_local_model, use_fast=True, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(fp_local_model, use_fast=True)
+    tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.padding_side = "left"  # good for generation with padding
 
-    # Initialize vLLM engine
-    llm = LLM(
-        model=fp_local_model,
-        dtype=dtype,
-        tensor_parallel_size=tensor_parallel_size,
-        max_model_len=max_model_len,
-        trust_remote_code=True,
-        gpu_memory_utilization=gpu_memory_utilization,
+    base = AutoModelForCausalLM.from_pretrained(
+        fp_local_model,
+        torch_dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
+        device_map="auto",
     )
+
+    model = PeftModel.from_pretrained(base, fp_adapter_weight)
+    model.eval()
 
     # Build prompts (batched for efficiency)
     prompts: List[str] = []
@@ -138,30 +174,58 @@ def process_items_vllm(
         # f1.close()
         # input('aaa')
         prompts.append(prompt)
+    # prompts=prompts[:10]
+    len_prompt=len(prompts)
+    cache_size=10
+    batch_num=len_prompt//cache_size
+    answers=[]
+    for ind in range(0,batch_num):
+        indStart=ind*cache_size
+        indEnd=(ind+1)*cache_size-1
+        if indEnd>=(len_prompt-1):
+            indEnd=len_prompt-1
+        sub_prompts=prompts[indStart:(indEnd+1)]
+        enc = tokenizer(
+            sub_prompts,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+        )
+        enc = {k: v.to(model.device) for k, v in enc.items()}
 
-    # vLLM sampling params
-    sampling_params = SamplingParams(
-        temperature=temperature,
-        top_p=top_p,
-        max_tokens=max_new_tokens,
-        stop=stop or [],
-    )
+        out = model.generate(
+            **enc,
+            max_new_tokens=max_new_tokens,
+            do_sample=True,
+            temperature=temperature,
+            top_p=top_p,
+            pad_token_id=tokenizer.eos_token_id,
+            eos_token_id=tokenizer.eos_token_id,
+            return_dict_in_generate=False,
+        )
 
-    # Generate in one batched call
-    outputs = llm.generate(prompts, sampling_params)
-    cache_size=20
+        # Decode full sequences
+        decoded = tokenizer.batch_decode(out, skip_special_tokens=True)
+
+        # Option 1 (recommended): return only newly generated tokens (answer-only)
+        # We do this by slicing off the prompt length (in tokens) per row.
+        input_lens = enc["attention_mask"].sum(dim=1).tolist()
+        sub_answers = []
+        for i, seq in enumerate(out):
+            gen_tokens = seq[input_lens[i]:]  # tokens after the prompt
+            sub_answers.append(tokenizer.decode(gen_tokens, skip_special_tokens=True).strip())
+        answers+=sub_answers
+        print('finish from {} to {}'.format(indStart,indEnd))
 
     # Collect results in list_output
     list_output: List[Dict[str, Any]] = []
     idx=0
-    for item, out in zip(items, outputs):
+    cache_size=20
+    for item, out in zip(items, answers):
         is_success=False
         try:
             # Take the top candidate
-            text = out.outputs[0].text.strip()
-            # print('the text: {}'.format(text))
-            # input('bbbb')
-            xml = keep_xml_only(text)
+            xml = keep_xml_only(out)
             # print(xml)
             # input('bbb')
             cloned = deepcopy(item)
@@ -191,13 +255,13 @@ def process_items_vllm(
 # ---------------- Example ----------------
 if __name__ == "__main__":
     fp_local_model = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"  # e.g., "/models/Llama-3.1-8B-Instruct"
-    # fp_local_model = "/home/hungphd/git/pretrained_open_llms/phi-4/"  # e.g., "/models/Llama-3.1-8B-Instruct"
-    # fp_local_model = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
 
     model_name=fp_local_model.split('/')[-2]
-    fop_output_result='data-all/results/baselines/'
+    fop_adapter_weight='/home/hungphd/git/finetuned_weights_noex_potracker/'+model_name+'/'
+    name_output_folder=fop_adapter_weight.split('/')[-3]
+    fop_output_result='../data-all/results/'+name_output_folder+'/'
     fp_output=fop_output_result+'test.'+model_name+'.json'
-    fp_input_file='data-all/label-split/test.json'
+    fp_input_file= '../data-all/label-split/test.json'
     input_items =load_list_from_file(fp_input_file)
     # for i in range(0,len(input_items)):
     #     print(input_items[i])
@@ -211,10 +275,11 @@ if __name__ == "__main__":
         input_items,
         output_path=fp_output,
         fp_local_model=fp_local_model,
+        fp_adapter_weight=fop_adapter_weight,
         dtype="bfloat16",
         tensor_parallel_size=1,
         max_model_len=8192,
-        temperature=0.0,
+        temperature=0.7,
         top_p=0.95,
         stop=None,  # add custom stop strings if you use a sentinel
     )

@@ -12,7 +12,7 @@ import json
 from copy import deepcopy
 from typing import Any, Dict, List, Optional
 
-from transformers import AutoTokenizer,MistralCommonBackend
+from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
 from utils import *
 
@@ -115,7 +115,7 @@ def process_items_vllm(
     tmpl = LabelGenerationPromptTemplate()
 
     # Load tokenizer for chat template formatting
-    tokenizer = MistralCommonBackend.from_pretrained(fp_local_model, use_fast=True, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(fp_local_model, use_fast=True, trust_remote_code=True)
 
     # Initialize vLLM engine
     llm = LLM(
@@ -190,16 +190,14 @@ def process_items_vllm(
 
 # ---------------- Example ----------------
 if __name__ == "__main__":
-    # fp_local_model = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-3B-Instruct/"  # e.g., "/models/Llama-3.1-8B-Instruct"
+    fp_local_model = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"  # e.g., "/models/Llama-3.1-8B-Instruct"
     # fp_local_model = "/home/hungphd/git/pretrained_open_llms/phi-4/"  # e.g., "/models/Llama-3.1-8B-Instruct"
     # fp_local_model = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
-    # fp_local_model = "/home/hungphd/git/pretrained_open_llms/gemma-3-1b-it/"
-    fp_local_model = "/home/hungphd/git/pretrained_open_llms/Ministral-3-8B-Instruct-2512-BF16/"
 
     model_name=fp_local_model.split('/')[-2]
     fop_output_result='data-all/results/baselines/'
     fp_output=fop_output_result+'test.'+model_name+'.json'
-    fp_input_file='data-all/label-split/test.json'
+    fp_input_file= '../data-all/label-split/test.json'
     input_items =load_list_from_file(fp_input_file)
     # for i in range(0,len(input_items)):
     #     print(input_items[i])

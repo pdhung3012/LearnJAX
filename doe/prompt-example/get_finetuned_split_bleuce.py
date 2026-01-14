@@ -3,7 +3,6 @@ import os
 import torch
 import pandas as pd
 from datasets import Dataset
-from combined_metrics import *
 
 from transformers import (
     AutoTokenizer,
@@ -16,15 +15,15 @@ from transformers import (
 
 from peft import LoraConfig, get_peft_model
 
-# from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
-folder_output = "/home/hungphd/git/potracker_adapter_weights_tag08/"
+folder_output = "/home/hungphd/git/potracker_adapter_weights/"
 
-fp_file_tuning_train = "/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_train.csv"
-fp_file_tuning_valid = "/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_valid.csv"
+fp_file_tuning_train = "/doe/data-all/label-split/finetune_train.csv"
+fp_file_tuning_valid = "/doe/data-all/label-split/finetune_valid.csv"
 
 df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)
 df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False)
@@ -43,7 +42,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = "right"
 
-MAX_LEN = 512
+MAX_LEN = 2048
 
 def format_prompt(p: str) -> str:
     return f"### Instruction:\n{p}\n\n### Response:\n"
@@ -120,7 +119,7 @@ data_collator = DataCollatorForSeq2Seq(
 # -----------------------------
 # Custom BLEU-augmented Trainer
 # -----------------------------
-class POTrackerLossTrainer(Trainer):
+class BleuLossTrainer(Trainer):
     """
     Adds a non-differentiable BLEU penalty on top of the standard CE loss.
     Gradients still come from CE; BLEU term is a scalar regularizer.
@@ -128,18 +127,18 @@ class POTrackerLossTrainer(Trainer):
     def __init__(
         self,
         *args,
-        potracker_weight: float = 0.2,
-        potracker_mode: str = "1-minus",  # "1-minus" or "inv"
-        potracker_eps: float = 1e-6,
+        bleu_weight: float = 0.2,
+        bleu_mode: str = "1-minus",  # "1-minus" or "inv"
+        bleu_eps: float = 1e-6,
         **kwargs
     ):
         super().__init__(*args, **kwargs)
-        self.potracker_weight = float(potracker_weight)
-        self.potracker_mode = potracker_mode
-        self.potracker_eps = float(potracker_eps)
-        # self._smooth = SmoothingFunction().method1
+        self.bleu_weight = float(bleu_weight)
+        self.bleu_mode = bleu_mode
+        self.bleu_eps = float(bleu_eps)
+        self._smooth = SmoothingFunction().method1
 
-    def _batch_potracker(self, pred_ids: torch.Tensor, label_ids: torch.Tensor) -> float:
+    def _batch_bleu(self, pred_ids: torch.Tensor, label_ids: torch.Tensor) -> float:
         """
         pred_ids: (B, T) predicted token ids (already aligned with labels)
         label_ids: (B, T) label token ids where -100 marks non-response/pad
@@ -169,13 +168,8 @@ class POTrackerLossTrainer(Trainer):
                 scores.append(0.0)
                 continue
 
-            # bleu = sentence_bleu([ref_tok], hyp_tok, smoothing_function=self._smooth)
-            score_obj = combined_similarity(ref_text, hyp_text, show_errors=False,alpha=0.2)  # use strings
-            scores.append(float(score_obj["combined_similarity"]))
-            # print('hype: {}\nscore: {}\n'.format(hyp_text,float(score_obj["combined_similarity"])))
-
-            # po_tracker=0
-            # scores.append(float(bleu))
+            bleu = sentence_bleu([ref_tok], hyp_tok, smoothing_function=self._smooth)
+            scores.append(float(bleu))
 
         if not scores:
             return 0.0
@@ -195,36 +189,36 @@ class POTrackerLossTrainer(Trainer):
 
         # Compute BLEU on current batch (non-differentiable scalar)
         with torch.no_grad():
-            potracker = self._batch_potracker(pred_ids, labels)
+            bleu = self._batch_bleu(pred_ids, labels)
 
-        if self.potracker_mode == "inv":
-            potracker_penalty = 1.0 / (potracker + self.potracker_eps)
+        if self.bleu_mode == "inv":
+            bleu_penalty = 1.0 / (bleu + self.bleu_eps)
         else:
             # default: (1 - BLEU)
-            potracker_penalty = 1.0 - potracker
+            bleu_penalty = 1.0 - bleu
 
-        total_loss = ce_loss + (self.potracker_weight * ce_loss.new_tensor(potracker_penalty))
+        total_loss = ce_loss + (self.bleu_weight * ce_loss.new_tensor(bleu_penalty))
 
         # (optional) log bleu occasionally
         if self.state.global_step % max(self.args.logging_steps, 1) == 0:
             self.log({
-                "train_potracker": potracker,
-                "potracker_penalty": float(potracker_penalty),
+                "train_bleu": bleu,
+                "bleu_penalty": float(bleu_penalty),
                 "ce_loss": float(ce_loss.detach().cpu()),
             })
 
         return (total_loss, outputs) if return_outputs else total_loss
 
 
-trainer = POTrackerLossTrainer(
+trainer = BleuLossTrainer(
     model=model,
     args=training_args,
     train_dataset=train_tokenized,
     eval_dataset=valid_tokenized,
     processing_class=tokenizer,
     data_collator=data_collator,
-    potracker_weight=1,      # tune this
-    potracker_mode="1-minus",  # or "inv"
+    bleu_weight=0.2,      # tune this
+    bleu_mode="1-minus",  # or "inv"
 )
 
 trainer.train()

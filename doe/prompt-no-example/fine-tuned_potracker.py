@@ -3,7 +3,7 @@ import os
 import torch
 import pandas as pd
 from datasets import Dataset
-from combined_metrics import *
+from doe.combined_metrics import *
 
 from transformers import (
     AutoTokenizer,
@@ -21,10 +21,10 @@ from peft import LoraConfig, get_peft_model
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
-folder_output = "/home/hungphd/git/potracker_adapter_weights/"
+folder_output = "/home/hungphd/git/finetuned_weights_noex_potracker/"
 
-fp_file_tuning_train = "/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_train.csv"
-fp_file_tuning_valid = "/home/hungphd/git/LearnJAX/doe/data-all/label-split/finetune_valid.csv"
+fp_file_tuning_train = "../data-all/label-split/finetune_noex_train.csv"
+fp_file_tuning_valid = "../data-all/label-split/finetune_noex_valid.csv"
 
 df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)
 df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False)
@@ -43,7 +43,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = "right"
 
-MAX_LEN = 512
+MAX_LEN = 2048
 
 def format_prompt(p: str) -> str:
     return f"### Instruction:\n{p}\n\n### Response:\n"
