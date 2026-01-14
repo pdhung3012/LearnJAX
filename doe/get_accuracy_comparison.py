@@ -5,7 +5,8 @@ from statistics import mean
 fp_label_xml='/home/hungphd/git/LearnJAX/doe/data-all/label-split/test.json'
 # fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/baselines/test.Qwen2.5-7B-Instruct.json'
 # fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/orgfinetuned_adapter_weights/test.Qwen2.5-7B-Instruct.json'
-fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_adapter_weights/test.Qwen2.5-7B-Instruct.json'
+# fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_adapter_weights/test.Qwen2.5-7B-Instruct.json'
+fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_adapter_weights_tag08/test.Qwen2.5-7B-Instruct.json'
 
 list_scores=[]
 list_text_scores=[]
@@ -18,7 +19,7 @@ for i in range(0,len(json_labels)):
     predict_item=json_predicts[i]
     label_item=json_labels[i]
     # print('{}\n\nlabel: {}\n\npredict: {}'.format(i,str(label_item['standard_xml']),str(predict_item['predicted_xml'])))
-    score_obj=combined_similarity(str(label_item['standard_xml']),str(predict_item['predicted_xml']),alpha=0.8)
+    score_obj=combined_similarity(str(label_item['standard_xml']),str(predict_item['predicted_xml']))
     list_scores.append(score_obj['combined_similarity'])
     list_text_scores.append(score_obj['text_similarity'])
     list_tag_scores.append(score_obj['tag_similarity'])

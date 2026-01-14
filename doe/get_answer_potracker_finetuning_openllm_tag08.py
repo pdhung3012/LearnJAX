@@ -267,7 +267,7 @@ if __name__ == "__main__":
     # fp_local_model = "/home/hungphd/git/pretrained_open_llms/Llama-3.1-8B/"
 
     model_name=fp_local_model.split('/')[-2]
-    fop_adapter_weight='/home/hungphd/git/potracker_adapter_weights/'+model_name+'/'
+    fop_adapter_weight='/home/hungphd/git/potracker_adapter_weights_tag08/'+model_name+'/'
     name_output_folder=fop_adapter_weight.split('/')[-3]
     fop_output_result='data-all/results/'+name_output_folder+'/'
     fp_output=fop_output_result+'test.'+model_name+'.json'
