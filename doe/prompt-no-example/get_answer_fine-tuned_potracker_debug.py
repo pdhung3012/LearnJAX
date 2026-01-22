@@ -226,8 +226,8 @@ def process_items_vllm(
         try:
             # Take the top candidate
             xml = keep_xml_only(out)
-            # print(xml)
-            # input('bbb')
+            print(xml)
+            input('bbb')
             cloned = deepcopy(item)
             cloned[output_field] = xml
             list_output.append(cloned)

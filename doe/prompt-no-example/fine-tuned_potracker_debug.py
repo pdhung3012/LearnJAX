@@ -25,9 +25,9 @@ folder_output = "/home/hungphd/git/finetuned_weights_noex_potracker/"
 
 fp_file_tuning_train = "../data-all/label-split/finetune_noex_train.csv"
 fp_file_tuning_valid = "../data-all/label-split/finetune_noex_valid.csv"
-
-df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)
-df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False)
+num_samples=10
+df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False) #.head(num_samples)
+df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False) #.head(num_samples)
 
 for df in (df_train, df_valid):
     df["prompt"] = df["prompt"].fillna("").astype(str)
@@ -128,7 +128,7 @@ class POTrackerLossTrainer(Trainer):
     def __init__(
         self,
         *args,
-        potracker_weight: float = 0.2,
+        potracker_weight: float = 1,
         potracker_mode: str = "1-minus",  # "1-minus" or "inv"
         potracker_eps: float = 1e-6,
         **kwargs
@@ -173,7 +173,7 @@ class POTrackerLossTrainer(Trainer):
                 continue
 
             # bleu = sentence_bleu([ref_tok], hyp_tok, smoothing_function=self._smooth)
-            score_obj = combined_similarity(ref_text, hyp_text, show_errors=False,alpha=0.2)  # use strings
+            score_obj = combined_similarity(ref_text, hyp_text, show_errors=False,alpha=0.1)  # use strings
             scores.append(float(score_obj["combined_similarity"]))
             # print('hype: {}\nscore: {}\n'.format(hyp_text,float(score_obj["combined_similarity"])))
             # input('bbbb')
@@ -207,15 +207,20 @@ class POTrackerLossTrainer(Trainer):
             # default: (1 - BLEU)
             potracker_penalty = 1.0 - potracker
 
-        total_loss = ce_loss + (self.potracker_weight * ce_loss.new_tensor(potracker_penalty))
+        # total_loss = (self.potracker_weight * ce_loss.new_tensor(potracker_penalty))
+        # total_loss = ce_loss + (self.potracker_weight * ce_loss.new_tensor(potracker_penalty))
+        # total_loss =(1-self.potracker_weight)*ce_loss + (self.potracker_weight * ce_loss.new_tensor(potracker_penalty))
+        total_loss = (1 - self.potracker_weight) * ce_loss + (
+                    self.potracker_weight * potracker_penalty)
 
         # (optional) log bleu occasionally
-        if self.state.global_step % max(self.args.logging_steps, 1) == 0:
-            self.log({
-                "train_potracker": potracker,
-                "potracker_penalty": float(potracker_penalty),
-                "ce_loss": float(ce_loss.detach().cpu()),
-            })
+        # if self.state.global_step % max(self.args.logging_steps, 1) == 0:
+        self.log({
+            # "train_potracker": potracker,
+            # "potracker_penalty": float(potracker_penalty),
+            # "ce_loss": float(ce_loss.detach().cpu()),
+            'total_loss':float(total_loss.detach().cpu())
+        })
 
         return (total_loss, outputs) if return_outputs else total_loss
 
@@ -227,7 +232,7 @@ trainer = POTrackerLossTrainer(
     eval_dataset=valid_tokenized,
     processing_class=tokenizer,
     data_collator=data_collator,
-    potracker_weight=0.2,      # tune this
+    potracker_weight=1,      # tune this
     potracker_mode="1-minus" #"1-minus",  # or "inv"
 )
 
