@@ -159,21 +159,72 @@ from dataclasses import dataclass
 from transformers import PreTrainedTokenizerBase
 
 @dataclass
+@dataclass
 class TagMaskDataCollator:
     tokenizer: PreTrainedTokenizerBase
     pad_to_multiple_of: int = None
 
     def __call__(self, features):
-        # pad input_ids/attention_mask/labels/tag_mask together
-        batch = self.tokenizer.pad(
-            features,
-            padding=True,
-            return_tensors="pt",
-            pad_to_multiple_of=self.pad_to_multiple_of,
-        )
-        # tokenizer.pad will pad tag_mask as well if it’s present in features,
-        # but it may pad with 0; ensure dtype is long
-        batch["tag_mask"] = batch["tag_mask"].long()
+        """
+        Pad input_ids / attention_mask / labels / tag_mask to a common length.
+
+        Note: tokenizer.pad() may drop unknown fields like `tag_mask` depending on
+        transformers version, so we pad manually to guarantee `tag_mask` exists.
+        """
+        # Basic sanity check (helps catch accidental use of a dataset without tag_mask)
+        if len(features) == 0:
+            return {}
+
+        if "tag_mask" not in features[0]:
+            raise KeyError(
+                "tag_mask is missing from dataset features. "
+                "Make sure your dataset.map(tokenize_with_tag_mask, ...) is the one passed "
+                "to the Trainer (train_dataset=tokenized_train / eval_dataset=tokenized_valid)."
+            )
+
+        pad_id = self.tokenizer.pad_token_id
+        if pad_id is None:
+            pad_id = getattr(self.tokenizer, "eos_token_id", 0)
+
+        max_len = max(len(f["input_ids"]) for f in features)
+        if self.pad_to_multiple_of:
+            m = int(self.pad_to_multiple_of)
+            max_len = ((max_len + m - 1) // m) * m
+
+        batch_input_ids = []
+        batch_attention = []
+        batch_labels = []
+        batch_tag_mask = []
+
+        for f in features:
+            ids = list(f["input_ids"])
+            attn = list(f.get("attention_mask", [1] * len(ids)))
+            labels = list(f.get("labels", [-100] * len(ids)))
+            tag_mask = list(f.get("tag_mask", [0] * len(ids)))
+
+            # Safety: ensure same length per example
+            if not (len(ids) == len(attn) == len(labels) == len(tag_mask)):
+                raise ValueError(
+                    f"Length mismatch: input_ids={len(ids)}, attention_mask={len(attn)}, "
+                    f"labels={len(labels)}, tag_mask={len(tag_mask)}"
+                )
+
+            pad_len = max_len - len(ids)
+            batch_input_ids.append(ids + [pad_id] * pad_len)
+            batch_attention.append(attn + [0] * pad_len)
+
+            # IMPORTANT: pad labels with -100 so padding doesn't contribute to CE loss
+            batch_labels.append(labels + [-100] * pad_len)
+
+            # Pad tag_mask with 0 (non-tag)
+            batch_tag_mask.append(tag_mask + [0] * pad_len)
+
+        batch = {
+            "input_ids": torch.tensor(batch_input_ids, dtype=torch.long),
+            "attention_mask": torch.tensor(batch_attention, dtype=torch.long),
+            "labels": torch.tensor(batch_labels, dtype=torch.long),
+            "tag_mask": torch.tensor(batch_tag_mask, dtype=torch.long),
+        }
         return batch
 
 
@@ -240,6 +291,7 @@ training_args = TrainingArguments(
     bf16=torch.cuda.is_available(),
     optim="paged_adamw_8bit",
     report_to="none",
+    remove_unused_columns=False
 )
 
 # data_collator = DataCollatorForSeq2Seq(
@@ -309,6 +361,9 @@ tokenized_train = train_ds.map(
     lambda ex: tokenize_with_tag_mask(ex, tokenizer, max_length=MAX_LEN, response_delim="### Response:\n"),
     remove_columns=train_ds.column_names,
 )
+print(tokenized_train.column_names)
+print(tokenized_train[0].keys())
+# input('aaa')
 
 tokenized_valid = valid_ds.map(
     lambda ex: tokenize_with_tag_mask(ex, tokenizer, max_length=MAX_LEN, response_delim="### Response:\n"),
@@ -322,11 +377,12 @@ trainer = TagMaskWeightedCETrainer(
     args=training_args,
     train_dataset=tokenized_train,
     eval_dataset=tokenized_valid,
-    processing_class=tokenize_with_tag_mask,   # transformers v5 style (or tokenizer=... in older)
+    processing_class=tokenizer,   # transformers v5 style (or tokenizer=... in older)
     data_collator=data_collator,
     w_tag=8.0,
     w_text=1.0,
     normalize_weights=True,
+
 )
 
 trainer.train()
