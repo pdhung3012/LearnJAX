@@ -6,6 +6,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 JSONObj = Dict[str, Any]
 Path = Tuple[Union[str, int], ...]
 
+def ensure_parent_dir(filepath: str) -> None:
+    parent = os.path.dirname(filepath)
+    if parent:  # empty when filepath has no directory part
+        os.makedirs(parent, exist_ok=True)
+
 def ensure_dir_os(path: str) -> str:
     os.makedirs(path, exist_ok=True)  # no error if it already exists
     return path

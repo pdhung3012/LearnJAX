@@ -21,7 +21,7 @@ from peft import LoraConfig, get_peft_model
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
-folder_output = "/home/hungphd/git/finetuned_weights_noex_potracker/"
+folder_output = "/home/hungphd/git/potracker_customloss/"
 
 fp_file_tuning_train = "../data-all/label-split/finetune_noex_train.csv"
 fp_file_tuning_valid = "../data-all/label-split/finetune_noex_valid.csv"

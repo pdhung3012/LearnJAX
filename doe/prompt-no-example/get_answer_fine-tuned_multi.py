@@ -258,8 +258,11 @@ if __name__ == "__main__":
 
     model_name=fp_local_model.split('/')[-2]
     # fop_adapter_weight='/home/hungphd/git/potracker_exampleweightce/'+model_name+'/'
-    fop_adapter_weight = '/home/hungphd/git/potracker_tokenweightce/' + model_name + '/'
+    # fop_adapter_weight = '/home/hungphd/git/potracker_tokenweightce/' + model_name + '/'
     # fop_adapter_weight = '/home/hungphd/git/potracker_tagmaskce/' + model_name + '/'
+    fop_adapter_weight = '/home/hungphd/git/potracker_customloss/' + model_name + '/'
+
+
 
     name_output_folder=fop_adapter_weight.split('/')[-3]
     fop_output_result='../data-all/results/'+name_output_folder+'/'
