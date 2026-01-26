@@ -22,13 +22,13 @@ from peft import LoraConfig, get_peft_model
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
-folder_output = "/home/hungphd/git/finetuned_weights_noex_potracker/"
+folder_output = "/home/hungphd/git/potracker_exampleweightce/"
 
 fp_file_tuning_train = "../data-all/label-split/finetune_noex_train.csv"
 fp_file_tuning_valid = "../data-all/label-split/finetune_noex_valid.csv"
-num_samples=10
-df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False) #.head(num_samples)
-df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False) #.head(num_samples)
+num_samples=100
+df_train = pd.read_csv(fp_file_tuning_train, dtype=str, keep_default_na=False, na_filter=False)#.head(num_samples)
+df_valid = pd.read_csv(fp_file_tuning_valid, dtype=str, keep_default_na=False, na_filter=False)#.head(num_samples)
 
 for df in (df_train, df_valid):
     df["prompt"] = df["prompt"].fillna("").astype(str)
@@ -100,9 +100,9 @@ model = get_peft_model(model, peft_config)
 
 training_args = TrainingArguments(
     output_dir=fop_output_model,
-    per_device_train_batch_size=1,
-    gradient_accumulation_steps=4,
-    num_train_epochs=3,
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=10,
+    num_train_epochs=2,
     logging_steps=10,
     save_strategy="epoch",
     fp16=False,
@@ -138,7 +138,7 @@ class POTrackerLossTrainer(Trainer):
         potracker_mode: str = "1-minus",      # "1-minus" or "inv"
         potracker_eps: float = 1e-6,
         potracker_every: int = 20,            # compute combined_similarity every N batches
-        alpha_text: float = 0.1,              # passed to combined_similarity(..., alpha=alpha_text)
+        alpha_text: float = 0.5,              # passed to combined_similarity(..., alpha=alpha_text)
         weight_clip_min: float = 0.5,
         weight_clip_max: float = 2.0,
         ema_beta: float = 0.95,               # EMA smoothing for baseline
