@@ -1,0 +1,72 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "easy_cuda_amp",
+      "Input_Code": "# Implement mixed precision training in PyTorch using torch.cuda.amp\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import DataLoader, TensorDataset\n\n# Define a simple model\nclass SimpleModel(nn.Module):\n    def __init__(self):\n        super(SimpleModel, self).__init__()\n        self.fc = nn.Linear(10, 1)\n\n    def forward(self, x):\n        return self.fc(x)\n\n# Generate synthetic data\nX = torch.randn(1000, 10)\ny = torch.randn(1000, 1)\ndataset = TensorDataset(X, y)\ndataloader = DataLoader(dataset, batch_size=32, shuffle=True)\n\n# Initialize model, loss function, and optimizer\nmodel = SimpleModel().cuda()\ncriterion = nn.MSELoss()\noptimizer = optim.Adam(model.parameters(), lr=0.001)\n\n# Enable mixed precision training\nscaler = torch.cuda.amp.GradScaler()\n\n# Training loop\nepochs = 5\nfor epoch in range(epochs):\n    for inputs, labels in dataloader:\n        inputs, labels = inputs.cuda(), labels.cuda()\n\n        # Forward pass under autocast\n        with torch.cuda.amp.autocast():\n            outputs = model(inputs)\n            loss = criterion(outputs, labels)\n\n        # Backward pass with scaled gradients\n        optimizer.zero_grad()\n        # TODO: Set scaler\n        scaler.scale(loss).backward()\n        scaler.step(optimizer)\n        scaler.update()\n\n    print(f\"Epoch {epoch + 1}/{epochs}, Loss: {loss.item():.4f}\")\n\n# Test the model on new data\nX_test = torch.randn(5, 10).cuda()\nwith torch.no_grad(), torch.cuda.amp.autocast():\n    predictions = model(X_test)\n    print(\"Predictions:\", predictions)\n\n# Test the model on new data\nX_test = torch.randn(5, 10).cuda()\nwith torch.no_grad(), torch.cuda.amp.autocast():\n    predictions = model(X_test)\n    print(\"Predictions:\", predictions)\n",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom jax import grad, jit, vmap\nfrom jax.experimental import optimizers\nfrom jax.experimental.optimizers import sgd\nfrom flax import linen as nn\nfrom flax.training import train_state\nfrom flax.linen import compact\n\n# Define a simple model\n@compact\nclass SimpleModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        return nn.Dense(1)(x)\n\n# Generate synthetic data\nX = jnp.random.randn(1000, 10)\ny = jnp.random.randn(1000, 1)\n\n# Initialize model, loss function, and optimizer\nmodel = SimpleModel()\nparams = model.init(jax.random.PRNGKey(0), X)\noptimizer_def = optimizers.adam(learning_rate=0.001)\nstate = train_state.TrainState.create(\n    apply_fn=model.apply,\n    params=params,\n    tx=optimizer_def\n)\n\n# Training loop\n@jit\ndef train_step(state, batch):\n    def loss_fn(params):\n        predictions = state.apply_fn({'params': params}, batch['inputs'])\n        return jnp.mean((predictions - batch['labels']) ** 2)\n    \n    grads = grad(loss_fn)(state.params)\n    state = state.apply_gradients(grads=grads)\n    return state\n\nepochs = 5\nfor epoch in range(epochs):\n    for inputs, labels in zip(X.reshape(-1, 32, 10), y.reshape(-1, 32, 1)):\n        batch = {'inputs': inputs, 'labels': labels}\n        state = train_step(state, batch)\n    \n    print(f\"Epoch {epoch + 1}/{epochs}, Loss: {state.loss:.4f}\")\n\n# Test the model on new data\nX_test = jnp.random.randn(5, 10)\npredictions = state.apply_fn({'params': state.params}, X_test)\nprint(\"Predictions:\", predictions)\n",
+      "LLM_fix_output": "# Implement mixed precision training in JAX using bfloat16 (equivalent to torch.cuda.amp)\nimport jax\nimport jax.numpy as jnp\nfrom jax import grad, jit\nfrom flax import linen as nn\nfrom flax.training import train_state\nimport optax\nimport numpy as np\n\n# Define a simple model\nclass SimpleModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        return nn.Dense(1)(x)\n\n# Generate synthetic data (fixed seed for reproducibility)\nkey = jax.random.PRNGKey(42)\nkey1, key2 = jax.random.split(key)\nX = jax.random.normal(key1, (1000, 10))\ny = jax.random.normal(key2, (1000, 1))\n\n# Initialize model, loss function, and optimizer\nmodel = SimpleModel()\ndummy_input = jnp.ones([1, 10])\nvariables = model.init(jax.random.PRNGKey(0), dummy_input)\n\ntx = optax.adam(learning_rate=0.001)\nstate = train_state.TrainState.create(\n    apply_fn=model.apply,\n    params=variables['params'],\n    tx=tx\n)\n\n# Mixed precision: use bfloat16 for forward pass (JAX equivalent of torch.cuda.amp.autocast)\n@jit\ndef train_step(state, inputs, labels):\n    def loss_fn(params):\n        # Cast inputs to bfloat16 for mixed precision forward pass\n        inputs_bf16 = inputs.astype(jnp.bfloat16)\n        predictions = model.apply({'params': jax.tree.map(lambda p: p.astype(jnp.bfloat16), params)}, inputs_bf16)\n        predictions = predictions.astype(jnp.float32)  # Cast back to float32 for loss\n        return jnp.mean((predictions - labels) ** 2)\n\n    loss, grads = jax.value_and_grad(loss_fn)(state.params)\n    state = state.apply_gradients(grads=grads)\n    return state, loss\n\n# Simple data loader\ndef data_loader(X, y, batch_size, shuffle=True):\n    n = len(X)\n    indices = np.arange(n)\n    if shuffle:\n        np.random.shuffle(indices)\n    for start in range(0, n, batch_size):\n        batch_idx = indices[start:start + batch_size]\n        yield X[batch_idx], y[batch_idx]\n\n# Training loop\nepochs = 5\nfor epoch in range(epochs):\n    for inputs, labels in data_loader(X, y, batch_size=32, shuffle=True):\n        state, loss = train_step(state, inputs, labels)\n\n    print(f\"Epoch {epoch + 1}/{epochs}, Loss: {loss.item():.4f}\")\n\n# Test the model on new data\nkey_test = jax.random.PRNGKey(99)\nX_test = jax.random.normal(key_test, (5, 10))\npredictions = model.apply({'params': state.params}, X_test)\nprint(\"Predictions:\", predictions)\n",
+      "Errors": [
+        {
+          "Error_Code": "from jax.experimental import optimizers\nfrom jax.experimental.optimizers import sgd",
+          "Error": "jax.experimental.optimizers has been removed from JAX. The module no longer exists and causes ImportError.",
+          "Fix_info": "Replace with optax library. Use optax.adam(learning_rate=0.001) and flax.training.train_state.TrainState for optimizer state management.",
+          "Fixed_Code": "import optax\n\ntx = optax.adam(learning_rate=0.001)\nstate = train_state.TrainState.create(\n    apply_fn=model.apply,\n    params=variables['params'],\n    tx=tx\n)"
+        },
+        {
+          "Error_Code": "from flax.linen import compact\n\n@compact\nclass SimpleModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):",
+          "Error": "flax.linen.compact is a method decorator, not a class decorator. Using @compact on the class causes an error, and having both @compact on the class and @nn.compact on the method is invalid.",
+          "Fix_info": "Remove the @compact class decorator and the compact import. Only use @nn.compact on the __call__ method.",
+          "Fixed_Code": "class SimpleModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        return nn.Dense(1)(x)"
+        },
+        {
+          "Error_Code": "X = jnp.random.randn(1000, 10)\ny = jnp.random.randn(1000, 1)",
+          "Error": "jnp.random.randn does not exist. JAX uses a functional PRNG system where random functions require an explicit key argument via jax.random module, not jnp.random.",
+          "Fix_info": "Use jax.random.normal with explicit PRNG keys and split keys for separate random arrays.",
+          "Fixed_Code": "key = jax.random.PRNGKey(42)\nkey1, key2 = jax.random.split(key)\nX = jax.random.normal(key1, (1000, 10))\ny = jax.random.normal(key2, (1000, 1))"
+        },
+        {
+          "Error_Code": "params = model.init(jax.random.PRNGKey(0), X)",
+          "Error": "model.init is called with the full dataset X (1000, 10) instead of a dummy input, which is wasteful. Also, model.init returns {'params': ...} but is stored as 'params', causing double-nesting when later used as {'params': params}.",
+          "Fix_info": "Use a small dummy input for initialization and extract ['params'] from the returned variables dict.",
+          "Fixed_Code": "dummy_input = jnp.ones([1, 10])\nvariables = model.init(jax.random.PRNGKey(0), dummy_input)"
+        },
+        {
+          "Error_Code": "optimizer_def = optimizers.adam(learning_rate=0.001)\nstate = train_state.TrainState.create(\n    apply_fn=model.apply,\n    params=params,\n    tx=optimizer_def\n)",
+          "Error": "optimizers.adam returns a (init_fn, update_fn, get_params) tuple from the deprecated API, not an optax GradientTransformation. TrainState.create expects an optax optimizer for the tx parameter. Also params is double-nested.",
+          "Fix_info": "Use optax.adam() and pass variables['params'] to avoid double-nesting.",
+          "Fixed_Code": "tx = optax.adam(learning_rate=0.001)\nstate = train_state.TrainState.create(\n    apply_fn=model.apply,\n    params=variables['params'],\n    tx=tx\n)"
+        },
+        {
+          "Error_Code": "grads = grad(loss_fn)(state.params)\nstate = state.apply_gradients(grads=grads)\nreturn state",
+          "Error": "train_step only returns state but not the loss value. The training loop later tries to access state.loss which doesn't exist on TrainState.",
+          "Fix_info": "Use jax.value_and_grad to compute both loss and gradients, and return loss alongside state from train_step.",
+          "Fixed_Code": "loss, grads = jax.value_and_grad(loss_fn)(state.params)\nstate = state.apply_gradients(grads=grads)\nreturn state, loss"
+        },
+        {
+          "Error_Code": "print(f\"Epoch {epoch + 1}/{epochs}, Loss: {state.loss:.4f}\")",
+          "Error": "TrainState does not have a .loss attribute. The loss must be returned from train_step and printed directly.",
+          "Fix_info": "Use the loss value returned from train_step instead of state.loss.",
+          "Fixed_Code": "print(f\"Epoch {epoch + 1}/{epochs}, Loss: {loss.item():.4f}\")"
+        },
+        {
+          "Error_Code": "for inputs, labels in zip(X.reshape(-1, 32, 10), y.reshape(-1, 32, 1)):",
+          "Error": "1000 is not evenly divisible by 32, so reshape(-1, 32, 10) would fail. Also this approach doesn't support shuffling like the PyTorch DataLoader.",
+          "Fix_info": "Create a proper data_loader generator function that handles batching with arbitrary sizes and supports shuffling.",
+          "Fixed_Code": "def data_loader(X, y, batch_size, shuffle=True):\n    n = len(X)\n    indices = np.arange(n)\n    if shuffle:\n        np.random.shuffle(indices)\n    for start in range(0, n, batch_size):\n        batch_idx = indices[start:start + batch_size]\n        yield X[batch_idx], y[batch_idx]"
+        },
+        {
+          "Error_Code": "from jax import grad, jit, vmap",
+          "Error": "vmap is imported but never used.",
+          "Fix_info": "Remove unused vmap import.",
+          "Fixed_Code": "from jax import grad, jit"
+        },
+        {
+          "Error_Code": "X_test = jnp.random.randn(5, 10)\npredictions = state.apply_fn({'params': state.params}, X_test)",
+          "Error": "Same jnp.random.randn issue for test data. Also no mixed precision equivalent of torch.cuda.amp.autocast is implemented anywhere in the code.",
+          "Fix_info": "Use jax.random.normal with a PRNG key for test data. Implement bfloat16 casting in the forward pass as JAX equivalent of autocast.",
+          "Fixed_Code": "key_test = jax.random.PRNGKey(99)\nX_test = jax.random.normal(key_test, (5, 10))\npredictions = model.apply({'params': state.params}, X_test)\nprint(\"Predictions:\", predictions)"
+        }
+      ]
+    }
+  ]
+}

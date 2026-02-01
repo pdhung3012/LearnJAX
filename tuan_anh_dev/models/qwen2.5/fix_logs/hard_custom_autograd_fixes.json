@@ -1,0 +1,54 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "hard_custom_autograd",
+      "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n\n# Generate synthetic data\ntorch.manual_seed(42)\nX = torch.rand(100, 1) * 10\ny = 2 * X + 3 + torch.randn(100, 1)\n\nclass LearnedSiLUFunction(torch.autograd.Function):\n    @staticmethod\n    def forward(ctx, x, slope):\n        ctx.save_for_backward(x)\n        ctx.slope = slope\n        return slope * x * torch.sigmoid(x)\n\n    @staticmethod\n    def backward(ctx, grad_output):\n        x, = ctx.saved_tensors\n        slope = ctx.slope\n        sigmoid_x = torch.sigmoid(x)\n        grad_input = grad_output * slope * (sigmoid_x + x * sigmoid_x * (1 - sigmoid_x))\n        grad_slope = grad_output * x * sigmoid_x\n        return grad_input, grad_slope\n\nclass LinearRegressionModel(nn.Module):\n    def __init__(self, slope=1):\n        super().__init__()\n        self.slope = nn.Parameter(torch.ones(1) * slope)\n\n    def forward(self, x):\n        return LearnedSiLUFunction.apply(x, self.slope)\n\nmodel = LinearRegressionModel()\ncriterion = nn.MSELoss()\noptimizer = optim.SGD(model.parameters(), lr=0.01)\n\nepochs = 1000\nfor epoch in range(epochs):\n    predictions = model(X)\n    loss = criterion(predictions, y)\n    optimizer.zero_grad()\n    loss.backward()\n    optimizer.step()\n    if (epoch + 1) % 100 == 0:\n        print(f\"Epoch [{epoch + 1}/{epochs}], Loss: {loss.item():.4f}\")\n\n[w, b] = model.linear.parameters()\nprint(f\"Learned weight: {w.item():.4f}, Learned bias: {b.item():.4f}\")\n\nX_test = torch.tensor([[4.0], [7.0]])\nwith torch.no_grad():\n    predictions = model(X_test)\n    print(f\"Predictions for {X_test.tolist()}: {predictions.tolist()}\")\n",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom jax import grad, jit, vmap\nfrom jax.experimental import optimizers\n\n# Generate synthetic data\nkey = jax.random.PRNGKey(42)\nX = jax.random.uniform(key, shape=(100, 1)) * 10\ny = 2 * X + 3 + jax.random.normal(key, shape=(100, 1))\n\ndef learned_silu_forward(x, slope):\n    return slope * x * jax.nn.sigmoid(x)\n\ndef learned_silu_backward(grad_output, x, slope):\n    sigmoid_x = jax.nn.sigmoid(x)\n    grad_input = grad_output * slope * (sigmoid_x + x * sigmoid_x * (1 - sigmoid_x))\n    grad_slope = grad_output * x * sigmoid_x\n    return grad_input, grad_slope\n\n@jit\ndef model(params, x):\n    slope = params['slope']\n    return learned_silu_forward(x, slope)\n\n@jit\ndef loss_fn(params, x, y):\n    predictions = model(params, x)\n    return jnp.mean((predictions - y) ** 2)\n\n@jit\ndef update(params, grads):\n    return optimizers.apply_updates(params, grads)\n\nparams = {'slope': jnp.array([1.0])}\nopt_state = optimizers.init SGD(learning_rate=0.01)(params)\n\nepochs = 1000\nfor epoch in range(epochs):\n    grads = grad(loss_fn)(params, X, y)\n    params, opt_state = update(params, grads)\n    if (epoch + 1) % 100 == 0:\n        print(f\"Epoch [{epoch + 1}/{epochs}], Loss: {loss_fn(params, X, y):.4f}\")\n\n[w, b] = [params['slope'], 0]\nprint(f\"Learned weight: {w:.4f}, Learned bias: {b:.4f}\")\n\nX_test = jnp.array([[4.0], [7.0]])\npredictions = model(params, X_test)\nprint(f\"Predictions for {X_test.tolist()}: {predictions.tolist()}\")\n",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom jax import jit, value_and_grad\nimport optax\n\n# Generate synthetic data\nkey = jax.random.PRNGKey(42)\nkey1, key2 = jax.random.split(key)\nX = jax.random.uniform(key1, shape=(100, 1)) * 10\ny = 2 * X + 3 + jax.random.normal(key2, shape=(100, 1))\n\ndef learned_silu(x, slope):\n    return slope * x * jax.nn.sigmoid(x)\n\ndef model(params, x):\n    slope = params['slope']\n    return learned_silu(x, slope)\n\ndef loss_fn(params, x, y):\n    predictions = model(params, x)\n    return jnp.mean((predictions - y) ** 2)\n\nparams = {'slope': jnp.array([1.0])}\noptimizer = optax.sgd(learning_rate=0.01)\nopt_state = optimizer.init(params)\n\n@jit\ndef train_step(params, opt_state, x, y):\n    loss, grads = value_and_grad(loss_fn)(params, x, y)\n    updates, opt_state = optimizer.update(grads, opt_state)\n    params = optax.apply_updates(params, updates)\n    return params, opt_state, loss\n\nepochs = 1000\nfor epoch in range(epochs):\n    params, opt_state, loss = train_step(params, opt_state, X, y)\n    if (epoch + 1) % 100 == 0:\n        print(f\"Epoch [{epoch + 1}/{epochs}], Loss: {loss:.4f}\")\n\nw = params['slope']\nprint(f\"Learned weight: {w[0]:.4f}, Learned bias: 0.0000\")\n\nX_test = jnp.array([[4.0], [7.0]])\npredictions = model(params, X_test)\nprint(f\"Predictions for {X_test.tolist()}: {predictions.tolist()}\")\n",
+      "Errors": [
+        {
+          "Error_Code": "from jax.experimental import optimizers",
+          "Error": "jax.experimental.optimizers is deprecated and removed in modern JAX versions.",
+          "Fix_info": "Replace with optax library for optimizers.",
+          "Fixed_Code": "import optax"
+        },
+        {
+          "Error_Code": "opt_state = optimizers.init SGD(learning_rate=0.01)(params)",
+          "Error": "Syntax error: 'optimizers.init SGD' is not valid Python. No such function exists in jax.experimental.optimizers either.",
+          "Fix_info": "Use optax.sgd(learning_rate=0.01) and optimizer.init(params) for proper optimizer initialization.",
+          "Fixed_Code": "optimizer = optax.sgd(learning_rate=0.01)\nopt_state = optimizer.init(params)"
+        },
+        {
+          "Error_Code": "def update(params, grads):\n    return optimizers.apply_updates(params, grads)",
+          "Error": "optimizers.apply_updates doesn't exist. The update function doesn't use an optimizer state, so it's just doing raw gradient subtraction without learning rate.",
+          "Fix_info": "Use optax's optimizer.update() and optax.apply_updates() which properly applies the learning rate and optimizer state.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state)\nparams = optax.apply_updates(params, updates)"
+        },
+        {
+          "Error_Code": "grads = grad(loss_fn)(params, X, y)\nparams, opt_state = update(params, grads)",
+          "Error": "Using grad() separately from loss computation causes loss to be recomputed for logging. Also update() returns wrong number of values.",
+          "Fix_info": "Use value_and_grad() to compute loss and gradients simultaneously in a jitted train_step function.",
+          "Fixed_Code": "@jit\ndef train_step(params, opt_state, x, y):\n    loss, grads = value_and_grad(loss_fn)(params, x, y)\n    updates, opt_state = optimizer.update(grads, opt_state)\n    params = optax.apply_updates(params, updates)\n    return params, opt_state, loss"
+        },
+        {
+          "Error_Code": "def learned_silu_backward(grad_output, x, slope):\n    ...",
+          "Error": "Manual backward function is unnecessary in JAX. JAX's autodiff (grad/value_and_grad) automatically differentiates through learned_silu_forward.",
+          "Fix_info": "Remove the manual backward function. JAX handles gradients automatically.",
+          "Fixed_Code": "# Removed: JAX autodiff handles gradients automatically"
+        },
+        {
+          "Error_Code": "y = 2 * X + 3 + jax.random.normal(key, shape=(100, 1))",
+          "Error": "Using the same random key for both X and noise produces correlated random numbers.",
+          "Fix_info": "Split the key into two separate keys for independent random generation.",
+          "Fixed_Code": "key1, key2 = jax.random.split(key)\nX = jax.random.uniform(key1, shape=(100, 1)) * 10\ny = 2 * X + 3 + jax.random.normal(key2, shape=(100, 1))"
+        },
+        {
+          "Error_Code": "[w, b] = [params['slope'], 0]\nprint(f\"Learned weight: {w:.4f}, Learned bias: {b:.4f}\")",
+          "Error": "w is a JAX array, not a scalar — f-string :.4f formatting won't work on an array. Also b=0 as integer won't format with :.4f.",
+          "Fix_info": "Index into the array with w[0] and use string literal for bias since the model has no bias parameter.",
+          "Fixed_Code": "w = params['slope']\nprint(f\"Learned weight: {w[0]:.4f}, Learned bias: 0.0000\")"
+        }
+      ]
+    }
+  ]
+}
