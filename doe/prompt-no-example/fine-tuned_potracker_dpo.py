@@ -30,14 +30,14 @@ model_name = "/home/hungphd/git/pretrained_open_llms/Qwen2.5-7B-Instruct/"
 
 # Output folder (LoRA adapter + trainer checkpoints)
 folder_output = "/home/hungphd/git/potracker_dpo/"
-
-# Your original SFT CSVs (prompt, response)
-fp_file_sft_train = "/mnt/data/finetune_train.csv"
-fp_file_sft_valid = "/mnt/data/finetune_valid.csv"
+#
+# # Your original SFT CSVs (prompt, response)
+# fp_file_sft_train = "/mnt/data/finetune_train.csv"
+# fp_file_sft_valid = "/mnt/data/finetune_valid.csv"
 
 # DPO CSVs to be created/used (prompt, response, bad_response)
-fp_file_dpo_train = "/mnt/data/train_dpo.csv"
-fp_file_dpo_valid = "/mnt/data/valid_dpo.csv"
+fp_file_dpo_train = "../data-all/label-split/train_dpo.csv"
+fp_file_dpo_valid = "../data-all/label-split/valid_dpo.csv"
 
 SEED = 42
 
@@ -154,10 +154,10 @@ def build_dpo_csv(inp_path: str, out_path: str, seed: int) -> None:
     df_out.to_csv(out_path, index=False)
     print(f"Wrote {out_path} with {len(df_out)} rows")
 
-if (not os.path.exists(fp_file_dpo_train)) or (not os.path.exists(fp_file_dpo_valid)):
-    print("DPO CSVs not found -> generating from SFT CSVs...")
-    build_dpo_csv(fp_file_sft_train, fp_file_dpo_train, seed=SEED)
-    build_dpo_csv(fp_file_sft_valid, fp_file_dpo_valid, seed=SEED + 1)
+# if (not os.path.exists(fp_file_dpo_train)) or (not os.path.exists(fp_file_dpo_valid)):
+#     print("DPO CSVs not found -> generating from SFT CSVs...")
+#     build_dpo_csv(fp_file_sft_train, fp_file_dpo_train, seed=SEED)
+#     build_dpo_csv(fp_file_sft_valid, fp_file_dpo_valid, seed=SEED + 1)
 
 
 # =========================
