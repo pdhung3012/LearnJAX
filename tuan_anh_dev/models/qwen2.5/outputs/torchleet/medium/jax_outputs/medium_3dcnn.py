@@ -251,10 +251,13 @@ def load_pretrained_torchvision_backbone(state):
 
 model = MedCNN()
 variables = model.init(random.PRNGKey(0), ct_images, train=True)
+# Normalize containers before optimizer init so opt_state tree types match grads/params.
+init_params = freeze(unfreeze(variables["params"]))
+init_batch_stats = freeze(unfreeze(variables["batch_stats"]))
 state = TrainState.create(
     apply_fn=model.apply,
-    params=variables["params"],
-    batch_stats=variables["batch_stats"],
+    params=init_params,
+    batch_stats=init_batch_stats,
     tx=optax.adam(learning_rate=0.01),
 )
 
@@ -280,8 +283,10 @@ def train_step(state, images, labels):
         return loss, updates["batch_stats"]
 
     (loss, new_batch_stats), grads = jax.value_and_grad(loss_fn, has_aux=True)(state.params)
+    # Keep pytree node types consistent with optimizer state (FrozenDict expected).
+    grads = freeze(unfreeze(grads))
     state = state.apply_gradients(grads=grads)
-    state = state.replace(batch_stats=new_batch_stats)
+    state = state.replace(batch_stats=freeze(unfreeze(new_batch_stats)))
     return state, loss
 
 

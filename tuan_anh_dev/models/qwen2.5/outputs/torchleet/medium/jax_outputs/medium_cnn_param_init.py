@@ -69,7 +69,8 @@ def reinit_params(params, init_type, key):
 
     for layer_name, layer_params in params_mut.items():
         new_layer = {}
-        kernel_shape = layer_params.get("kernel", None)
+        kernel = layer_params.get("kernel", None)
+        kernel_shape = tuple(kernel.shape) if kernel is not None else None
         fan_in = _compute_fan_in(kernel_shape) if kernel_shape is not None else 1
         for param_name, param in layer_params.items():
             key, subkey = jax.random.split(key)
