@@ -45,12 +45,8 @@ def augment_and_normalize(key, image):
     image = to_float_and_normalize(image)
     return image
 
-def normalize_only(image):
-    """Normalize without augmentation (for test set)."""
-    return to_float_and_normalize(image)
-
 # Create a simple data loader
-def data_loader(images, labels, batch_size, key, shuffle=True, augment=True):
+def data_loader(images, labels, batch_size, key, shuffle=True):
     n = len(images)
     indices = np.arange(n)
     if shuffle:
@@ -59,11 +55,8 @@ def data_loader(images, labels, batch_size, key, shuffle=True, augment=True):
         batch_idx = indices[start:start + batch_size]
         batch_images = jnp.array(images[batch_idx])
         batch_labels = jnp.array(labels[batch_idx])
-        if augment:
-            keys = random.split(random.fold_in(key, start), len(batch_idx))
-            batch_images = jax.vmap(augment_and_normalize)(keys, batch_images)
-        else:
-            batch_images = jax.vmap(normalize_only)(batch_images)
+        keys = random.split(random.fold_in(key, start), len(batch_idx))
+        batch_images = jax.vmap(augment_and_normalize)(keys, batch_images)
         yield batch_images, batch_labels
 
 # Display a batch of augmented images
@@ -90,9 +83,14 @@ def make_grid(images, nrow=8):
     grid = grid.reshape(nrow_actual * h, ncol * w, c)
     return grid
 
-# Get some random training images
+# Match PyTorch transform usage: both train/test datasets use the same transform; only shuffle differs.
 key = random.PRNGKey(0)
-for batch_images, batch_labels in data_loader(train_images, train_labels, 64, key, shuffle=True, augment=True):
-    grid = make_grid(batch_images)
-    imshow(grid)
-    break
+train_key, test_key = random.split(key)
+train_loader = data_loader(train_images, train_labels, batch_size=64, key=train_key, shuffle=True)
+test_loader = data_loader(test_images, test_labels, batch_size=64, key=test_key, shuffle=False)
+
+# Get some random training images
+data_iter = iter(train_loader)
+images, labels = next(data_iter)
+grid = make_grid(images)
+imshow(grid)

@@ -9,10 +9,31 @@ key1, key2 = jax.random.split(key)
 X = jax.random.uniform(key1, shape=(100, 1)) * 10  # 100 data points between 0 and 10
 y = 2 * X + 3 + jax.random.normal(key2, shape=(100, 1))  # Linear relationship with noise
 
-# In JAX, custom autograd functions are not needed — JAX's autodiff
-# handles differentiating through standard ops automatically.
+@jax.custom_vjp
 def learned_silu(x, slope):
     return slope * x * jax.nn.sigmoid(x)
+
+
+def learned_silu_fwd(x, slope):
+    sigmoid_x = jax.nn.sigmoid(x)
+    output = slope * x * sigmoid_x
+    return output, (x, slope, sigmoid_x)
+
+
+def learned_silu_bwd(res, grad_output):
+    x, slope, sigmoid_x = res
+    grad_input = grad_output * slope * (sigmoid_x + x * sigmoid_x * (1.0 - sigmoid_x))
+
+    # Match torch.autograd.Function backward for slope, then reduce to the broadcasted slope shape.
+    grad_slope_full = grad_output * x * sigmoid_x
+    reduce_axes = tuple(range(grad_slope_full.ndim - slope.ndim))
+    grad_slope = jnp.sum(grad_slope_full, axis=reduce_axes) if reduce_axes else grad_slope_full
+    grad_slope = grad_slope.reshape(slope.shape)
+    return grad_input, grad_slope
+
+
+learned_silu.defvjp(learned_silu_fwd, learned_silu_bwd)
+
 
 def model(params, x):
     slope = params['slope']

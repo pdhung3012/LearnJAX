@@ -7,6 +7,9 @@ import optax
 import torchvision
 import numpy as np
 
+KERNEL_INIT = nn.initializers.normal(stddev=0.01)
+BIAS_INIT = nn.initializers.zeros
+
 # Load data
 train_dataset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True)
 test_dataset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True)
@@ -42,33 +45,64 @@ class AlexNet(nn.Module):
     @nn.compact
     def __call__(self, x, training=False):
         # Features
-        x = nn.Conv(features=96, kernel_size=(11, 11), strides=(4, 4), padding=((2, 2), (2, 2)))(x)
+        x = nn.Conv(
+            features=96,
+            kernel_size=(11, 11),
+            strides=(4, 4),
+            padding=((2, 2), (2, 2)),
+            kernel_init=KERNEL_INIT,
+            bias_init=BIAS_INIT,
+        )(x)
         x = nn.relu(x)
         x = nn.max_pool(x, window_shape=(3, 3), strides=(2, 2))
 
-        x = nn.Conv(features=256, kernel_size=(5, 5), padding=((2, 2), (2, 2)))(x)
+        x = nn.Conv(
+            features=256,
+            kernel_size=(5, 5),
+            padding=((2, 2), (2, 2)),
+            kernel_init=KERNEL_INIT,
+            bias_init=BIAS_INIT,
+        )(x)
         x = nn.relu(x)
         x = nn.max_pool(x, window_shape=(3, 3), strides=(2, 2))
 
-        x = nn.Conv(features=384, kernel_size=(3, 3), padding=((1, 1), (1, 1)))(x)
+        x = nn.Conv(
+            features=384,
+            kernel_size=(3, 3),
+            padding=((1, 1), (1, 1)),
+            kernel_init=KERNEL_INIT,
+            bias_init=BIAS_INIT,
+        )(x)
         x = nn.relu(x)
 
-        x = nn.Conv(features=384, kernel_size=(3, 3), padding=((1, 1), (1, 1)))(x)
+        x = nn.Conv(
+            features=384,
+            kernel_size=(3, 3),
+            padding=((1, 1), (1, 1)),
+            kernel_init=KERNEL_INIT,
+            bias_init=BIAS_INIT,
+        )(x)
         x = nn.relu(x)
 
-        x = nn.Conv(features=256, kernel_size=(3, 3), padding=((1, 1), (1, 1)))(x)
+        x = nn.Conv(
+            features=256,
+            kernel_size=(3, 3),
+            padding=((1, 1), (1, 1)),
+            kernel_init=KERNEL_INIT,
+            bias_init=BIAS_INIT,
+        )(x)
         x = nn.relu(x)
         x = nn.max_pool(x, window_shape=(3, 3), strides=(2, 2))
 
         # Classifier
         x = x.reshape((x.shape[0], -1))  # Flatten: 256 * 6 * 6
         x = nn.Dropout(rate=0.5, deterministic=not training)(x)
-        x = nn.Dense(features=4096)(x)
+        x = nn.Dense(features=4096, kernel_init=KERNEL_INIT, bias_init=BIAS_INIT)(x)
         x = nn.relu(x)
         x = nn.Dropout(rate=0.5, deterministic=not training)(x)
-        x = nn.Dense(features=4096)(x)
+        x = nn.Dense(features=4096, kernel_init=KERNEL_INIT, bias_init=BIAS_INIT)(x)
         x = nn.relu(x)
-        x = nn.Dense(features=self.num_classes)(x)
+        x = nn.Dense(features=self.num_classes, kernel_init=KERNEL_INIT, bias_init=BIAS_INIT)(x)
         return x
 
 # Training setup
