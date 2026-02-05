@@ -4,14 +4,15 @@ from statistics import mean
 
 fp_label_xml='/home/hungphd/git/LearnJAX/doe/data-all/label-split/test.json'
 # fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/baselines_no_example/test.Qwen2.5-7B-Instruct.json'
-# fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/finetuned_weights_noex_org/test.Qwen2.5-7B-Instruct.json'
+fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/finetuned_weights_noex_org/test.Qwen2.5-7B-Instruct.json'
 # fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/finetuned_weights_noex_potracker/test.Qwen2.5-7B-Instruct.json'
 # fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/finetuned_weights_noex_mrt/test.Qwen2.5-7B-Instruct.json'
 # fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_exampleweightce/test.Qwen2.5-7B-Instruct.json'
 # fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_tokenweightce/test.Qwen2.5-7B-Instruct.json'
 # fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_tagmaskce/test.Qwen2.5-7B-Instruct.json'
-# fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_customloss/test.Qwen2.5-7B-Instruct.json'
-fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/rulebased/test.rulebased.json'
+fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_customloss/test.Qwen2.5-7B-Instruct.json'
+# fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/rulebased/test.rulebased.json'
+# fp_predicted_xml='/home/hungphd/git/LearnJAX/doe/data-all/results/potracker_dpo/test.Qwen2.5-7B-Instruct.json'
 
 list_scores=[]
 list_text_scores=[]

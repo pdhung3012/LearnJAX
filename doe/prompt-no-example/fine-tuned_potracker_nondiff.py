@@ -227,7 +227,7 @@ trainer = POTrackerLossTrainer(
     eval_dataset=valid_tokenized,
     processing_class=tokenizer,
     data_collator=data_collator,
-    potracker_weight=0.2,      # tune this
+    potracker_weight=0.5,      # tune this
     potracker_mode="1-minus" #"1-minus",  # or "inv"
 )
 

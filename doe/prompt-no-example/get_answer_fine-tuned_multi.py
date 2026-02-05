@@ -261,6 +261,7 @@ if __name__ == "__main__":
     # fop_adapter_weight = '/home/hungphd/git/potracker_tokenweightce/' + model_name + '/'
     # fop_adapter_weight = '/home/hungphd/git/potracker_tagmaskce/' + model_name + '/'
     fop_adapter_weight = '/home/hungphd/git/potracker_customloss/' + model_name + '/'
+    # fop_adapter_weight = '/home/hungphd/git/potracker_dpo/' + model_name + '/'
 
 
 
