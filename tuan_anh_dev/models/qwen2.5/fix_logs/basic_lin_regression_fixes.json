@@ -1,0 +1,60 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "basic_lin_regression",
+      "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n\n# Generate synthetic data\ntorch.manual_seed(42)\nX = torch.rand(100, 1) * 10  # 100 data points between 0 and 10\ny = 2 * X + 3 + torch.randn(100, 1)  # Linear relationship with noise\n\n# Define the Linear Regression Model\nclass LinearRegressionModel(nn.Module):\n    def __init__(self):\n        super(LinearRegressionModel, self).__init__()\n        self.linear = nn.Linear(1, 1)  # Single input and single output\n\n    def forward(self, x):\n        return self.linear(x)\n\n# Initialize the model, loss function, and optimizer\nmodel = LinearRegressionModel()\ncriterion = nn.MSELoss()\noptimizer = optim.SGD(model.parameters(), lr=0.01)\n\n# Training loop\nepochs = 1000\nfor epoch in range(epochs):\n    # Forward pass\n    predictions = model(X)\n    loss = criterion(predictions, y)\n\n    # Backward pass and optimization\n    optimizer.zero_grad()\n    loss.backward()\n    optimizer.step()\n\n    # Log progress every 100 epochs\n    if (epoch + 1) % 100 == 0:\n        print(f\"Epoch [{epoch + 1}/{epochs}], Loss: {loss.item():.4f}\")\n\n# Display the learned parameters\n[w, b] = model.linear.parameters()\nprint(f\"Learned weight: {w.item():.4f}, Learned bias: {b.item():.4f}\")\n\n# Testing on new data\nX_test = torch.tensor([[4.0], [7.0]])\nwith torch.no_grad():\n    predictions = model(X_test)\n    print(f\"Predictions for {X_test.tolist()}: {predictions.tolist()}\")\n",
+      "LLM_weak_output": "import jax.numpy as jnp\nfrom jax import grad, jit, vmap\nfrom jax.experimental import optimizers\n\n# Generate synthetic data\nkey = jax.random.PRNGKey(42)\nX = jax.random.uniform(key, shape=(100, 1)) * 10  # 100 data points between 0 and 10\ny = 2 * X + 3 + jax.random.normal(key, shape=(100, 1))  # Linear relationship with noise\n\n# Define the Linear Regression Model\ndef linear_regression(params, x):\n    w, b = params\n    return w * x + b\n\n# Initialize the model parameters\nparams = jnp.array([0.0, 0.0])\n\n# Define the loss function\ndef mse_loss(params, x, y):\n    predictions = linear_regression(params, x)\n    return jnp.mean((predictions - y) ** 2)\n\n# Define the gradient of the loss function\ngrad_mse_loss = grad(mse_loss)\n\n# Define the update step\n@jit\ndef update(params, opt_state, x, y):\n    grads = grad_mse_loss(params, x, y)\n    updates, opt_state = optimizers.sgd(0.01)(grads, opt_state)\n    return opt_state, optimizers.apply_updates(opt_state, updates)\n\n# Initialize the optimizer state\nopt_init, opt_update, get_params = optimizers.adam(step_size=0.01)\nopt_state = opt_init(params)\n\n# Training loop\nepochs = 1000\nfor epoch in range(epochs):\n    opt_state, params = update(params, opt_state, X, y)\n\n    # Log progress every 100 epochs\n    if (epoch + 1) % 100 == 0:\n        loss = mse_loss(params, X, y)\n        print(f\"Epoch [{epoch + 1}/{epochs}], Loss: {loss:.4f}\")\n\n# Display the learned parameters\nw, b = params\nprint(f\"Learned weight: {w:.4f}, Learned bias: {b:.4f}\")\n\n# Testing on new data\nX_test = jnp.array([[4.0], [7.0]])\npredictions = linear_regression(params, X_test)\nprint(f\"Predictions for {X_test.tolist()}: {predictions.tolist()}\")\n",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom jax import grad, jit\nfrom jax.example_libraries import optimizers\n\n# Generate synthetic data\nkey = jax.random.PRNGKey(42)\nkey, key_x, key_noise = jax.random.split(key, 3)\nX = jax.random.uniform(key_x, shape=(100, 1)) * 10  # 100 data points between 0 and 10\ny = 2 * X + 3 + jax.random.normal(key_noise, shape=(100, 1))  # Linear relationship with noise\n\n# Define the Linear Regression Model\ndef linear_regression(params, x):\n    w, b = params\n    return jnp.dot(x, w) + b\n\n# Initialize the model parameters (matching nn.Linear(1, 1))\nparams = (jnp.zeros((1, 1)), jnp.zeros((1,)))\n\n# Define the loss function\ndef mse_loss(params, x, y):\n    predictions = linear_regression(params, x)\n    return jnp.mean((predictions - y) ** 2)\n\n# Define the gradient of the loss function\ngrad_mse_loss = grad(mse_loss)\n\n# Training loop\nopt_init, opt_update, get_params = optimizers.sgd(step_size=0.01)\nopt_state = opt_init(params)\n\n@jit\ndef update(i, opt_state, x, y):\n    params = get_params(opt_state)\n    grads = grad_mse_loss(params, x, y)\n    return opt_update(i, grads, opt_state)\n\nepochs = 1000\nfor epoch in range(epochs):\n    opt_state = update(epoch, opt_state, X, y)\n\n    # Log progress every 100 epochs\n    if (epoch + 1) % 100 == 0:\n        params = get_params(opt_state)\n        loss = mse_loss(params, X, y)\n        print(f\"Epoch [{epoch + 1}/{epochs}], Loss: {loss:.4f}\")\n\n# Display the learned parameters\nparams = get_params(opt_state)\nw, b = params\nprint(f\"Learned weight: {w[0][0]:.4f}, Learned bias: {b[0]:.4f}\")\n\n# Testing on new data\nX_test = jnp.array([[4.0], [7.0]])\npredictions = linear_regression(params, X_test)\nprint(f\"Predictions for {X_test.tolist()}: {predictions.tolist()}\")\n",
+      "Errors": [
+        {
+          "Error_Code": "import jax.numpy as jnp\nfrom jax import grad, jit, vmap\nfrom jax.experimental import optimizers",
+          "Error": "Missing 'import jax' statement. The code uses jax.random.PRNGKey(42), jax.random.uniform, and jax.random.normal, but only imports jax.numpy as jnp. This causes NameError: name 'jax' is not defined.",
+          "Fix_info": "Add 'import jax' at the top of the imports to enable use of the jax.random module.",
+          "Fixed_Code": "import jax\nimport jax.numpy as jnp\nfrom jax import grad, jit\nfrom jax.example_libraries import optimizers"
+        },
+        {
+          "Error_Code": "from jax.experimental import optimizers",
+          "Error": "ImportError: cannot import name 'optimizers' from 'jax.experimental'. The optimizers module was moved from jax.experimental to jax.example_libraries in newer versions of JAX.",
+          "Fix_info": "Replace 'from jax.experimental import optimizers' with 'from jax.example_libraries import optimizers'.",
+          "Fixed_Code": "from jax.example_libraries import optimizers"
+        },
+        {
+          "Error_Code": "key = jax.random.PRNGKey(42)\nX = jax.random.uniform(key, shape=(100, 1)) * 10\ny = 2 * X + 3 + jax.random.normal(key, shape=(100, 1))",
+          "Error": "PRNG key reuse: the same JAX random key is used for generating X and the noise in y. In JAX, reusing the same key produces identical random streams (modulo shape), resulting in correlated random values. This is inconsistent with PyTorch where each torch.rand/torch.randn call advances the global RNG state to produce independent values.",
+          "Fix_info": "Use jax.random.split to create independent subkeys for each random operation.",
+          "Fixed_Code": "key = jax.random.PRNGKey(42)\nkey, key_x, key_noise = jax.random.split(key, 3)\nX = jax.random.uniform(key_x, shape=(100, 1)) * 10\ny = 2 * X + 3 + jax.random.normal(key_noise, shape=(100, 1))"
+        },
+        {
+          "Error_Code": "opt_init, opt_update, get_params = optimizers.adam(step_size=0.01)",
+          "Error": "Wrong optimizer type. The PyTorch code uses optim.SGD(lr=0.01) but the JAX translation uses optimizers.adam(step_size=0.01). Adam and SGD are different optimization algorithms with different update rules and convergence behavior.",
+          "Fix_info": "Replace optimizers.adam with optimizers.sgd to match the PyTorch SGD optimizer.",
+          "Fixed_Code": "opt_init, opt_update, get_params = optimizers.sgd(step_size=0.01)"
+        },
+        {
+          "Error_Code": "params = jnp.array([0.0, 0.0])\n...\ndef linear_regression(params, x):\n    w, b = params\n    return w * x + b",
+          "Error": "Incorrect parameter structure for matching nn.Linear(1, 1). The code stores weight and bias as a flat 1D array jnp.array([0.0, 0.0]) and uses element-wise multiply (w * x). PyTorch's nn.Linear(1, 1) has separate weight (shape (1,1)) and bias (shape (1,)) parameters and computes x @ W.T + b via matrix multiplication. The flat array representation loses structural correspondence with the PyTorch model.",
+          "Fix_info": "Use a tuple (w, b) with w shape (1,1) and b shape (1,) to match nn.Linear(1,1). Use jnp.dot(x, w) + b for the forward pass.",
+          "Fixed_Code": "params = (jnp.zeros((1, 1)), jnp.zeros((1,)))\n...\ndef linear_regression(params, x):\n    w, b = params\n    return jnp.dot(x, w) + b"
+        },
+        {
+          "Error_Code": "@jit\ndef update(params, opt_state, x, y):\n    grads = grad_mse_loss(params, x, y)\n    updates, opt_state = optimizers.sgd(0.01)(grads, opt_state)\n    return opt_state, optimizers.apply_updates(opt_state, updates)",
+          "Error": "The update function uses completely invalid API calls. optimizers.sgd(0.01) returns a tuple (opt_init, opt_update, get_params), not a callable function, so calling it as optimizers.sgd(0.01)(grads, opt_state) raises a TypeError. Additionally, optimizers.apply_updates does not exist in the JAX optimizers module. The function also incorrectly takes params as a separate argument instead of extracting it from opt_state.",
+          "Fix_info": "Rewrite the update function to follow the correct JAX optimizers pattern: extract params via get_params(opt_state), compute gradients, then call opt_update(i, grads, opt_state).",
+          "Fixed_Code": "@jit\ndef update(i, opt_state, x, y):\n    params = get_params(opt_state)\n    grads = grad_mse_loss(params, x, y)\n    return opt_update(i, grads, opt_state)"
+        },
+        {
+          "Error_Code": "for epoch in range(epochs):\n    opt_state, params = update(params, opt_state, X, y)\n\n    # Log progress every 100 epochs\n    if (epoch + 1) % 100 == 0:\n        loss = mse_loss(params, X, y)",
+          "Error": "The training loop uses the wrong calling pattern. It calls update(params, opt_state, X, y) and unpacks two return values (opt_state, params), but the corrected update function only returns the new opt_state. Parameters should be extracted via get_params(opt_state) when needed for logging.",
+          "Fix_info": "Call update(epoch, opt_state, X, y) and assign the result to opt_state. Use get_params(opt_state) inside the logging block to get current params for loss computation.",
+          "Fixed_Code": "for epoch in range(epochs):\n    opt_state = update(epoch, opt_state, X, y)\n\n    # Log progress every 100 epochs\n    if (epoch + 1) % 100 == 0:\n        params = get_params(opt_state)\n        loss = mse_loss(params, X, y)\n        print(f\"Epoch [{epoch + 1}/{epochs}], Loss: {loss:.4f}\")"
+        },
+        {
+          "Error_Code": "w, b = params\nprint(f\"Learned weight: {w:.4f}, Learned bias: {b:.4f}\")",
+          "Error": "After training, params is extracted from the broken update function. With the corrected parameter structure as a (w, b) tuple where w has shape (1,1) and b has shape (1,), the scalars must be indexed out of the arrays for display.",
+          "Fix_info": "Use get_params(opt_state) to extract final params, then index into w[0][0] and b[0] to get scalar values for display.",
+          "Fixed_Code": "params = get_params(opt_state)\nw, b = params\nprint(f\"Learned weight: {w[0][0]:.4f}, Learned bias: {b[0]:.4f}\")"
+        }
+      ]
+    }
+  ]
+}
