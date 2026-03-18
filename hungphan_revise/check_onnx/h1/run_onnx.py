@@ -1,4 +1,4 @@
-# test_onnx.py
+# run_onnx.py
 import os
 import tempfile
 
