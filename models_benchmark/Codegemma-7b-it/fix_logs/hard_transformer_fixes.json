@@ -1,0 +1,30 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "hard_transformer",
+        "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n# ... (Transformer definitions) ...\n\n# Training loop\nmodel.train()\nepochs = 50\nfor epoch in range(epochs):\n    for batch in train_loader:\n        # Forward pass\n        predictions = model(X)\n        loss = criterion(predictions, y)\n\n        # Backward pass and optimization\n        optimizer.zero_grad()\n        loss.backward()\n        optimizer.step()\n\n# ... (Evaluation) ...\nmodel.eval()",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom jax.example_libraries import flax\nfrom flax import linen as nn\nimport optax\n\n# ... (Transformer definitions) ...\nself.pe = flax.nn.Embed(pe)\n# ...\n\n# Define loss and optimizer\ncriterion = optax.softmax_cross_entropy_with_logits\noptimizer = optax.adam(learning_rate=2e-4)\n\n# Training loop\nfor epoch in range(10):\n    for i in range(0, num_samples, 64):\n        # ...\n        # Backward pass and optimization\n        optimizer.update(loss, model.params)\n        model = optax.apply_updates(model, optimizer.updates)\n\n    model.eval()\n    # ...\n    model.train()",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Correct linen definitions) ...\n\n# Training step\n@jax.jit\ndef train_step(params, opt_state, X_batch, y_batch):\n    def loss_fn(params):\n        predictions = model.apply({'params': params}, X_batch)\n        return jnp.mean(optax.softmax_cross_entropy_with_integer_labels(predictions, y_batch))\n    loss, grads = jax.value_and_grad(loss_fn)(params)\n    updates, opt_state = optimizer.update(grads, opt_state)\n    params = optax.apply_updates(params, updates)\n    return params, opt_state, loss\n\n# ... (Loop uses train_step) ...",
+        "Errors": [
+          {
+            "Error_Code": "optimizer.update(loss, model.params)",
+            "Error": "API Hallucination. `optimizer` (Optax gradient transformation) does not have a stateful `.update` method that takes `loss` and `params`. Optax is functional; `update` takes `(grads, opt_state)`.",
+            "Fix_info": "Use the functional pattern: `updates, opt_state = optimizer.update(grads, opt_state)`.",
+            "Fixed_Code": "loss, grads = jax.value_and_grad(loss_fn)(params)\nupdates, opt_state = optimizer.update(grads, opt_state)"
+          },
+          {
+            "Error_Code": "self.pe = flax.nn.Embed(pe)",
+            "Error": "Deprecated API. `flax.nn` refers to the pre-2020 Flax API which has been removed. Linen (`flax.linen`) should be used.",
+            "Fix_info": "Use `flax.linen.Embed` (or just `nn.Embed` if aliased). Note that `Embed` usually takes `num_embeddings` and `features`, not a pre-computed array.",
+            "Fixed_Code": "# Inside __call__ or setup\nself.embedding = nn.Embed(vocab_size, embed_dim)"
+          },
+          {
+            "Error_Code": "model.eval() ... model.train()",
+            "Error": "Stateful Mode Error. Flax/JAX models are stateless. There is no global `eval()` or `train()` switch on the model object. Dropout/Batch Norm behavior is controlled by passing flags (e.g., `deterministic=True/False`) to the `apply` method.",
+            "Fix_info": "Remove `model.eval()`/`model.train()`. Pass a `train` boolean argument to the model's `__call__` method and handle it explicitly (e.g., `nn.Dropout(..., deterministic=not train)`).",
+            "Fixed_Code": "predictions = model.apply(..., rngs={'dropout': dropout_key})"
+          }
+        ]
+      }
+    ]
+  }

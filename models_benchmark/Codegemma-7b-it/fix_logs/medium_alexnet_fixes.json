@@ -1,0 +1,42 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "medium_alexnet",
+        "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\nimport torchvision\n# ... (Data Loading) ...\n\n# Define AlexNet\nclass AlexNet(nn.Module):\n    def __init__(self, num_classes=10):  # Adjusted for CIFAR-10\n        super(AlexNet, self).__init__()\n        self.features = nn.Sequential(\n            nn.Conv2d(3, 96, kernel_size=11, stride=4, padding=2),\n            nn.ReLU(inplace=True),\n            nn.MaxPool2d(kernel_size=3, stride=2),\n            # ... (More layers) ...\n        )\n        self.classifier = nn.Sequential(\n            nn.Dropout(),\n            nn.Linear(256 * 6 * 6, 4096),\n            # ...\n        )\n        self._initialize_weights()\n\n    # ... (Forward & Weight Init Logic) ...\n\n# --- Training setup ---\nmodel = AlexNet(num_classes=10).to(device)\ncriterion = nn.CrossEntropyLoss()\noptimizer = optim.Adam(model.parameters(), lr=0.0001)\n\n# ... (Training Loop) ...",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# Define AlexNet\nclass AlexNet(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        x = nn.Conv2d(96, (11, 11), strides=(4, 4), padding='SAME')(x)\n        x = nn.relu(x)\n        x = nn.max_pool(x, (3, 3), strides=(2, 2))\n        # ...\n        x = nn.Dense(4096)(x)\n        x = nn.relu(x)\n        x = nn.Dropout(0.5)(x)\n        x = nn.Dense(10)(x)\n        return x\n\n# --- Training setup ---\nkey = jax.random.PRNGKey(0)\nmodel = AlexNet()\nparams = model.init(key, jnp.ones((1, 3, 224, 224)))\n\n# Optimizer\nopt_init, opt_update, get_params = optax.rmsprop(1e-3)\nopt_state = opt_init(params)\n\n@jax.jit\ndef train_step(params, opt_state, images, labels):\n    def loss_fn(params):\n        logits = model.apply({'params': params}, images)\n        loss = jnp.mean(optax.softmax_cross_entropy_with_logits(logits, labels))\n        return loss, logits\n\n    grad_fn = jax.value_and_grad(loss_fn, has_aux=True)\n    (loss, logits), grads = grad_fn(params)\n    updates, opt_state = opt_update(grads, opt_state, params)\n    params = optax.apply_updates(params, updates)\n    return params, opt_state, loss",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nfrom flax.training import train_state\nimport optax\n\n# Define AlexNet\nclass AlexNet(nn.Module):\n    num_classes: int = 10\n    training: bool = True\n\n    @nn.compact\n    def __call__(self, x, training: bool):\n        # 1. Padding Calculation: PyTorch padding=2 vs JAX 'SAME'/'VALID'\n        # PyTorch padding=2 on kernel 11 stride 4 needs explicit JAX padding\n        x = nn.Conv(features=96, kernel_size=(11, 11), strides=(4, 4), padding=[(2, 2), (2, 2)])(x)\n        x = nn.relu(x)\n        x = nn.max_pool(x, window_shape=(3, 3), strides=(2, 2), padding=[(0, 0), (0, 0)])\n        # ... (Rest of layers with explicit padding logic) ...\n        \n        # 2. Dropout needs explicit RNG\n        x = nn.Dropout(0.5, deterministic=not training)(x)\n        x = nn.Dense(self.num_classes)(x)\n        return x\n\n# ... (Training Loop with Dropout RNG handling) ...",
+        "Errors": [
+          {
+            "Error_Code": "x = nn.Conv2d(96, (11, 11), strides=(4, 4), padding='SAME')(x)",
+            "Error": "Padding Mismatch. PyTorch uses explicit `padding=2` for the first Conv layer (kernel 11, stride 4). `padding='SAME'` in JAX calculates padding dynamically to maintain dimensions, which often results in different output shapes (and thus different feature map sizes) compared to the fixed PyTorch padding, breaking the AlexNet architecture fidelity.",
+            "Fix_info": "Use explicit padding tuples `padding=[(2, 2), (2, 2)]` in Flax to match PyTorch's `padding=2` exactly.",
+            "Fixed_Code": "x = nn.Conv(features=96, kernel_size=(11, 11), strides=(4, 4), padding=[(2, 2), (2, 2)])(x)"
+          },
+          {
+            "Error_Code": "logits = model.apply({'params': params}, images)",
+            "Error": "Missing Dropout State. The model includes `nn.Dropout` layers. The Raw code fails to pass a random number generator (RNG) key for dropout to `model.apply`, meaning dropout will either fail or default to a deterministic state (no dropout), fundamentally changing the training behavior.",
+            "Fix_info": "Pass `rngs={'dropout': dropout_key}` to `model.apply` and ensure the `dropout_key` is split and updated at every step.",
+            "Fixed_Code": "logits = model.apply({'params': params}, images, training=True, rngs={'dropout': dropout_key})"
+          },
+          {
+            "Error_Code": "opt_init, opt_update, get_params = optax.rmsprop(1e-3)",
+            "Error": "Optimizer and API Mismatch. The Input PyTorch code uses `optim.Adam(lr=0.0001)`. The Raw JAX code hallucinates the old `jax.example_libraries.optimizers` API (`opt_init`, `get_params`) but calls it `optax.rmsprop` (which is a different library with a different functional API). It also changes the learning rate to `1e-3`.",
+            "Fix_info": "Use `optax.adam(learning_rate=0.0001)` and the standard Optax update pattern.",
+            "Fixed_Code": "optimizer = optax.adam(learning_rate=0.0001)\nupdates, opt_state = optimizer.update(grads, opt_state, params)"
+          },
+          {
+            "Error_Code": "loss = jnp.mean(optax.softmax_cross_entropy_with_logits(logits, labels))",
+            "Error": "Loss Function Signature Mismatch. `optax.softmax_cross_entropy_with_logits` expects *one-hot encoded* labels. The CIFAR-10 labels are integers (sparse). This will result in dimension mismatch errors or garbage loss calculation.",
+            "Fix_info": "Use `optax.softmax_cross_entropy_with_integer_labels(logits, labels)`.",
+            "Fixed_Code": "loss = jnp.mean(optax.softmax_cross_entropy_with_integer_labels(logits, labels))"
+          },
+          {
+            "Error_Code": "x = nn.Conv2d(...) ... nn.Dense(...)",
+            "Error": "AttributeError / API Hallucination. Flax Linen does not have `Conv2d` or `Dense` (capitalized) in the way used. `Dense` exists, but `Conv2d` is usually just `Conv` in Linen. Mixing naming conventions suggests confusion with other libraries.",
+            "Fix_info": "Use `nn.Conv` and `nn.Dense` consistently.",
+            "Fixed_Code": "x = nn.Conv(features=96, ...)(x)"
+          }
+        ]
+      }
+    ]
+  }

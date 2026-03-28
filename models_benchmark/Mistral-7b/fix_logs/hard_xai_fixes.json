@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "hard_xai",
+      "Input_Code": "import torch\n# ... (ResNet Model) ...\n# ... (Hooks for Grad-CAM) ...\ntarget_layer.register_backward_hook(save_gradients)\ntarget_layer.register_forward_hook(save_activations)\n# ...\noutput[0, predicted_class].backward()",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (ResNet definition) ...\n\n# Perform a backward pass for the predicted class\ngrads, _ = jax.value_and_grad(lambda x: jnp.argmax(output), args=(params, input_tensor))[1]\ngrads = jnp.sum(grads, axis=(1, 2, 3))\n\n# Generate Grad-CAM heatmap\ngradcam = GradCAM(model)\nheatmap = gradcam(input_tensor, predicated_class)",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\n# ...\ndef compute_grad_cam(model, params, batch_stats, input_tensor, target_class):\n    # 1. Forward pass to target layer\n    # 2. Gradient of class score w.r.t target layer activations\n    # ... (Manual implementation using model slicing or 'method' kwarg in apply) ...",
+      "Errors": [
+        {
+          "Error_Code": "jax.value_and_grad(lambda x: jnp.argmax(output), args=...)",
+          "Error": "Gradient of Non-Differentiable Function. `jnp.argmax` is a discrete operation (returns integer indices) and has zero/undefined gradients almost everywhere. You cannot differentiate through it to get meaningful gradients for Grad-CAM.",
+          "Fix_info": "Differentiate the *logit score* corresponding to the predicted class (`output[0, predicted_class]`), not the index.",
+          "Fixed_Code": "score_fn = lambda x: model.apply(..., x)[0, target_class]\ngrads = jax.grad(score_fn)(input_tensor)"
+        },
+        {
+          "Error_Code": "gradcam = GradCAM(model)",
+          "Error": "Hallucinated Library/Class. The code assumes a `GradCAM` class exists (possibly from a library like `jacobi` or `captum` equivalent), but imports none. It invents a high-level XAI API that doesn't exist in standard JAX/Flax.",
+          "Fix_info": "Implement the Grad-CAM logic manually: compute gradients of the class score with respect to the last convolutional layer's feature map.",
+          "Fixed_Code": "# (See LLM_fix_output for manual implementation)"
+        },
+        {
+          "Error_Code": "grads, _ = jax.value_and_grad(...)[1]",
+          "Error": "Incorrect Unpacking. `jax.value_and_grad` returns a function. Calling that function returns `(value, grads)`. The Raw code attempts to index into the *result* of the call, but the call syntax is malformed (passing `args` kwarg which `value_and_grad` doesn't accept in that way).",
+          "Fix_info": "Correctly call the transformed function: `(val, grads) = jax.value_and_grad(fn)(params)`.",
+          "Fixed_Code": "(val, grads) = jax.value_and_grad(fn)(params)"
+        },
+        {
+          "Error_Code": "predicated_class",
+          "Error": "Typo / NameError. The variable `predicted_class` is defined, but used as `predicated_class` in the function call.",
+          "Fix_info": "Fix the variable name.",
+          "Fixed_Code": "heatmap = gradcam(..., predicted_class)"
+        },
+        {
+          "Error_Code": "heatmap = gradcam(input_tensor, predicated_class)",
+          "Error": "Missing Parameters. Even if `GradCAM` existed, Flax models require `params` (and `batch_stats`) to function. Passing just the input tensor to a model wrapper without the weights is insufficient.",
+          "Fix_info": "Pass the trained `params` to the function.",
+          "Fixed_Code": "heatmap = compute_grad_cam(params, input_tensor, ...)"
+        }
+      ]
+    }
+  ]
+}

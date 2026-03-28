@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "easy_augmentation",
+      "Input_Code": "import torch\nimport torchvision.transforms as transforms\n# ... (Data Loading with Transforms) ...\n# ... (Display Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport flax.linen as nn\nimport optax\n# ...\n# Load CIFAR-10 dataset with data augmentation\ntransform = lambda images: jax.ops.index_update(images, jax.ops.index[:, :, :, 0], ...) \n# ... (Complex lambda using deprecated jax.ops) ...\n\nclass Net(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        # ... (Dense layers) ...\n\nparams = next(Net.init_params())\n\ndef train_step(params, images, labels):\n    grad_fn = jax.value_and_grad(Net().apply, has_aux=True)(params)(images)\n    # ... (Incorrect update logic) ...\n\nfor i in range(num_steps):\n    state = train_loader.take(1)[0]\n    # ...",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom jax import random\n# ... (Data Loading) ...\n\n# Data augmentation functions in JAX\ndef random_horizontal_flip(key, image):\n    do_flip = random.uniform(key) > 0.5\n    return jnp.where(do_flip, jnp.flip(image, axis=1), image)\n\n# ... (Random Crop & Display Logic) ...",
+      "Errors": [
+        {
+          "Error_Code": "transform = lambda images: jax.ops.index_update(...)",
+          "Error": "Deprecated API & Logic Horror. `jax.ops.index_update` is deprecated (removed in recent JAX versions). The lambda function attempts to implement augmentation using complex, unreadable, and likely incorrect indexing operations on a batch, rather than simple composable functions.",
+          "Fix_info": "Replace with JAX's functional augmentation approach using `jax.image` or simple array manipulations (`jnp.flip`, `jnp.pad`/`slice`) controlled by random keys.",
+          "Fixed_Code": "def augment(key, img): ... return jnp.flip(img, axis=1)"
+        },
+        {
+          "Error_Code": "class Net(nn.Module): ... x = nn.Dense(32 * 32 * 3 * 3, 1024)(x)",
+          "Error": "Task Mismatch. The Input code is about *Data Augmentation and Visualization*, not training a classifier. The Raw code implements a Dense Neural Network (`Net`) and a training loop, completely missing the point of the example which is to show how to augment and display images.",
+          "Fix_info": "Remove the neural network and training loop. Implement the requested augmentations (HorizontalFlip, RandomCrop) and the visualization loop.",
+          "Fixed_Code": "# (No Net class, just augmentation functions and display)"
+        },
+        {
+          "Error_Code": "params = next(Net.init_params())",
+          "Error": "API Hallucination. Flax modules do not have a static `init_params()` generator. Parameters are initialized via `model.init(key, input_shape)`.",
+          "Fix_info": "Use standard initialization: `params = model.init(key, input)`.",
+          "Fixed_Code": "params = Net().init(key, jnp.ones(...))"
+        },
+        {
+          "Error_Code": "grad_fn = jax.value_and_grad(Net().apply, has_aux=True)(params)(images)",
+          "Error": "Incorrect Differentiation Target. `Net().apply` expects `(params, inputs)`. `jax.value_and_grad` transforms a function with respect to its first argument. Passing `Net().apply` directly usually fails because it doesn't return a scalar loss. The Raw code tries to differentiate the model's forward pass output, not a loss function.",
+          "Fix_info": "Define a loss function `loss_fn(params, x, y)` and differentiate that.",
+          "Fixed_Code": "loss_fn = lambda p, x, y: ...\ngrads = jax.grad(loss_fn)(params, x, y)"
+        },
+        {
+          "Error_Code": "state = train_loader.take(1)[0]",
+          "Error": "API Hallucination (TF/PyTorch mixup). `train_loader.take(1)` looks like TensorFlow `tf.data` API. PyTorch DataLoaders are iterables. This code will fail on a standard PyTorch DataLoader object.",
+          "Fix_info": "Use `next(iter(train_loader))` or a standard loop.",
+          "Fixed_Code": "batch = next(iter(train_loader))"
+        }
+      ]
+    }
+  ]
+}

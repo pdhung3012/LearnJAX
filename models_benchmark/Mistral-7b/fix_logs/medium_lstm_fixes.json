@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "medium_lstm",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ...\nclass CustomLSTMModel(nn.Module):\n    def __init__(self, ...):\n        self.W_i = nn.Parameter(...)\n        # ...\n    def forward(self, x, hidden_state=None):\n        # ... (Manual LSTM math) ...\n        return output, (h_t, c_t)\n\nclass InbuiltLSTMModel(nn.Module):\n    def __init__(self, ...):\n        self.lstm = nn.LSTM(...)\n    def forward(self, x):\n        out, _ = self.lstm(x)\n        return self.linear(out[:, -1, :])",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nfrom flax import linen as nn\nfrom flax import optax\n\nclass CustomLSTMModel(nn.Module):\n    @nn.compact\n    def __init__(self, input_dim, hidden_units):\n        self.Wxi = self.param(\"Wxi\", jnp.random.normal(size=(input_dim, hidden_units)))\n        # ...\n\n    def __call__(self, inputs, H_C=None):\n        # ... (Manual loop) ...\n        for t in range(seq_len):\n             # ...\n\nclass LSTMModel(nn.Module):\n    # ... (Hallucinated Flax LSTM wrapper) ...\n\n# ... (Training Loop) ...\ngrads = jax.grad(LSTMModel().loss)(params)(X_seq, y_seq)",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n# ...\nclass CustomLSTMModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        # ... (Scan-based implementation) ...\n\nclass InbuiltLSTMModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        lstm = nn.LSTMCell(features=self.hidden_units)\n        scan = nn.scan(lstm, ...)\n        # ...",
+      "Errors": [
+        {
+          "Error_Code": "self.Wxi = self.param(\"Wxi\", jnp.random.normal(size=...))",
+          "Error": "Incorrect Parameter Init. `self.param` expects an initializer *function*, not a concrete array. Passing `jnp.random.normal(...)` directly will cause errors during initialization because Flax expects to call the initializer with a PRNG key.",
+          "Fix_info": "Pass an initializer function: `self.param('Wxi', nn.initializers.normal(), (input_dim, hidden_units))`.",
+          "Fixed_Code": "self.Wxi = self.param('Wxi', nn.initializers.normal(), ...)"
+        },
+        {
+          "Error_Code": "@nn.compact def __init__(self, ...):",
+          "Error": "Invalid Decorator Usage. `__init__` should rarely be decorated with `@nn.compact`, and certainly not when defining parameters that should be in `setup` or `__call__`. In Flax, `__init__` is for configuration (hyperparameters), not parameter creation.",
+          "Fix_info": "Move parameter definition to `setup` or `__call__`.",
+          "Fixed_Code": "def setup(self): self.Wxi = self.param(...)"
+        },
+        {
+          "Error_Code": "grads = jax.grad(LSTMModel().loss)(params)(X_seq, y_seq)",
+          "Error": "AttributeError. Flax module instances do not have a `.loss` method. And initializing `LSTMModel()` inside the grad call creates a fresh, uninitialized model, which will fail.",
+          "Fix_info": "Define an external loss function using the initialized model parameters.",
+          "Fixed_Code": "loss_fn = lambda p: criterion(model.apply({'params': p}, X_seq), y_seq)"
+        },
+        {
+          "Error_Code": "for t in range(seq_len): ...",
+          "Error": "Performance Warning / JIT Inefficiency.  Using a Python loop inside a JAX model unrolls the graph for every timestep. For sequence models, `jax.lax.scan` is required for efficiency and fast compilation.",
+          "Fix_info": "Use `jax.lax.scan` for the LSTM recurrence.",
+          "Fixed_Code": "jax.lax.scan(step_fn, carry, inputs)"
+        },
+        {
+          "Error_Code": "optimizer.update(params, grads)",
+          "Error": "Incorrect Argument Order. `optimizer.update` expects `(grads, opt_state)`. Mistral passes `params` first.",
+          "Fix_info": "Pass `grads` then `opt_state`.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "medium_alexnet",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ...\nclass AlexNet(nn.Module):\n    def __init__(self, num_classes=10):\n        # ...\n        self.features = nn.Sequential(\n            nn.Conv2d(3, 96, kernel_size=11, stride=4, padding=2),\n            nn.ReLU(inplace=True),\n            nn.MaxPool2d(kernel_size=3, stride=2),\n            # ...\n        )\n# ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nfrom flax import optax\n\nclass AlexNet(nn.Module):\n    num_classes: int\n\n    def setup(self):\n        self.features = nn.Sequential(\n            nn.Conv2D(input_shape=image_shape, output_shape=(96, image_shape[0], image_shape[1]),\n                      kernel_size=11, strides=4, padding=\"same\",\n                      init=nn.initializers.xavier_uniform()),\n            nn.Relu(),\n            nn.MaxPool2D(kernel_size=3, strides=2),\n            # ...\n        )\n\n# ...\n\n    def __call__(self, x):\n        x = self.features(x)\n        return x\n\n# ...\n        updates = jax.lax.scan(train_step, params, jax.tuple(train_images, train_labels))\n        params = updates\n        train_loss = model.loss(params)(train_images, train_labels)\n# ...",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n# ...\nclass AlexNet(nn.Module):\n    num_classes: int = 10\n    training: bool = True\n\n    @nn.compact\n    def __call__(self, x, training: bool):\n        x = nn.Conv(features=96, kernel_size=(11, 11), strides=(4, 4), padding=[(2, 2), (2, 2)])(x)\n        x = nn.relu(x)\n        x = nn.max_pool(x, window_shape=(3, 3), strides=(2, 2), padding=[(0, 0), (0, 0)])\n        # ...",
+      "Errors": [
+        {
+          "Error_Code": "self.features = nn.Sequential(...)",
+          "Error": "API Hallucination. `nn.Sequential` does not exist in Flax Linen. Flax models are defined imperatively.",
+          "Fix_info": "Define layers inline in `__call__` or use a list/loop.",
+          "Fixed_Code": "x = nn.Conv(...)(x)\nx = nn.relu(x)"
+        },
+        {
+          "Error_Code": "nn.Conv2D(..., padding=\"same\")",
+          "Error": "API Error. Flax uses `nn.Conv`. Using `Conv2D` is incorrect. Also, PyTorch uses `padding=2` (explicit), while `padding=\"same\"` in JAX calculates dynamic padding that might not match, potentially breaking the AlexNet spatial dimensions.",
+          "Fix_info": "Use `nn.Conv` with explicit padding `[(2, 2), (2, 2)]` to match PyTorch.",
+          "Fixed_Code": "x = nn.Conv(features=96, padding=[(2, 2), (2, 2)])(x)"
+        },
+        {
+          "Error_Code": "nn.Relu()",
+          "Error": "API Error. `nn.relu` is a function in Flax, not a class/module like `nn.ReLU` in PyTorch. It should be called as a function `nn.relu(x)`, not instantiated.",
+          "Fix_info": "Use `nn.relu(x)` inside `__call__`.",
+          "Fixed_Code": "x = nn.relu(x)"
+        },
+        {
+          "Error_Code": "updates = jax.lax.scan(train_step, params, jax.tuple(train_images, train_labels))",
+          "Error": "Incorrect Scan Usage. `jax.lax.scan` expects specific array structures for the sequence. `jax.tuple` is not a valid JAX function (tuples are standard Python types). This attempts to scan over the entire dataset at once in a way that likely mismatches the `train_step` signature.",
+          "Fix_info": "Use a standard Python loop over batches for training, or structure the data correctly for `scan`.",
+          "Fixed_Code": "for batch in data_loader(...): ..."
+        },
+        {
+          "Error_Code": "model.loss(params)(train_images, train_labels)",
+          "Error": "AttributeError. The Flax module instance `model` does not have a `loss` method. Loss computation must be external.",
+          "Fix_info": "Define an external loss function.",
+          "Fixed_Code": "loss = jnp.mean(optax.softmax_cross_entropy(logits, labels))"
+        }
+      ]
+    }
+  ]
+}

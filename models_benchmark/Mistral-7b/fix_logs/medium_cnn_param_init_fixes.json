@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "medium_cnn_param_init",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ...\ndef config_init(init_type=\"kaiming\"):\n    def kaiming_init(m):\n        if isinstance(m, nn.Conv2d):\n            nn.init.kaiming_normal_(m.weight, ...)\n    # ... (Xavier, Zeros, Random)\n    return initializer_dict.get(init_type)\n\nfor name, model in zip(...):\n    model.apply(config_init(name))",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as random\nimport optax\nimport flax\nimport flax.linen as nn\n\n# ...\nclass VanillaCNNModel(nn.Module):\n    def setup(self):\n        self.conv1 = self.param(\"conv1\", nn.Conv2D(3, 32, ...))\n        # ...\n\ndef init(rng, params):\n    init_type = \"kaiming\" # Hardcoded\n    if init_type == \"kaiming\":\n        return nn.initializers.kaiming_normal()(rng, params.shape)\n    # ...\n\nif __name__ == \"__main__\":\n    # ... (Loop missing the logic of applying different inits) ...\n    train_loader = jax.random.prcsr_batch(...)",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n\nclass VanillaCNNModel(nn.Module):\n    kernel_init: callable = nn.initializers.lecun_normal()\n    bias_init: callable = nn.initializers.zeros\n\n    @nn.compact\n    def __call__(self, x):\n        x = nn.Conv(32, (3, 3), kernel_init=self.kernel_init)(x)\n        # ...\n\ninit_map = {\n    \"kaiming\": nn.initializers.he_normal(),\n    \"xavier\": nn.initializers.xavier_normal(),\n    # ...\n}",
+      "Errors": [
+        {
+          "Error_Code": "self.conv1 = self.param(\"conv1\", nn.Conv2D(...))",
+          "Error": "Invalid Parameter Definition. `self.param` expects an initializer function, not a Module instance (`nn.Conv2D`). You cannot store a layer inside a parameter variable. Layers should be attributes or called directly.",
+          "Fix_info": "Use `self.conv1 = nn.Conv(...)`.",
+          "Fixed_Code": "self.conv1 = nn.Conv(features=32, ...)"
+        },
+        {
+          "Error_Code": "nn.initializers.kaiming_normal()",
+          "Error": "AttributeError. Flax uses `he_normal` (He initialization is Kaiming initialization). `kaiming_normal` does not exist in `nn.initializers`.",
+          "Fix_info": "Use `nn.initializers.he_normal()`.",
+          "Fixed_Code": "nn.initializers.he_normal()"
+        },
+        {
+          "Error_Code": "train_loader = jax.random.prcsr_batch(...)",
+          "Error": "API Hallucination. `jax.random.prcsr_batch` does not exist. Mistral is inventing a random data loading function.",
+          "Fix_info": "Create a simple data loader using numpy or standard iteration.",
+          "Fixed_Code": "def data_loader(...): ..."
+        },
+        {
+          "Error_Code": "init_type = \"kaiming\" # Hardcoded",
+          "Error": "Task Failure. The input code iterates through 5 different initialization types. The Mistral code hardcodes \"kaiming\" and fails to implement the loop or the logic to switch initializers dynamically.",
+          "Fix_info": "Make the model accept an initializer argument and loop through the configurations.",
+          "Fixed_Code": "class Model(nn.Module): kernel_init: Callable"
+        },
+        {
+          "Error_Code": "params = jax.tree_map(lambda p, u: p + u, params, updates)",
+          "Error": "Incorrect Update Rule. Simply adding `updates` (gradients?) to parameters (`p + u`) is gradient ascent (if u is grad) or incorrect descent (if u is negative grad) without a learning rate. `optax` handles this logic.",
+          "Fix_info": "Use `optax.apply_updates(params, updates)`.",
+          "Fixed_Code": "params = optax.apply_updates(params, updates)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "easy_cuda_amp",
+      "Input_Code": "import torch\n# ...\nscaler = torch.cuda.amp.GradScaler()\n# ...\nwith torch.cuda.amp.autocast():\n    outputs = model(inputs)\n    loss = criterion(outputs, labels)\n\nscaler.scale(loss).backward()\nscaler.step(optimizer)\nscaler.update()",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nfrom flax import linen as nn\nfrom flax import optax\n\n# ... (Model Def) ...\n\n# Initialize model, loss function, and optimizer\nmodel = SimpleModel()\ncriterion = optax.l2_loss\noptimizer = optax.adam(learning_rate=0.001)\n\n# Training loop\n@jax.jit\ndef train_step(params, batch):\n    x, y = batch\n    with jax.value_and_grad(criterion, has_aux=True) as (loss_fn, grad_fn):\n        predictions = model.apply(params, x)\n        loss = loss_fn(predictions, y)\n    updates, new_params = optimizer.update(grad_fn(params, x), params)\n    params = optax.apply_updates(params, updates)\n    return loss, new_params\n\n# ... (Loop) ...",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nfrom flax.training import train_state\nimport optax\n# ...\n\n# Mixed precision: use bfloat16 for forward pass\n@jax.jit\ndef train_step(state, inputs, labels):\n    def loss_fn(params):\n        # Cast inputs to bfloat16 for mixed precision\n        inputs_bf16 = inputs.astype(jnp.bfloat16)\n        predictions = model.apply({'params': jax.tree.map(lambda p: p.astype(jnp.bfloat16), params)}, inputs_bf16)\n        predictions = predictions.astype(jnp.float32)  # Cast back to float32 for loss\n        return jnp.mean((predictions - labels) ** 2)\n    # ... (Standard update) ...",
+      "Errors": [
+        {
+          "Error_Code": "with jax.value_and_grad(criterion, has_aux=True) as (loss_fn, grad_fn):",
+          "Error": "Syntax Error / Hallucination. `jax.value_and_grad` returns a function, not a context manager. It cannot be used with the `with` statement. This is a severe hallucination attempting to mimic PyTorch's `with autocast():` syntax using JAX gradients.",
+          "Fix_info": "Use `jax.value_and_grad` as a function wrapper: `grad_fn = jax.value_and_grad(loss_fn)`.",
+          "Fixed_Code": "loss, grads = jax.value_and_grad(loss_fn)(params, x, y)"
+        },
+        {
+          "Error_Code": "loss_fn(predictions, y)",
+          "Error": "Logic Error. The code attempts to calculate gradients using `loss_fn` which is derived from `criterion` (optax.l2_loss). However, gradients must be calculated with respect to *parameters*, not just the loss value itself. The differentiation flow is broken.",
+          "Fix_info": "Define a loss function that takes `params` as input and returns the scalar loss.",
+          "Fixed_Code": "def loss_fn(params): ... return loss"
+        },
+        {
+          "Error_Code": "optimizer.update(grad_fn(params, x), params)",
+          "Error": "Incorrect Argument Order & Type. `optimizer.update` expects `(grads, opt_state, params)`. The code passes `(gradients, params)`. This will fail.",
+          "Fix_info": "Pass arguments as `optimizer.update(grads, opt_state, params)`.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)"
+        },
+        {
+          "Error_Code": "# (Missing Mixed Precision)",
+          "Error": "Task Failure. The user explicitly requested \"mixed precision training\" (equivalent to `torch.cuda.amp`). The Raw code implements standard float32 training, completely ignoring the prompt's core requirement.",
+          "Fix_info": "Implement mixed precision by casting inputs/weights to `bfloat16` or `float16` during the forward pass.",
+          "Fixed_Code": "inputs = inputs.astype(jnp.bfloat16) # (See fix)"
+        },
+        {
+          "Error_Code": "params = optax.apply_updates(params, updates)",
+          "Error": "Statelessness Violation. The `params` updated inside `train_step` are returned, but if `optimizer.update` was called correctly, it would also return a new `opt_state` which must be propagated. The Raw code ignores `opt_state` propagation (if it existed), breaking the optimizer.",
+          "Fix_info": "Return and propagate `opt_state`.",
+          "Fixed_Code": "return params, opt_state, loss"
+        }
+      ]
+    }
+  ]
+}

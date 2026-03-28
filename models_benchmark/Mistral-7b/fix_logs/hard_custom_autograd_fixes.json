@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "hard_custom_autograd",
+      "Input_Code": "class LearnedSiLUFunction(torch.autograd.Function):\n    @staticmethod\n    def forward(ctx, x, slope):\n        # ...\n    @staticmethod\n    def backward(ctx, grad_output):\n        # ... (Custom gradient logic) ...\n\nclass LinearRegressionModel(nn.Module):\n    def forward(self, x):\n        return LearnedSiLUFunction.apply(x, self.slope)",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n\nclass LearnedSiLUFunction(nn.Module):\n    @nn.compact\n    def __call__(self, x, slope):\n        return slope * jnp.sigmoid(x)\n\nclass LinearRegressionModel(nn.Module):\n    @nn.compact\n    def __init__(self, slope=1.0):\n        # ...\n    @nn.compact\n    def __call__(self, x):\n        return self.apply(x, self.slope)\n\n# ...\n@jax.jit\ndef train_step(params, X, y):\n    grad_fn = jax.grad(criterion)\n    loss, grads = jax.value_and_grad(criterion)(model.apply(X, params))\n    updates, _ = optimizer.update(params, grads)\n    return updates, loss\n\n# ...\n    model = model.apply_updates(updates)",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\n\n@jax.custom_vjp\ndef learned_silu(x, slope):\n    return slope * x * jax.nn.sigmoid(x)\n\ndef learned_silu_fwd(x, slope):\n    # ... return output, residuals ...\n\ndef learned_silu_bwd(res, grad_output):\n    # ... (Manual gradient calculation) ...\n    return grad_input, grad_slope\n\nlearned_silu.defvjp(learned_silu_fwd, learned_silu_bwd)\n# ...",
+      "Errors": [
+        {
+          "Error_Code": "class LearnedSiLUFunction(nn.Module): ... return slope * jnp.sigmoid(x)",
+          "Error": "Task Failure (Missing Custom Autograd). The prompt specifically asks to implement a *custom autograd function* (custom backward pass). The Raw code ignores this and implements a standard forward-only Module, relying on JAX's default autodiff. It fails the core educational objective.",
+          "Fix_info": "Use `jax.custom_vjp` to define the function and its custom backward pass (`defvjp`).",
+          "Fixed_Code": "@jax.custom_vjp\ndef learned_silu(...): ...\nlearned_silu.defvjp(...)"
+        },
+        {
+          "Error_Code": "grad_fn = jax.grad(criterion)\nloss, grads = jax.value_and_grad(criterion)(model.apply(X, params))",
+          "Error": "Differentiation Target Error. `criterion` is likely `nn.MSELoss()` (from hallucinated imports or context). `jax.grad` requires a function. Even if `criterion` is a function, `model.apply(X, params)` returns *predictions*, not parameters. You cannot take the gradient of the loss function with respect to the *loss value* or *predictions* to update parameters directly in this syntax.",
+          "Fix_info": "Define `loss_fn(params)` and differentiate that with respect to `params`.",
+          "Fixed_Code": "loss_fn = lambda p: criterion(model.apply({'params': p}, X), y)\ngrads = jax.grad(loss_fn)(params)"
+        },
+        {
+          "Error_Code": "model.apply(X, params)",
+          "Error": "Incorrect Argument Order. `model.apply` (Flax) expects `(variables, inputs)`. The Raw code passes `(inputs, variables)`. This will result in a runtime error.",
+          "Fix_info": "Pass variables first: `model.apply({'params': params}, X)`.",
+          "Fixed_Code": "model.apply({'params': params}, X)"
+        },
+        {
+          "Error_Code": "model = model.apply_updates(updates)",
+          "Error": "Hallucinated Method. Flax module instances (`LinearRegressionModel`) do not have an `apply_updates` method. They are immutable configuration objects. Parameters are updated using `optax.apply_updates` on the *params dictionary*, not the model class.",
+          "Fix_info": "Update the parameters dictionary: `params = optax.apply_updates(params, updates)`.",
+          "Fixed_Code": "params = optax.apply_updates(params, updates)"
+        },
+        {
+          "Error_Code": "class LinearRegressionModel(nn.Module): @nn.compact def __init__(self, ...):",
+          "Error": "Invalid Decorator Usage. `__init__` should not be decorated with `@nn.compact`. Compact modules define submodules inside `__call__` or `setup`, not `__init__`.",
+          "Fix_info": "Remove `@nn.compact` from `__init__`.",
+          "Fixed_Code": "def __init__(self, slope=1.0): self.slope_init = slope"
+        }
+      ]
+    }
+  ]
+}

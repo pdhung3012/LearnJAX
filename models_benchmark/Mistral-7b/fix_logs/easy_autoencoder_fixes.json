@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "easy_autoencoder",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ... (Autoencoder Def) ...\n# ... (Anomaly Detection Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport flax.linen as nn\n\n# ... (Load MNIST) ...\n\nclass Autoencoder(nn.Module):\n    def setup(self):\n        self.encoder = nn.Sequential(\n            nn.Conv2D(..., padding=\"same\", activation_fn=nn.relu),\n            # ...\n        )\n        self.decoder = nn.Sequential(\n            nn.ConvTranspose2D(...),\n            # ...\n        )\n\n    def __call__(self, x):\n        encoded = self.encoder(x)\n        decoded = self.decoder(encoded)\n        return decoded\n\n# ... (Training Loop with jax.prng.axis?) ...\n\n@jax.jit\ndef detect_anomalies(model, test_images):\n    reconstructed = model(test_images)\n    loss = model.loss(params, test_images, reconstructed)\n    # ...\n\nif jnp.shape(anomalies)[0] > 0:\n    # ... (Matplotlib usage) ...",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n# ...\n\nclass Autoencoder(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        # Encoder\n        x = nn.Conv(32, (3, 3), padding='SAME')(x)\n        x = nn.relu(x)\n        # ...\n        return x\n\n# ... (Anomaly Logic) ...",
+      "Errors": [
+        {
+          "Error_Code": "self.encoder = nn.Sequential(...)",
+          "Error": "API Hallucination. Flax does not have a `nn.Sequential` container. Models are defined by writing the execution flow imperatively in `__call__` or `setup`.",
+          "Fix_info": "Define layers individually or use a list and iterate through them in `__call__`.",
+          "Fixed_Code": "# Inside __call__\nx = nn.Conv(...)(x)\nx = nn.relu(x)\n..."
+        },
+        {
+          "Error_Code": "nn.Conv2D(..., activation_fn=nn.relu)",
+          "Error": "API Error. Flax Linen uses `nn.Conv` (generic), not `Conv2D`. Also, `nn.Conv` does not accept an `activation_fn` argument; activations are applied separately.",
+          "Fix_info": "Use `nn.Conv` followed by `nn.relu(x)`.",
+          "Fixed_Code": "x = nn.Conv(features=32, ...)(x)\nx = nn.relu(x)"
+        },
+        {
+          "Error_Code": "for i in jax.prng.axis(rng, 0, ...)",
+          "Error": "Hallucinated API. `jax.prng.axis` does not exist. The loop logic attempts to iterate over data using a non-existent JAX utility.",
+          "Fix_info": "Use standard Python `range` and slicing, or `jax.random.permutation` for shuffling indices.",
+          "Fixed_Code": "for i in range(0, len(images), batch_size):"
+        },
+        {
+          "Error_Code": "loss = model.loss(params, ...)",
+          "Error": "AttributeError. The Flax module instance `model` does not have a `loss` method. Loss functions are external to the model definition.",
+          "Fix_info": "Define a loss function that calls `model.apply`.",
+          "Fixed_Code": "loss = jnp.mean((model.apply(params, x) - x) ** 2)"
+        },
+        {
+          "Error_Code": "params = jax.tree_multimap(jax.ops.index_update, params, ...)",
+          "Error": "Deprecated/Hallucinated Update Logic. `jax.tree_multimap` is deprecated (use `jax.tree.map`). `jax.ops.index_update` is deprecated. More importantly, using index updates for parameter optimization is manually reimplementing an optimizer incorrectly instead of using Optax.",
+          "Fix_info": "Use `optax` for optimization.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state)\nparams = optax.apply_updates(params, updates)"
+        }
+      ]
+    }
+  ]
+}

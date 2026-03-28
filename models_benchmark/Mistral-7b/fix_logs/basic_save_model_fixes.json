@@ -1,0 +1,30 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "basic_save_model",
+      "Input_Code": "import torch\n# ... (Model & Training) ...\ntorch.save(model.state_dict(), \"model.pth\")\nloaded_model.load_state_dict(torch.load(\"model.pth\"))",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nfrom flax import linen as nn\nfrom flax import optax\n\n# ... (Model Defs) ...\n\n# ... (Training Loop) ...\n\n# Save the model to a file named \"model.jax\"\njax.save(params, \"model.jax\")\n\n# Load the model back from \"model.jax\"\nloaded_params = jax.load(\"model.jax\")\nloaded_model = SimpleModelParams()\nloaded_model.setup_from_params(loaded_params)",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nimport pickle\n# ...\n\n# Save\nwith open('model.pkl', 'wb') as f:\n    pickle.dump(params, f)\n\n# Load\nwith open('model.pkl', 'rb') as f:\n    loaded_params = pickle.load(f)",
+      "Errors": [
+        {
+          "Error_Code": "jax.save(params, \"model.jax\")\njax.load(\"model.jax\")",
+          "Error": "API Hallucination. `jax` does not have top-level `save` and `load` functions for arbitrary object serialization.",
+          "Fix_info": "Use standard Python `pickle`, `orbax`, or `flax.serialization`.",
+          "Fixed_Code": "with open('model.pkl', 'wb') as f: pickle.dump(params, f)"
+        },
+        {
+          "Error_Code": "loaded_model.setup_from_params(loaded_params)",
+          "Error": "Hallucinated Method. Flax modules do not have a `setup_from_params` method. State is loaded by simply passing the loaded parameters dictionary to `model.apply`.",
+          "Fix_info": "Just use the loaded parameters in `apply`.",
+          "Fixed_Code": "preds = model.apply(loaded_params, X)"
+        },
+        {
+          "Error_Code": "updates, new_opt_state = optax.update(opt_state, grads)",
+          "Error": "Incorrect Argument Order. `optax.update` (or `optimizer.update`) expects `(grads, opt_state, params)`. The raw code passes `opt_state` first.",
+          "Fix_info": "Fix argument order.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "medium_lstm",
+        "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n# ... (Data Gen) ...\n\n# Custom LSTM Cell implementation\nclass CustomLSTMModel(nn.Module):\n    def __init__(self, input_dim, hidden_units, output_dim):\n        super(CustomLSTMModel, self).__init__()\n        self.hidden_units = hidden_units\n        self.W_i = nn.Parameter(torch.Tensor(input_dim, hidden_units))\n        # ... (Other weights: W_f, W_o, W_g, U_i, U_f, etc.) ...\n        self.init_weights()\n\n    def forward(self, x, hidden_state=None):\n        # ... (Manual LSTM logic: gates, cell update) ...\n        return output, (h_t, c_t)\n\n# Inbuilt LSTM for comparison\nclass InbuiltLSTMModel(nn.Module):\n    def __init__(self, input_dim, hidden_units, output_dim):\n        super(InbuiltLSTMModel, self).__init__()\n        self.lstm = nn.LSTM(input_dim, hidden_units, batch_first=True)\n        self.linear = nn.Linear(hidden_units, output_dim)\n\n    def forward(self, x):\n        out, _ = self.lstm(x)\n        return self.linear(out[:, -1, :])\n\n# ... (Training Loops for both) ...",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Data Gen) ...\n\nclass CustomLSTMModel(nn.Module):\n    @nn.compact\n    def __call__(self, inputs, H_C=None):\n        # ... (Initialization logic) ...\n        for t in range(seq_len):\n             # ... (Manual LSTM logic) ...\n        return output\n\n# Inbuilt LSTM\nclass InbuiltLSTMModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        # Error: trying to use PyTorch's nn.LSTM inside Flax?\n        # Actually, the user code just calls nn.LSTM (hallucinated Flax LSTM API)\n        lstm = nn.LSTM(self.hidden_units)(x)\n        return nn.Dense(self.output_dim)(lstm)\n\n# Training Loops\n# ... (Standard loops) ...",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Data Gen) ...\n\n# Custom LSTM (Manual implementation)\nclass CustomLSTMModel(nn.Module):\n    hidden_units: int\n    output_dim: int\n\n    @nn.compact\n    def __call__(self, x):\n        # 1. Define parameters manually using self.param\n        Wi = self.param('Wi', nn.initializers.xavier_uniform(), (x.shape[-1], self.hidden_units))\n        # ... (Define other weights Wf, Wo, Wg, Ui, Uf, etc.) ...\n        \n        def step(carry, x_t):\n            h_prev, c_prev = carry\n            # ... (LSTM math: it, ft, ot, gt) ...\n            c_t = ft * c_prev + it * gt\n            h_t = ot * jnp.tanh(c_t)\n            return (h_t, c_t), h_t\n\n        # 2. Use jax.lax.scan for efficient unrolling\n        (h_final, c_final), all_h = jax.lax.scan(step, (h_0, c_0), x)\n        return nn.Dense(self.output_dim)(h_final)\n\n# Inbuilt LSTM (Using Flax's nn.RNN or nn.LSTMCell)\nclass InbuiltLSTMModel(nn.Module):\n    hidden_units: int\n    output_dim: int\n\n    @nn.compact\n    def __call__(self, x):\n        # Flax LSTMCell is a cell, not a full layer. Need to scan it.\n        lstm = nn.LSTMCell(features=self.hidden_units)\n        scan = nn.scan(lstm, variable_broadcast=\"params\", split_rngs={\"params\": False})\n        # Initialize carry\n        carry = lstm.initialize_carry(jax.random.PRNGKey(0), (x.shape[0], self.hidden_units))\n        carry, outputs = scan(carry, x)\n        return nn.Dense(self.output_dim)(carry[1]) # carry is (c, h)\n\n# ... (Training Loops) ...",
+        "Errors": [
+          {
+            "Error_Code": "lstm = nn.LSTM(self.hidden_units)(x)",
+            "Error": "API Error. Flax does not have a high-level `nn.LSTM` layer that accepts a sequence tensor directly (like PyTorch). It provides `nn.LSTMCell`, which operates on a single time step.",
+            "Fix_info": "Use `nn.LSTMCell` wrapped in `nn.scan` (or `jax.lax.scan`) to process the sequence.",
+            "Fixed_Code": "scan = nn.scan(nn.LSTMCell(features=hidden_units), ...)\ncarry, outputs = scan(carry, x)"
+          },
+          {
+            "Error_Code": "for t in range(seq_len): ... # Python loop in CustomLSTM",
+            "Error": "Performance Warning / JIT Inefficiency.  Using a Python `for` loop inside a JAX model unrolls the loop into the computational graph. For long sequences, this causes massive compilation times and slow execution.",
+            "Fix_info": "Use `jax.lax.scan` to efficiently loop over the sequence.",
+            "Fixed_Code": "jax.lax.scan(step_fn, init_carry, inputs)"
+          },
+          {
+            "Error_Code": "pred = model_inbuilt(X, params)",
+            "Error": "Incorrect Module Call. Flax modules must be called via `.apply()`. Passing `params` as a second argument to `__call__` is not the correct API.",
+            "Fix_info": "Use `model.apply({'params': params}, X)`.",
+            "Fixed_Code": "pred = model.apply({'params': params}, X)"
+          }
+        ]
+      }
+    ]
+  }

@@ -1,0 +1,30 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "hard_custom_autograd",
+        "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n\n# ... (Data gen) ...\n\nclass LearnedSiLUFunction(torch.autograd.Function):\n    @staticmethod\n    def forward(ctx, x, slope):\n        # Save the input tensor and slope for backward computation\n        ctx.save_for_backward(x)\n        ctx.slope = slope\n        return slope * x * torch.sigmoid(x)\n\n    @staticmethod\n    def backward(ctx, grad_output):\n        # ... (Custom gradient computation) ...\n        grad_input = grad_output * slope * (sigmoid_x + x * sigmoid_x * (1 - sigmoid_x))\n        grad_slope = grad_output * x * sigmoid_x\n        return grad_input, grad_slope\n\n# Define the Linear Regression Model\nclass LinearRegressionModel(nn.Module):\n    def __init__(self, slope=1):\n        super().__init__()\n        self.slope = nn.Parameter(torch.ones(1) * slope)\n\n    def forward(self, x):\n        # Use the custom LearnedSiLUFunction\n        return LearnedSiLUFunction.apply(x, self.slope)\n\n# ... (Training loop and print) ...\n[w, b] = model.linear.parameters()\n# (Note: PyTorch code likely has logic error here too as model doesn't have .linear, but JAX translation should reproduce the INTENT of custom autograd)",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Data gen) ...\n\n# Define the custom activation function\nclass LearnedSiLUFunction(jax.nn.Module):\n    def __init__(self, slope=1):\n        super().__init__()\n        self.slope = slope\n\n    def __call__(self, x):\n        return self.slope * x * jax.nn.sigmoid(x)\n\n# Define the Linear Regression Model\nclass LinearRegressionModel(nn.Module):\n    def setup(self, slope=1):\n        self.slope = self.param(\"slope\", (1,), init=lambda key: jnp.ones(key, dtype=jnp.float32) * slope)\n\n    def __call__(self, x):\n        # Use the custom LearnedSiLUFunction\n        return LearnedSiLUFunction(self.slope)(x)\n\n# ... (Training loop) ...\n\n# Display the learned parameters\nw, b = model.apply({\"params\": params, \"batch_stats\": batch_stats}, jnp.array([[4.0], [7.0]]))\nprint(f\"Learned weight: {w[0][0]:.4f}, Learned bias: {b[0][0]:.4f}\")",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom jax import jit, value_and_grad\n\n@jax.custom_vjp\ndef learned_silu(x, slope):\n    return slope * x * jax.nn.sigmoid(x)\n\ndef learned_silu_fwd(x, slope):\n    sigmoid_x = jax.nn.sigmoid(x)\n    output = slope * x * sigmoid_x\n    return output, (x, slope, sigmoid_x)\n\ndef learned_silu_bwd(res, grad_output):\n    x, slope, sigmoid_x = res\n    # Manual gradient calculation matching PyTorch backward\n    grad_input = grad_output * slope * (sigmoid_x + x * sigmoid_x * (1.0 - sigmoid_x))\n    grad_slope_full = grad_output * x * sigmoid_x\n    # Reduce logic for slope scalar\n    grad_slope = jnp.sum(grad_slope_full).reshape(slope.shape)\n    return grad_input, grad_slope\n\nlearned_silu.defvjp(learned_silu_fwd, learned_silu_bwd)\n\ndef model(params, x):\n    slope = params['slope']\n    return learned_silu(x, slope)\n\n# ... (Training loop) ...",
+        "Errors": [
+          {
+            "Error_Code": "class LearnedSiLUFunction(jax.nn.Module):\n    def __call__(self, x):\n        return self.slope * x * jax.nn.sigmoid(x)",
+            "Error": "Missing Custom Gradient Implementation. The task requires translating a custom autograd function (defining `forward` and `backward`). The Raw code ignores this entirely and implements a standard Module that relies on JAX's default automatic differentiation, defeating the purpose of the exercise.",
+            "Fix_info": "Use `jax.custom_vjp` to define the forward and backward passes explicitly, mirroring the `torch.autograd.Function` logic.",
+            "Fixed_Code": "@jax.custom_vjp\ndef learned_silu(x, slope): ... \nlearned_silu.defvjp(fwd, bwd)"
+          },
+          {
+            "Error_Code": "w, b = model.apply({\"params\": params, \"batch_stats\": batch_stats}, ...)",
+            "Error": "ValueError/Logic Error. `model.apply` returns the model predictions (a JAX array), not the weights. Trying to unpack the prediction array into `w, b` will raise a ValueError if the shapes don't align, and is logically incorrect for extracting parameters.",
+            "Fix_info": "Extract learned parameters directly from the `params` dictionary.",
+            "Fixed_Code": "w = params['slope']\nprint(f\"Learned weight: {w[0]:.4f}\")"
+          },
+          {
+            "Error_Code": "class LearnedSiLUFunction(jax.nn.Module):",
+            "Error": "AttributeError / Hallucination. `jax.nn` does not have a `Module` class. Flax modules inherit from `flax.linen.Module`.",
+            "Fix_info": "Inherit from `flax.linen.Module` or use a pure function decorated with `jax.custom_vjp`.",
+            "Fixed_Code": "class LearnedSiLUFunction(nn.Module): # flax.linen"
+          }
+        ]
+      }
+    ]
+  }

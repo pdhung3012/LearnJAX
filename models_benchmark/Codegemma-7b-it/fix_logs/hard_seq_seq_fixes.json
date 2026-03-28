@@ -1,0 +1,30 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "hard_seq_seq",
+        "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n\n# Define the Encoder\nclass Encoder(nn.Module):\n    def __init__(self, input_dim, embed_dim, hidden_dim, num_layers):\n        super(Encoder, self).__init__()\n        self.embedding = nn.Embedding(input_dim, embed_dim)\n        self.lstm = nn.LSTM(embed_dim, hidden_dim, num_layers, batch_first=True)\n\n    def forward(self, x):\n        embedded = self.embedding(x)\n        outputs, (hidden, cell) = self.lstm(embedded)\n        return outputs, (hidden, cell)\n\n# Define the Decoder with Attention\nclass Decoder(nn.Module):\n    def __init__(self, output_dim, embed_dim, hidden_dim, num_layers, src_seq_length):\n        super(Decoder, self).__init__()\n        self.embedding = nn.Embedding(output_dim, embed_dim)\n        self.attention = nn.Linear(hidden_dim + embed_dim, src_seq_length)\n        self.attention_combine = nn.Linear(hidden_dim + embed_dim, embed_dim)\n        self.lstm = nn.LSTM(embed_dim, hidden_dim, num_layers, batch_first=True)\n        self.fc_out = nn.Linear(hidden_dim, output_dim)\n\n    def forward(self, x, encoder_outputs, hidden, cell):\n        x = x.unsqueeze(1)  # Add sequence dimension\n        embedded = self.embedding(x)\n\n        # Attention mechanism\n        attention_weights = torch.softmax(self.attention(torch.cat((embedded.squeeze(1), hidden[-1]), dim=1)), dim=1)\n        context_vector = torch.bmm(attention_weights.unsqueeze(1), encoder_outputs)\n\n        # Combine context and embedded input\n        combined = torch.cat((embedded.squeeze(1), context_vector.squeeze(1)), dim=1)\n        combined = torch.tanh(self.attention_combine(combined)).unsqueeze(1)\n\n        # LSTM and output\n        lstm_out, (hidden, cell) = self.lstm(combined, (hidden, cell))\n        output = self.fc_out(lstm_out.squeeze(1))\n        return output, hidden, cell\n\n# ... (Training loop with teacher forcing) ...",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Encoder definition) ...\n\n# Initialize models, loss function, and optimizer\n# ...\nloss_fn = nn.CrossEntropyLoss()\noptimizer = optax.adam(learning_rate=0.001)\n\n# Training loop\n@jax.jit\ndef train_step(params, batch):\n    src_data, tgt_data = batch\n    params = optax.apply_updates(params, jax.value_and_grad(loss_fn)(params, src_data, tgt_data))\n    return params\n\n@jax.jit\ndef predict(params, x):\n    # ...\n    for _ in range(tgt_seq_length):\n        output, hidden, cell = decoder(decoder_input, encoder_outputs, hidden, cell)\n        # ...\n\nfor epoch in range(epochs):\n    params = train_step(params, (src_data, tgt_data))\n    # ...",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Model definitions) ...\n\n# Optimizer\noptimizer = optax.adam(learning_rate=0.001)\nopt_state = optimizer.init(params)\n\n# Loss function\ndef compute_loss(params, src_data, tgt_data):\n    # ... (Manual loop for decoder steps) ...\n    return loss\n\n# Training step\n@jax.jit\ndef train_step(params, opt_state, src_data, tgt_data):\n    loss, grads = jax.value_and_grad(compute_loss)(params, src_data, tgt_data)\n    updates, opt_state = optimizer.update(grads, opt_state)\n    params = optax.apply_updates(params, updates)\n    return params, opt_state, loss\n\n# ... (Rest of the code) ...",
+        "Errors": [
+          {
+            "Error_Code": "loss_fn = nn.CrossEntropyLoss()",
+            "Error": "AttributeError/Hallucination. Flax's `linen` module (aliased as `nn`) does not have a `CrossEntropyLoss` class. PyTorch loss modules cannot be used in JAX.",
+            "Fix_info": "Use `optax.softmax_cross_entropy_with_integer_labels` inside a functional loss definition.",
+            "Fixed_Code": "loss = jnp.mean(optax.softmax_cross_entropy_with_integer_labels(logits, targets))"
+          },
+          {
+            "Error_Code": "params = optax.apply_updates(params, jax.value_and_grad(loss_fn)(...))",
+            "Error": "Critical Logic Error. `jax.value_and_grad` returns `(loss, grads)`, but `optax.apply_updates` expects `(params, updates)`. Furthermore, the code completely skips `optimizer.update`, meaning it tries to subtract raw gradients (or the loss tuple) from parameters without applying the Adam optimizer logic (moments, etc.).",
+            "Fix_info": "Compute gradients, pass them to `optimizer.update` to get `updates`, and then apply those updates.",
+            "Fixed_Code": "loss, grads = jax.value_and_grad(loss_fn)(params, ...)\nupdates, opt_state = optimizer.update(grads, opt_state)\nparams = optax.apply_updates(params, updates)"
+          },
+          {
+            "Error_Code": "output, hidden, cell = decoder(decoder_input, encoder_outputs, hidden, cell)",
+            "Error": "Incorrect Module Call. Flax Modules must be called via `model.apply(params, ...)`. Calling the instance directly (`decoder(...)`) inside JIT-compiled functions without `apply` context is invalid for Flax.",
+            "Fix_info": "Use `decoder.apply({'params': params}, ...)`.",
+            "Fixed_Code": "output, carry = decoder.apply({'params': params['decoder']}, decoder_input, ...)"
+          }
+        ]
+      }
+    ]
+  }

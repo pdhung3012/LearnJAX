@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "hard_seq_seq",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ...\nclass Decoder(nn.Module):\n    def __init__(self, ...):\n        self.attention = nn.Linear(hidden_dim + embed_dim, src_seq_length)\n        # ...\n    def forward(self, x, encoder_outputs, hidden, cell):\n        # ...\n        attention_weights = torch.softmax(self.attention(torch.cat((embedded.squeeze(1), hidden[-1]), dim=1)), dim=1)\n        context_vector = torch.bmm(attention_weights.unsqueeze(1), encoder_outputs)\n        # ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nfrom flax import linen as nn\nfrom flax import optax\n\n# ... (Encoder definition) ...\n\nclass Decoder(nn.Module):\n    output_dim: int\n    embed_dim: int\n    hidden_dim: int\n    num_layers: int\n    src_seq_length: int\n\n    def setup(self):\n        self.embedding = self.param(\"embedding\", nn.Dense(self.output_dim, self.embed_dim))\n        self.attention = nn.Dense(self.hidden_dim + self.embed_dim, self.src_seq_length)\n        # ...\n\n    @nn.compact\n    def __call__(self, x, encoder_outputs, hidden, cell):\n        # ...\n        attention_weights = nn.softmax(nn.Dense(self.hidden_dim + self.embed_dim, self.src_seq_length)(jnp.concatenate((embedded.squeeze(1), hidden[-1]), axis=1)), axis=1)\n        context_vector = jnp.einsum('lbh,bl->bh', attention_weights.unsqueeze(1), encoder_outputs)\n        # ...\n\n# ... (Training loop) ...\ngrads = jax.grad(train_step)(params, src_data, tgt_data)\nreturn optimizer.update(grads, params)",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n# ...\nclass Decoder(nn.Module):\n    @nn.compact\n    def __call__(self, x, encoder_outputs, carry1, carry2):\n        # ...\n        attention_input = jnp.concatenate([embedded, h_last], axis=-1)\n        attention_weights = jax.nn.softmax(nn.Dense(self.src_seq_length)(attention_input), axis=-1)\n        # ...",
+      "Errors": [
+        {
+          "Error_Code": "self.embedding = self.param(\"embedding\", nn.Dense(self.output_dim, self.embed_dim))",
+          "Error": "Invalid Parameter Definition. `self.param` expects an initializer function, not a Flax Module instance (`nn.Dense`). Flax modules should be assigned directly to attributes in `setup` or defined inline in `__call__`.",
+          "Fix_info": "Use `self.embedding = nn.Embed(num_embeddings, features)` in `setup`.",
+          "Fixed_Code": "self.embedding = nn.Embed(self.output_dim, self.embed_dim)"
+        },
+        {
+          "Error_Code": "attention_weights.unsqueeze(1)",
+          "Error": "AttributeError. JAX arrays do not have an `.unsqueeze()` method (this is PyTorch syntax).",
+          "Fix_info": "Use `jnp.expand_dims(attention_weights, axis=1)` or slice notation `attention_weights[:, None, :]`.",
+          "Fixed_Code": "attention_weights = jnp.expand_dims(attention_weights, 1)"
+        },
+        {
+          "Error_Code": "embedded.squeeze(1)",
+          "Error": "AttributeError. JAX arrays do not have a `.squeeze()` method. This is PyTorch syntax.",
+          "Fix_info": "Use `jnp.squeeze(embedded, axis=1)`.",
+          "Fixed_Code": "embedded = jnp.squeeze(embedded, axis=1)"
+        },
+        {
+          "Error_Code": "nn.Dense(..., self.src_seq_length)(input)",
+          "Error": "Incorrect `nn.Dense` Signature. `nn.Dense` takes `features` (output dim) as the first argument. It does not accept two integers for input and output dimensions like PyTorch's `nn.Linear(in, out)`. Flax infers the input dimension.",
+          "Fix_info": "Pass only the output dimension: `nn.Dense(self.src_seq_length)`.",
+          "Fixed_Code": "nn.Dense(self.src_seq_length)(input)"
+        },
+        {
+          "Error_Code": "optimizer.update(grads, params)",
+          "Error": "Incorrect Argument Order. `optax` optimizers expect `(grads, opt_state, [params])`. Passing `params` as the second argument will cause a type error or silent failure.",
+          "Fix_info": "Pass `opt_state` as the second argument.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)"
+        }
+      ]
+    }
+  ]
+}

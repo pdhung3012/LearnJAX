@@ -1,0 +1,36 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "easy_cuda_amp",
+        "Input_Code": "# Implement mixed precision training in PyTorch using torch.cuda.amp\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import DataLoader, TensorDataset\n\n# Define a simple model\nclass SimpleModel(nn.Module):\n    def __init__(self):\n        super(SimpleModel, self).__init__()\n        self.fc = nn.Linear(10, 1)\n\n    def forward(self, x):\n        return self.fc(x)\n\n# Generate synthetic data\nX = torch.randn(1000, 10)\ny = torch.randn(1000, 1)\ndataset = TensorDataset(X, y)\ndataloader = DataLoader(dataset, batch_size=32, shuffle=True)\n\n# Initialize model, loss function, and optimizer\nmodel = SimpleModel().cuda()\ncriterion = nn.MSELoss()\noptimizer = optim.Adam(model.parameters(), lr=0.001)\n\n# Enable mixed precision training\nscaler = torch.cuda.amp.GradScaler()\n\n# Training loop\nepochs = 5\nfor epoch in range(epochs):\n    for inputs, labels in dataloader:\n        inputs, labels = inputs.cuda(), labels.cuda()\n\n        # Forward pass under autocast\n        with torch.cuda.amp.autocast():\n            outputs = model(inputs)\n            loss = criterion(outputs, labels)\n\n        # Backward pass with scaled gradients\n        optimizer.zero_grad()\n        scaler.scale(loss).backward()\n        scaler.step(optimizer)\n        scaler.update()\n\n    print(f\"Epoch {epoch + 1}/{epochs}, Loss: {loss.item():.4f}\")\n\n# Test the model on new data\nX_test = torch.randn(5, 10).cuda()\nwith torch.no_grad(), torch.cuda.amp.autocast():\n    predictions = model(X_test)\n    print(\"Predictions:\", predictions)",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# Define a simple model\nclass SimpleModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        x = nn.Dense(10)(x)\n        x = nn.relu(x)\n        x = nn.Dense(1)(x)\n        return x\n\n# Generate synthetic data\nX = jnp.random.randn(1000, 10)\ny = jnp.random.randn(1000, 1)\n\n# Initialize model, loss function, and optimizer\nmodel = SimpleModel()\ncriterion = optax.l2_loss\noptimizer = optax.adam(learning_rate=0.001)\n\n# Training loop\n@jax.jit\ndef train_step(params, batch):\n    x, y = batch\n    with jax.value_and_grad(criterion, has_aux=True) as (loss_fn, grad_fn):\n        predictions = model.apply(params, x)\n        loss = loss_fn(predictions, y)\n    updates, new_params = optimizer.update(grad_fn(params, x), params)\n    params = optax.apply_updates(params, updates)\n    return loss, new_params\n\n@jax.jit\ndef test_step(params, x):\n    predictions = model.apply(params, x)\n    return predictions\n\nepochs = 5\nfor epoch in range(epochs):\n    for x, y in zip(X, y):\n        loss, params = train_step(params, (x, y))\n\n    print(f\"Epoch {epoch + 1}/{epochs}, Loss: {loss:.4f}\")\n\n# Test the model on new data\nX_test = jnp.random.randn(5, 10)\npredictions = test_step(params, X_test)\nprint(\"Predictions:\", predictions)",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom jax import grad, jit\nfrom flax import linen as nn\nfrom flax.training import train_state\nimport optax\nimport numpy as np\n\n# Define a simple model\nclass SimpleModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        return nn.Dense(1)(x)\n\n# Generate synthetic data (fixed seed for reproducibility)\nkey = jax.random.PRNGKey(42)\nkey1, key2 = jax.random.split(key)\nX = jax.random.normal(key1, (1000, 10))\ny = jax.random.normal(key2, (1000, 1))\n\n# Initialize model, loss function, and optimizer\nmodel = SimpleModel()\ndummy_input = jnp.ones([1, 10])\nvariables = model.init(jax.random.PRNGKey(0), dummy_input)\n\ntx = optax.adam(learning_rate=0.001)\nstate = train_state.TrainState.create(\n    apply_fn=model.apply,\n    params=variables['params'],\n    tx=tx\n)\n\n# Mixed precision: use bfloat16 for forward pass (JAX equivalent of torch.cuda.amp.autocast)\n@jit\ndef train_step(state, inputs, labels):\n    def loss_fn(params):\n        # Cast inputs to bfloat16 for mixed precision forward pass\n        inputs_bf16 = inputs.astype(jnp.bfloat16)\n        predictions = model.apply({'params': jax.tree.map(lambda p: p.astype(jnp.bfloat16), params)}, inputs_bf16)\n        predictions = predictions.astype(jnp.float32)  # Cast back to float32 for loss\n        return jnp.mean((predictions - labels) ** 2)\n\n    loss, grads = jax.value_and_grad(loss_fn)(state.params)\n    state = state.apply_gradients(grads=grads)\n    return state, loss\n\n# (Training loop omitted for brevity)",
+        "Errors": [
+          {
+            "Error_Code": "with jax.value_and_grad(criterion, has_aux=True) as (loss_fn, grad_fn):",
+            "Error": "Syntax Error / Hallucination. `jax.value_and_grad` returns a function, not a context manager. You cannot use it with the `with` statement. The code attempts to use it like `torch.cuda.amp.autocast`, which is incorrect for JAX.",
+            "Fix_info": "Define the loss function and wrap it with `jax.value_and_grad` directly. Call the resulting function to get loss and gradients.",
+            "Fixed_Code": "grad_fn = jax.value_and_grad(loss_fn)\nloss, grads = grad_fn(params, x, y)"
+          },
+          {
+            "Error_Code": "optimizer.update(grad_fn(params, x), params)",
+            "Error": "Incorrect arguments for `optimizer.update`. It expects `(grads, opt_state)`, but the code passes `(grad_fn_result, params)`. The `params` variable is not a valid optimizer state, meaning the optimizer (Adam) will not track momentum correctly.",
+            "Fix_info": "Initialize `opt_state` properly. Pass `grads` (computed from `value_and_grad`) and `opt_state` to `optimizer.update`.",
+            "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)"
+          },
+          {
+            "Error_Code": "# (Missing Mixed Precision implementation)",
+            "Error": "Task Mismatch. The prompt explicitly requested 'mixed precision training' (equivalent to `torch.cuda.amp`). The Raw code implements standard float32 training, completely ignoring the core requirement.",
+            "Fix_info": "Implement mixed precision by casting inputs and parameters to `jnp.bfloat16` (or `float16`) during the forward pass computations, then casting back to `float32` for the loss calculation.",
+            "Fixed_Code": "inputs_bf16 = inputs.astype(jnp.bfloat16)\n# ... compute in bf16 ...\npredictions = predictions.astype(jnp.float32)"
+          },
+          {
+            "Error_Code": "loss_params = train_step(params, (x, y))",
+            "Error": "Variable Definition Error. `params` is used in `train_step` but is never initialized in the global scope before the loop. The model is instantiated, but `model.init` is never called to create the initial parameters.",
+            "Fix_info": "Initialize parameters using `model.init` before the training loop.",
+            "Fixed_Code": "params = model.init(key, jnp.ones((1, 10)))"
+          }
+        ]
+      }
+    ]
+  }

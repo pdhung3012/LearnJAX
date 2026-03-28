@@ -1,0 +1,36 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "basic_custom_dataset",
+      "Input_Code": "import torch\nimport torch.nn as nn\nimport pandas as pd\nfrom torch.utils.data import Dataset, DataLoader\n# ... (Data Gen & Saving CSV) ...\nclass LinearRegressionDataset(Dataset):\n    def __init__(self, csv_file):\n        self.data = pd.read_csv(csv_file)\n        # ...\n    def __getitem__(self, idx):\n        return self.X[idx], self.y[idx]\n# ... (Model & Loop using DataLoader) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nimport optax\nimport flax\nimport flax.linen as nn\n\n# ... (Data Gen) ...\n# Save to CSV... (Comment: \"JAX does not support this directly\")\n\nclass LinearRegression(nn.Module):\n    @nn.compact\n    def __call__(self, X):\n        w = self.param('w', nn.initializers.normal(stddev=0.01))\n        b = self.param('b', nn.initializers.zeros(1))\n        return w * X + b\n\n    @nn.compact\n    def setup(self):\n        self.params = self.param_attrs\n\nmodel = LinearRegression()\nparams = model.init(rng, jnp.ones((1,)))\nstate = optax.initialize(jax.grad(model.loss)(params), params)\n\n@jax.jit\ndef train_step(X_batch, y_batch, state, learning_rate):\n    grads, new_state = jax.value_and_grad(model.update)(state, X_batch, y_batch)\n    # ... (Hallucinated update logic) ...\n\nfor epoch in range(num_epochs):\n    # Randomly splitting data manually inside loop\n    X_batch, y_batch = jnp.random.split(..., num=2, axis=-1)\n    params, state = train_step(X_batch, y_batch, state, 0.01)\n\n# ...",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nimport pandas as pd\nimport numpy as np\n# ... (Imports) ...\n\n# 1. Replicate Dataset Logic\nclass LinearRegressionDataset:\n    def __init__(self, csv_file):\n        df = pd.read_csv(csv_file)\n        self.X = jnp.array(df['X'].values).reshape(-1, 1)\n        self.y = jnp.array(df['y'].values).reshape(-1, 1)\n\n    def __len__(self):\n        return len(self.X)\n\n# 2. Replicate DataLoader Logic (Generator)\ndef data_loader(dataset, batch_size, key, shuffle=True):\n    indices = jnp.arange(len(dataset))\n    if shuffle:\n        indices = jax.random.permutation(key, indices)\n    for i in range(0, len(dataset), batch_size):\n        batch_idx = indices[i:i+batch_size]\n        yield dataset.X[batch_idx], dataset.y[batch_idx]\n\n# ... (Standard Flax Model & Loop) ...",
+      "Errors": [
+        {
+          "Error_Code": "w = self.param('w', ...)\n@nn.compact\ndef setup(self):\n    self.params = self.param_attrs",
+          "Error": "Invalid Flax Definition. You cannot have both `@nn.compact` on `__call__` AND a `setup` method decorated with `@nn.compact`. `setup` is for non-compact modules. Also `self.param_attrs` does not exist.",
+          "Fix_info": "Use `@nn.compact` on `__call__` only, and define `self.param` inside it. Remove `setup`.",
+          "Fixed_Code": "# Inside __call__ (compact):\nw = self.param('w', nn.initializers.normal(), (1, 1))"
+        },
+        {
+          "Error_Code": "state = optax.initialize(jax.grad(model.loss)(params), params)",
+          "Error": "API Hallucination. `optax.initialize` does not exist. Optax optimizers (like `optax.sgd`) return an `init` function (e.g., `optimizer.init(params)`).",
+          "Fix_info": "Use `optimizer.init(params)` to create the optimizer state.",
+          "Fixed_Code": "opt_state = optimizer.init(params)"
+        },
+        {
+          "Error_Code": "jax.grad(model.loss)(params)",
+          "Error": "AttributeError. The `model` (Flax module) does not have a `loss` method unless explicitly defined by the user (which it isn't here). Flax modules are just architecture definitions.",
+          "Fix_info": "Define an external loss function that calls `model.apply`.",
+          "Fixed_Code": "def loss_fn(params, x, y): ..."
+        },
+        {
+          "Error_Code": "# (Missing Dataset/DataLoader implementation)",
+          "Error": "Task Mismatch. The Input code is specifically about creating a Custom Dataset and DataLoader. The Raw JAX code skips this entirely, doing manual random splitting inside the loop, failing to translate the core educational concept.",
+          "Fix_info": "Implement a `LinearRegressionDataset` class and a generator-based `data_loader` function to mirror PyTorch's data handling.",
+          "Fixed_Code": "# (See LLM_fix_output for data_loader implementation)"
+        }
+      ]
+    }
+  ]
+}

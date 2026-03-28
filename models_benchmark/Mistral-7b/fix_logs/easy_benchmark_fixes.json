@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "easy_benchmark",
+      "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\nimport time\n# ... (Data Loading) ...\nclass SimpleNN(nn.Module):\n    def __init__(self):\n        super(SimpleNN, self).__init__()\n        self.fc1 = nn.Linear(28*28, 128)\n        self.fc2 = nn.Linear(128, 10)\n    def forward(self, x):\n        x = x.view(-1, 28*28)\n        x = torch.relu(self.fc1(x))\n        x = self.fc2(x)\n        return x\n# ... (Training Loop with time.time()) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nimport optax\nfrom flax import linen as nn\n\n# ... (SimpleNN Def) ...\n\n# Initialize the model\nrng = jr.PRNGKey(0)\nkey, params = jax.random.normal(rng, (), [1, 784, 128, 10])\nmodel = SimpleNN.init(params)\n\ncriterion = jax.ops.index_update(jax.ops.index[:, 0], jnp.arange(10), ...)\n\nstate = optax.init_optimizer_state(model.apply_grad_fn, step_size=0.01)\n\n# Training loop\nnum_epochs = 5\nfor epoch in range(num_epochs):\n    start_time = jax.time()\n    for i in range(len(train_batch)):\n        # ...\n        grads = jax.grad(model.apply_grad_fn)(params, images, labels)\n        updates, new_state = optax.update(state, grads)\n        params = jax.tree_multimap(jax.ops.index_update, params, updates)\n\n    end_time = jax.time()\n    # ...",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nfrom flax.training import train_state\nimport optax\nimport time\n\n# ... (Correct Data Loading & Model) ...\n\n# Initialize\nmodel = SimpleNN()\nvariables = model.init(jax.random.PRNGKey(0), jnp.ones([1, 28*28]))\nstate = train_state.TrainState.create(\n    apply_fn=model.apply, params=variables['params'], tx=optax.sgd(0.01)\n)\n\n@jax.jit\ndef train_step(state, batch):\n    def loss_fn(params):\n        logits = model.apply({'params': params}, batch[0])\n        return optax.softmax_cross_entropy_with_integer_labels(logits, batch[1]).mean()\n    loss, grads = jax.value_and_grad(loss_fn)(state.params)\n    state = state.apply_gradients(grads=grads)\n    return state, loss\n\n# Loop\nfor epoch in range(5):\n    start_time = time.time()\n    # ... (Step) ...\n    end_time = time.time()",
+      "Errors": [
+        {
+          "Error_Code": "model = SimpleNN.init(params)",
+          "Error": "Incorrect Initialization. `SimpleNN` is a class (inheriting from `nn.Module`). You must instantiate it (`SimpleNN()`) before calling `.init`. Furthermore, `.init` takes a RNG key and input sample, not `params`. The code passes `params` (random noise) into `init`, which is backwards.",
+          "Fix_info": "Instantiate the model and initialize it properly: `variables = SimpleNN().init(rng, sample_input)`.",
+          "Fixed_Code": "model = SimpleNN()\nvariables = model.init(rng, jnp.ones((1, 784)))"
+        },
+        {
+          "Error_Code": "criterion = jax.ops.index_update(...)",
+          "Error": "Hallucination/Nonsense. The code attempts to define a loss function (`criterion`) using a complex, nested call to `jax.ops.index_update`. This is not how loss functions are defined. `index_update` is for array modification, not for computing Cross Entropy.",
+          "Fix_info": "Use `optax.softmax_cross_entropy_with_integer_labels`.",
+          "Fixed_Code": "criterion = optax.softmax_cross_entropy_with_integer_labels"
+        },
+        {
+          "Error_Code": "state = optax.init_optimizer_state(model.apply_grad_fn, step_size=0.01)",
+          "Error": "API Hallucination. `optax` does not have `init_optimizer_state`. Flax modules do not have `apply_grad_fn`. This is a complete fabrication of the optimization API.",
+          "Fix_info": "Use `optax.sgd(learning_rate=0.01)` to create an optimizer definition, then `optimizer.init(params)` to get the state.",
+          "Fixed_Code": "tx = optax.sgd(learning_rate=0.01)\nstate = train_state.TrainState.create(..., tx=tx)"
+        },
+        {
+          "Error_Code": "start_time = jax.time()",
+          "Error": "AttributeError. `jax` does not have a top-level `time()` function. Time measurement should use Python's standard `time` module.",
+          "Fix_info": "Import `time` and use `time.time()`.",
+          "Fixed_Code": "import time\nstart_time = time.time()"
+        },
+        {
+          "Error_Code": "params = jax.tree_multimap(jax.ops.index_update, params, updates)",
+          "Error": "Deprecated/Wrong Update Logic. `jax.tree_multimap` is deprecated (use `jax.tree.map`). `jax.ops.index_update` is deprecated. More importantly, using `index_update` to apply gradients manually ignores the optimizer's update rule (SGD/Adam).",
+          "Fix_info": "Use `optax.apply_updates(params, updates)`.",
+          "Fixed_Code": "params = optax.apply_updates(params, updates)"
+        }
+      ]
+    }
+  ]
+}

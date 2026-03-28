@@ -1,0 +1,19 @@
+  Here's the JAX code for converting PyTorch to JAX:
+from jax import numpy as np
+def convert_pytorch_to_jax(x, y)):
+    # Note: You may need to adjust your input tensor shape/size (e.g. add/remove dimensions, change data type)))))
+
+    return np.asarray(x))
+
+# Use "np" instead of "torch" for PyTorch/JAX code)
+from jax import numpy as np
+def convert_pytorch_to_jax(x, y)):
+    # Note: You may need to adjust your input tensor shape/size (e.g. add/remove dimensions, change data type)))))
+
+    return np.asarray(x))
+
+# 1. Put JAX code in evaluation mode (disables dropout/batchnorm)
+model.eval()
+
+test_sequences = [
+    "This was the worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst worst wrong wrong right right right right right right

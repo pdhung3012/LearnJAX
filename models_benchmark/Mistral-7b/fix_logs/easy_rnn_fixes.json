@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "easy_rnn",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ...\nclass RNNModel(nn.Module):\n    def __init__(self, ...):\n        self.W_ih = nn.Parameter(...)\n        self.W_hh = nn.Parameter(...)\n        self.b_h = nn.Parameter(...)\n    def forward(self, x):\n        # ... (Manual RNN implementation) ...\n# ... (Training Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nfrom flax import linen as nn\nfrom flax import optax\n\n# ... (Data Gen) ...\n\nclass RNNModel(nn.Module):\n    def setup(self):\n        self.hidden_dim = 50\n        self.W_ih = self.param(\"W_ih\", self.initializer(shape=(1, self.hidden_dim), rng=rng))\n        self.W_hh = self.param(\"W_hh\", self.initializer(shape=(self.hidden_dim, self.hidden_dim), rng=rng))\n        # ...\n\n    def __call__(self, x):\n        # ... (Manual implementation) ...\n        h = tanh(x_t @ self.W_ih + h @ self.W_hh + self.b_h)\n        return output\n\n    def initializer(self, shape, rng):\n        return jr.normal(rng, shape) * 0.1\n\n# ...\n\n@jax.jit\ndef train_step(params, X_seq, y_seq):\n    grad_fn = jax.value_and_grad(model.apply, has_aux=True)(params, X_seq)\n    loss, grads = grad_fn\n    grads = jnp.squeeze(grads, axis=-1)\n    updates, _ = optimizer.update(params, grads)\n    return updates, loss\n\n# ...",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n# ...\nclass RNNModel(nn.Module):\n    # ...\n    @nn.compact\n    def __call__(self, x):\n        # Correct parameter definition\n        W_ih = self.param('W_ih', nn.initializers.normal(0.1), (1, self.hidden_dim))\n        # ...\n# ...",
+      "Errors": [
+        {
+          "Error_Code": "self.param(\"W_ih\", self.initializer(shape=..., rng=rng))",
+          "Error": "Incorrect `self.param` Usage. `self.param` expects an initializer *function*, not the result of calling an initializer (a tensor). Mistral calls `self.initializer(...)` immediately, passing a tensor as the initializer argument to `self.param`. This will crash or behave unexpectedly.",
+          "Fix_info": "Pass the function `self.initializer` itself (or a lambda/partial) to `self.param`. Flax calls it with `(rng, shape)`.",
+          "Fixed_Code": "self.param('W_ih', nn.initializers.normal(0.1), (1, hidden_dim))"
+        },
+        {
+          "Error_Code": "grad_fn = jax.value_and_grad(model.apply, has_aux=True)(params, X_seq)",
+          "Error": "Differentiation Target Error. `model.apply` returns the model output (predictions), not a scalar loss. `jax.value_and_grad` requires a function that returns a scalar. This code attempts to calculate gradients of the *prediction vector*, which is mathematically invalid for scalar optimization without a loss function.",
+          "Fix_info": "Wrap `model.apply` in a loss function `loss_fn(params, x, y)` and differentiate that.",
+          "Fixed_Code": "loss, grads = jax.value_and_grad(loss_fn)(params, X_seq, y_seq)"
+        },
+        {
+          "Error_Code": "optimizer.update(params, grads)",
+          "Error": "Incorrect Argument Order. `optimizer.update` expects `(grads, opt_state, params)`. Mistral passes `params` first.",
+          "Fix_info": "Pass `grads` then `opt_state`.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)"
+        },
+        {
+          "Error_Code": "grads = jnp.squeeze(grads, axis=-1)",
+          "Error": "Dimension Hacking / Shape Mismatch. Attempting to manually squeeze gradients suggests the loss function or model output shapes were mismatched (e.g., `(B, 1)` vs `(B,)`), and the model blindly tried to fix it. Gradients should automatically match parameter shapes.",
+          "Fix_info": "Ensure prediction and target shapes match in the loss calculation.",
+          "Fixed_Code": "# Remove manual squeeze, fix shapes in loss_fn"
+        },
+        {
+          "Error_Code": "class RNNModel(nn.Module): ... def setup(self): ... rng=rng",
+          "Error": "Scope Error (Variable Capture). The code uses a global variable `rng` inside the `setup` method for initialization. This breaks reproducibility and makes the module dependent on global state.",
+          "Fix_info": "Do not pass `rng` manually. Flax handles RNG splitting automatically when you pass an initializer function to `self.param`.",
+          "Fixed_Code": "# Remove rng argument from initializer call"
+        }
+      ]
+    }
+  ]
+}

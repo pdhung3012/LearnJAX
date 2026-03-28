@@ -1,0 +1,36 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "basic_custom_activation",
+      "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n# ... (Data Gen) ...\nclass CustomActivationModel(nn.Module):\n    def __init__(self):\n        super(CustomActivationModel, self).__init__()\n        self.linear = nn.Linear(1, 1)\n\n    def custom_activation(self, x):\n        return torch.tanh(x) + x\n\n    def forward(self, x):\n        return self.custom_activation(self.linear(x))\n# ... (Training Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nfrom flax import linen as nn\nfrom flax import optax\nimport matplotlib.pyplot as plt\n\n# ... (Data Gen) ...\n\n# Define the Linear Regression Model within a CustomActivationModel class\nclass CustomActivationModel(nn.Module):\n    @nn.compact\n    def __call__(self, X):\n        x = X[:, jnp.newaxis]\n        w = self.params[\"w\"]\n        b = self.params[\"b\"]\n        return jnp.tanh(x * w) + x * w + b\n\n    @nn.compact\n    def setup(self):\n        self.params = self.init_params()\n\n    def init_params(self):\n        rng = jr.PRNGKey(42)\n        return {\"w\": jr.normal(rng, (1,)), \"b\": jr.normal(rng, (1,))}\n\n# Initialize the model, loss function, and optimizer\nmodel = CustomActivationModel()\n\n# Define the loss function\ndef loss(params, X, y):\n    predictions = model.apply(params, X)\n    return jnp.mean((predictions - y) ** 2)\n\n# Initialize the optimizer\noptimizer = optax.sgd(0.01)\n\n# Training loop\n@jax.jit\ndef train_step(params, X, y):\n    grads = jax.value_and_grad(loss)(params, X, y)\n    return optimizer.update(params, grads)\n\n# Training loop\nfor epoch in range(1000):\n    params = train_step(params, X, y)[0]\n    # ...\n\nw, b = model.params[\"w\"], model.params[\"b\"]",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Data Gen) ...\n\nclass CustomActivationModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        x = nn.Dense(1)(x)\n        return jnp.tanh(x) + x\n\nmodel = CustomActivationModel()\nparams = model.init(jax.random.PRNGKey(42), jnp.ones((1, 1)))\noptimizer = optax.sgd(learning_rate=0.01)\nopt_state = optimizer.init(params)\n\n@jax.jit\ndef train_step(params, opt_state, X, y):\n    def loss_fn(params):\n        predictions = model.apply(params, X)\n        return jnp.mean((predictions - y) ** 2)\n    \n    loss, grads = jax.value_and_grad(loss_fn)(params)\n    updates, opt_state = optimizer.update(grads, opt_state, params)\n    params = optax.apply_updates(params, updates)\n    return params, opt_state, loss\n\n# ... (Loop) ...",
+      "Errors": [
+        {
+          "Error_Code": "w = self.params[\"w\"]\nb = self.params[\"b\"]",
+          "Error": "Invalid Parameter Access / Hallucination. In Flax, you define parameters using `self.param()`, not by assigning to a `self.params` dictionary directly. Additionally, `setup` and `__call__` usage here is convoluted and incorrect for defining trainable weights.",
+          "Fix_info": "Use `self.param('w', ...)` inside `setup` or `__call__`, or simply use `nn.Dense` which handles this automatically.",
+          "Fixed_Code": "x = nn.Dense(1)(x)"
+        },
+        {
+          "Error_Code": "optimizer.update(params, grads)",
+          "Error": "Incorrect Argument Order. `optimizer.update` (from Optax) expects `(grads, opt_state, [params])`. The Raw code passes `(params, grads)`, which will cause type errors or silent failures.",
+          "Fix_info": "Pass `grads` then `opt_state`.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)"
+        },
+        {
+          "Error_Code": "model.params[\"w\"]",
+          "Error": "AttributeError. The `model` instance (CustomActivationModel) is a configuration object and does not store parameters in a `.params` attribute after initialization. Parameters are returned by `model.init`.",
+          "Fix_info": "Access parameters from the `params` Pytree returned by `model.init`.",
+          "Fixed_Code": "w = params['params']['Dense_0']['kernel']"
+        },
+        {
+          "Error_Code": "from flax import optax",
+          "Error": "Import Error. `optax` is a separate library, not a submodule of `flax`. It should be imported as `import optax`.",
+          "Fix_info": "Correct the import statement.",
+          "Fixed_Code": "import optax"
+        }
+      ]
+    }
+  ]
+}

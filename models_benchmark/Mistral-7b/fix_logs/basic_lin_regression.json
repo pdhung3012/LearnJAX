@@ -1,0 +1,48 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "basic_lin_regression",
+      "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n# ... (Data Gen) ...\nclass LinearRegressionModel(nn.Module):\n    def __init__(self):\n        super(LinearRegressionModel, self).__init__()\n        self.linear = nn.Linear(1, 1)\n    def forward(self, x):\n        return self.linear(x)\n# ... (Training Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nfrom flax import linen as nn\nfrom flax import optax\n\n# ... (Data Gen) ...\n\nclass LinearRegressionModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        return self.linear(x)\n\n    @nn.compact\n    def setup(self):\n        self.linear = nn.Dense(1)\n\nclass LinearRegression(nn.Module):\n    model = LinearRegressionModel\n\n# Initialize the model, loss function, and optimizer\nparams = jax.random.normal(rng, LinearRegression.model.setup_rng_key(), LinearRegression.model.setup())\noptimizer_state = optax.init_optimizer_state(optax.sgd, params, step_size=0.01)\n\n@jax.jit\ndef train_step(params, optimizer_state, X, y):\n    predictions = LinearRegression.model()(params)(X)\n    loss = jnp.mean((predictions - y) ** 2)\n    grads = jax.grad(loss)(params)\n    updates, new_optimizer_state = optax.update(optimizer_state, grads)\n    return params.at(0, jax.ops.index_update(params[0], ...)) # (Hallucinated mess)\n",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Data Gen) ...\n\nclass LinearRegressionModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        return nn.Dense(1)(x)\n\n# ... (Standard Init & Loop) ...",
+      "Errors": [
+        {
+          "Error_Code": "class LinearRegressionModel(nn.Module): ... @nn.compact def setup(self): ...",
+          "Error": "Invalid Flax Definition. Mixing `@nn.compact` on `setup` is invalid. Also, defining `self.linear = nn.Dense(1)` in `setup` and calling it `self.linear(x)` in `__call__` is correct for non-compact modules, but the decorators are misused here.",
+          "Fix_info": "Use standard compact definition: define `nn.Dense` inline inside `__call__`.",
+          "Fixed_Code": "@nn.compact\ndef __call__(self, x):\n    return nn.Dense(1)(x)"
+        },
+        {
+          "Error_Code": "class LinearRegression(nn.Module): model = LinearRegressionModel",
+          "Error": " convoluted wrapper. Creating a wrapper class `LinearRegression` that holds the `LinearRegressionModel` class as a static attribute is bizarre and non-functional.",
+          "Fix_info": "Instantiate `LinearRegressionModel` directly.",
+          "Fixed_Code": "model = LinearRegressionModel()"
+        },
+        {
+          "Error_Code": "params = jax.random.normal(rng, LinearRegression.model.setup_rng_key(), ...)",
+          "Error": "Hallucinated Initialization API. Flax models are initialized via `model.init(key, input_shape)`. The raw code invents methods like `setup_rng_key()` and attempts to initialize parameters using `jax.random.normal` directly on the model class.",
+          "Fix_info": "Use `params = model.init(key, sample_input)`.",
+          "Fixed_Code": "params = model.init(key, jnp.ones((1, 1)))"
+        },
+        {
+          "Error_Code": "optimizer_state = optax.init_optimizer_state(optax.sgd, params, step_size=0.01)",
+          "Error": "API Hallucination. `optax.init_optimizer_state` does not exist. `optax.sgd` returns a transformation with an `.init` method.",
+          "Fix_info": "Initialize optimizer correctly.",
+          "Fixed_Code": "tx = optax.sgd(learning_rate=0.01)\nopt_state = tx.init(params)"
+        },
+        {
+          "Error_Code": "predictions = LinearRegression.model()(params)(X)",
+          "Error": "Invalid Call Syntax. Flax models are called via `.apply()`. This syntax tries to call the class as a function, then call the result with params, then with data.",
+          "Fix_info": "Use `model.apply`.",
+          "Fixed_Code": "predictions = model.apply(params, X)"
+        },
+        {
+          "Error_Code": "return params.at(0, jax.ops.index_update(...))",
+          "Error": "Hallucinated Update Logic. The code generates a massive, nonsensical nested `jax.ops.index_update` call to manually apply gradients, instead of using `optax.apply_updates`. It also hallucinates the `jax.ops` API which was deprecated/removed in favor of `.at[].set()`.",
+          "Fix_info": "Use `optax.apply_updates(params, updates)`.",
+          "Fixed_Code": "params = optax.apply_updates(params, updates)"
+        }
+      ]
+    }
+  ]
+}

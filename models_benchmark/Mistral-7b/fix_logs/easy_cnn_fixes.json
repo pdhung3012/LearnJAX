@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "easy_cnn",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ... (Data Gen) ...\nclass CNNModel(nn.Module):\n    def __init__(self):\n        super(CNNModel, self).__init__()\n        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)\n        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)\n        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)\n        # ...\n    def forward(self, x):\n        x = self.relu(self.conv1(x))\n        x = self.pool(self.relu(self.conv2(x)))\n        # ...\n# ... (Training Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport flax.linen as nn\nimport optax\n# ... (Data Gen) ...\n\n@jjf.primitive\ndef load_dataset():\n    # ...\n\nclass CNNModel(nn.Module):\n  @nn.compact\n  def __call__(self, x):\n    x = nn.relu(self.conv1(x))\n    x = nn.max_pool(x, 2, 2)\n    # ...\n\n  @setup\n  def setup(self):\n    self.conv1 = nn.conv2d(3, 32, 3, 1, 1)\n    self.conv2 = nn.conv2d(32, 64, 3, 1, 1)\n    # ...\n\noptimizer = optax.adam(params)\nloss_fn = nn.cross_entropy\n\n@jax.jit\ndef train_step(params, images, labels):\n  outputs = CNNModel()(params)(images)\n  grads = jax.value_and_grad(CNNModel()(params), images)(images)[1]\n  updates, _ = optimizer.update(grads)\n  params = jax.tree_multimap(jax.ops.index_update, params, updates)\n  return params, loss",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\nclass CNNModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        x = nn.Conv(32, kernel_size=(3, 3), padding='SAME')(x)\n        x = nn.relu(x)\n        x = nn.Conv(64, kernel_size=(3, 3), padding='SAME')(x)\n        x = nn.relu(x)\n        x = nn.max_pool(x, window_shape=(2, 2), strides=(2, 2))\n        # ...\n        return x\n\n# ... (Correct Init & Loop) ...",
+      "Errors": [
+        {
+          "Error_Code": "@jjf.primitive",
+          "Error": "Hallucinated Decorator. The code uses `@jjf.primitive` to decorate `load_dataset`. `jjf` is likely a hallucination of `jax.jit` or `jax.custom_jvp` or completely made up. This module is not imported and does not exist.",
+          "Fix_info": "Remove the decorator. Data loading should usually happen outside JAX transformations, or using `tf.data` / `torch.utils.data`.",
+          "Fixed_Code": "# Remove @jjf.primitive"
+        },
+        {
+          "Error_Code": "self.conv1 = nn.conv2d(3, 32, 3, 1, 1)",
+          "Error": "Invalid API / Method Existence. `nn.conv2d` does not exist in Flax Linen. The class is `nn.Conv`. Furthermore, using `@setup` as a decorator is non-standard, and defining layers in `setup` while calling them in a `@nn.compact` `__call__` is a mix of styles that is often invalid.",
+          "Fix_info": "Use `nn.Conv` inside `__call__` (compact) or `setup`. Correct arguments: `features=32, kernel_size=(3,3)`.",
+          "Fixed_Code": "x = nn.Conv(features=32, kernel_size=(3, 3))(x)"
+        },
+        {
+          "Error_Code": "outputs = CNNModel()(params)(images)",
+          "Error": "Invalid Call Syntax. `CNNModel()` instantiates the class. `(params)` is not how you pass parameters to a Flax module instance. `(images)` is the input. This chain attempts to treat the module class as a curried function in a way that doesn't exist.",
+          "Fix_info": "Use `CNNModel().apply({'params': params}, images)`.",
+          "Fixed_Code": "outputs = model.apply({'params': params}, images)"
+        },
+        {
+          "Error_Code": "optimizer = optax.adam(params)",
+          "Error": "Incorrect Initialization. `optax.adam` takes `learning_rate` as its first argument, not `params`. It returns a gradient transformation, not an optimizer instance bound to parameters.",
+          "Fix_info": "Initialize with LR: `optimizer = optax.adam(0.001)`. Initialize state later: `opt_state = optimizer.init(params)`.",
+          "Fixed_Code": "optimizer = optax.adam(learning_rate=0.001)"
+        },
+        {
+          "Error_Code": "loss_fn = nn.cross_entropy",
+          "Error": "API Hallucination. `flax.linen` (`nn`) does not have `cross_entropy`. Loss functions are typically in `optax` or implemented manually.",
+          "Fix_info": "Use `optax.softmax_cross_entropy_with_integer_labels`.",
+          "Fixed_Code": "loss_fn = optax.softmax_cross_entropy_with_integer_labels"
+        }
+      ]
+    }
+  ]
+}

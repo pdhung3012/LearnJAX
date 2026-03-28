@@ -1,0 +1,48 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "basic_custom_loss",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ... (Data Gen) ...\nclass HuberLoss(nn.Module):\n    def __init__(self, delta=1.0):\n        super(HuberLoss, self).__init__()\n        self.delta = delta\n    \n    def forward(self, y_pred, y_true):\n        # ... (Huber logic) ...\n        return loss.mean()\n\n# ... (Model & Training Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nfrom flax import optax\n\n# ... (Data Gen) ...\n\nclass HuberLoss(nn.Module):\n    delta: float\n\n    def setup(self):\n        self.delta = jnp.full_like(jnp.ones((1,)), self.delta)\n\n    @nn.compact\n    def __call__(self, y_pred, y_true):\n        # ... (Huber logic) ...\n        return loss.mean()\n\nclass TrainStep(nn.Module):\n    def setup(self):\n        self.params = self.param(\"params\", self.linear)\n        self.optimizer_state = self.param(\"optimizer_state\", optax.state.OptState())\n\n    def __call__(self, X, y):\n        # ... (Convoluted logic trying to embed training step in a Module) ...\n        updates, new_state = optax.sgd(self.optimizer_state, self.params, grads, 0.01)\n        return self.apply(updates), new_state\n\n# ... (Loop calling self.train_step) ...",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# Functional Huber Loss\ndef huber_loss(y_pred, y_true, delta=1.0):\n    error = jnp.abs(y_pred - y_true)\n    loss = jnp.where(error <= delta,\n                     0.5 * error**2,\n                     delta * (error - 0.5 * delta))\n    return jnp.mean(loss)\n\n# ... (Standard Model & Loop) ...",
+      "Errors": [
+        {
+          "Error_Code": "class HuberLoss(nn.Module): ... def setup(self): self.delta = ...",
+          "Error": "Anti-pattern (Stateful Loss). Creating a `nn.Module` for a simple loss function (with hyperparameters as state) is unnecessary complexity in JAX. Furthermore, `setup` initializing `self.delta` as a tracked variable implies it might be trainable or require `init`, which complicates the training loop significantly for no reason.",
+          "Fix_info": "Define the loss as a pure Python function `def huber_loss(preds, targets, delta=1.0):`.",
+          "Fixed_Code": "def huber_loss(y_pred, y_true, delta=1.0): ..."
+        },
+        {
+          "Error_Code": "class TrainStep(nn.Module): ...",
+          "Error": "Architecture Hallucination. Wrapping the *training loop logic* (forward, backward, optimizer step) inside a `nn.Module` (`TrainStep`) is a fundamental misunderstanding of JAX/Flax design. Modules define the network architecture; training logic should be external pure functions transformed by `jax.jit`.",
+          "Fix_info": "Remove `TrainStep`. Implement a standard `train_step(params, opt_state, batch)` function.",
+          "Fixed_Code": "@jax.jit\ndef train_step(params, opt_state, batch): ..."
+        },
+        {
+          "Error_Code": "self.params = self.param(\"params\", self.linear)",
+          "Error": "Invalid Parameter Initialization. `self.param` expects an initialization function (like `nn.initializers.zeros`). Passing `self.linear` (a Module instance or class) as the initializer is invalid and will crash.",
+          "Fix_info": "Initialize parameters properly using `model.init` outside the model definition.",
+          "Fixed_Code": "# params = model.init(key, input)"
+        },
+        {
+          "Error_Code": "self.optimizer_state = self.param(\"optimizer_state\", optax.state.OptState())",
+          "Error": "Optimizer State Hallucination. `optax.state.OptState()` is not a valid initializer function, nor should optimizer state be stored as a model parameter inside `self.param`. Optimizer state must be managed externally.",
+          "Fix_info": "Initialize optimizer state using `optimizer.init(params)` in the main script.",
+          "Fixed_Code": "opt_state = optimizer.init(params)"
+        },
+        {
+          "Error_Code": "optax.sgd(self.optimizer_state, self.params, grads, 0.01)",
+          "Error": "Incorrect API Usage. `optax.sgd` is a function that returns a `GradientTransformation` (a pair of init/update functions). It is not a function that performs a single update step on arguments like this.",
+          "Fix_info": "Define `optimizer = optax.sgd(0.01)` once, then call `updates, opt_state = optimizer.update(grads, opt_state, params)`.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)"
+        },
+        {
+          "Error_Code": "grads = jax.value_and_grad(self.loss)(self, X, y)[1]",
+          "Error": "Differentiation Target Error. Attempting to differentiate `self.loss` with respect to `self` (the Module instance). JAX transforms functions of *arrays/PyTrees*. A stateful Module instance is not a valid differentiation target in this manner.",
+          "Fix_info": "Differentiate a function that takes `params` (a PyTree) as input.",
+          "Fixed_Code": "loss, grads = jax.value_and_grad(loss_fn)(params, X, y)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "basic_tensorboard",
+      "Input_Code": "import torch\nfrom torch.utils.tensorboard import SummaryWriter\n# ...\nwriter = SummaryWriter(log_dir=\"runs/linear_regression\")\n# ...\nwriter.add_scalar(\"Loss/train\", loss.item(), epoch)\nwriter.close()",
+      "LLM_weak_output": "import jax\n# ...\nimport optax.scipy as scipy_optax\n\n# ... (Model Def) ...\n\nopt_state = optax.init_optimizer(scipy_optax.sgd, step_size=0.01)\n\n@jax.jit\ndef train(X, y, num_steps=100):\n    # ... (Complex loop with jax.ops.index_update) ...\n    return opt_state\n\n# Log loss to a simple text file (Hallucination: Prompt asked for TensorBoard)\ndef log_loss(opt_state, X, y):\n    # ...\n\n# (No TensorBoard implementation found)",
+      "LLM_fix_output": "import jax\nimport tensorflow as tf\n# ...\nwriter = tf.summary.create_file_writer('runs/linear_regression')\n# ...\nwith writer.as_default():\n    tf.summary.scalar(\"Loss/train\", loss, step=epoch)",
+      "Errors": [
+        {
+          "Error_Code": "# (Missing TensorBoard implementation)",
+          "Error": "Task Failure. The user explicitly requested TensorBoard logging (present in input). The Mistral output completely ignores this, providing a custom `log_loss` function that prints to stdout or a text file instead.",
+          "Fix_info": "Implement TensorBoard logging using `tensorflow.summary` or `tensorboardX`.",
+          "Fixed_Code": "writer = tf.summary.create_file_writer(...)"
+        },
+        {
+          "Error_Code": "optax.init_optimizer(scipy_optax.sgd, step_size=0.01)",
+          "Error": "API Hallucination. `optax` does not have an `init_optimizer` function, nor a `scipy` submodule structured this way.",
+          "Fix_info": "Use standard `optax.sgd`.",
+          "Fixed_Code": "optimizer = optax.sgd(0.01)\nopt_state = optimizer.init(params)"
+        },
+        {
+          "Error_Code": "rng_state = jr.foldl(jax.ops.index_update, ...)",
+          "Error": "Hallucinated/Deprecated Logic. Using `jr.foldl` combined with `jax.ops.index_update` (deprecated) inside a `train` function is an overly complex and incorrect way to write a training loop in JAX.",
+          "Fix_info": "Use a standard Python loop or `jax.lax.scan` for the training loop.",
+          "Fixed_Code": "for epoch in range(epochs): ..."
+        }
+      ]
+    }
+  ]
+}

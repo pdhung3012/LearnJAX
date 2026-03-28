@@ -1,0 +1,30 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "medium_cnn_param_init",
+        "Input_Code": "import torch\nimport torch.nn as nn\n# ... (Data Loading) ...\n\nclass VanillaCNNModel(nn.Module):\n    # ... (Model Definition) ...\n\ndef config_init(init_type=\"kaiming\"):\n    def kaiming_init(m):\n        if isinstance(m, nn.Conv2d):\n            nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')\n            # ...\n    # ... (Logic for Xavier, Zeros, Random init) ...\n    return initializer_dict.get(init_type)\n\nfor name in [\"Vanilla\", \"Kaiming\", \"Xavier\", \"Zeros\", \"Random\"]:\n    model = VanillaCNNModel()\n    model.apply(config_init(name.lower()))\n    train_test_loop(model, ...)",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# Define the model architecture\nclass VanillaCNNModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        # Standard definition without init logic\n        x = nn.relu(nn.Conv2d(3, 32, kernel_size=3, padding=1)(x))\n        # ...\n        return x\n\n# Initialize the model\nmodel = VanillaCNNModel()\n\n# ... (Standard training loop) ...\n# Note: The raw code completely IGNORES the custom initialization requirement.\n# It just defines one model and trains it with default initialization.",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n\n# Define model with pluggable initializers\nclass VanillaCNNModel(nn.Module):\n    kernel_init_strategy: callable = nn.initializers.lecun_normal()\n    bias_init_strategy: callable = nn.initializers.zeros\n\n    @nn.compact\n    def __call__(self, x):\n        # Pass the init strategy to layers\n        x = nn.Conv(32, (3, 3), kernel_init=self.kernel_init_strategy, bias_init=self.bias_init_strategy)(x)\n        # ...\n\n# Mapping PyTorch inits to JAX/Flax\ninit_map = {\n    \"kaiming\": nn.initializers.he_normal(), # He = Kaiming\n    \"xavier\": nn.initializers.xavier_normal(),\n    \"zeros\": nn.initializers.zeros,\n    \"random\": nn.initializers.normal(stddev=0.01)\n}\n\n# Loop over configurations\nfor name, init_fn in init_map.items():\n    # Re-initialize model with specific strategy\n    model = VanillaCNNModel(kernel_init_strategy=init_fn)\n    variables = model.init(jax.random.PRNGKey(0), dummy_input)\n    # ... (Train loop)",
+        "Errors": [
+          {
+            "Error_Code": "# (Entire file content)",
+            "Error": "Task Mismatch / Feature Omission. The core task of this example is **Parameter Initialization** (Kaiming, Xavier, etc.). The Raw JAX code ignores this entirely, implementing a single standard CNN with default initialization. It fails to demonstrate how to apply custom initializers in JAX/Flax.",
+            "Fix_info": "Modify the Flax model to accept `kernel_init` and `bias_init` arguments in its `__init__` or `setup`. Create a dictionary mapping the requested strategies (Kaiming -> `nn.initializers.he_normal`, Xavier -> `nn.initializers.xavier_normal`, etc.) to Flax initializers and iterate through them.",
+            "Fixed_Code": "class Model(nn.Module):\n    kernel_init: Callable\n    @nn.compact\n    def __call__(self, x):\n        x = nn.Conv(..., kernel_init=self.kernel_init)(x)"
+          },
+          {
+            "Error_Code": "loss_fn = nn.losses.cross_entropy_with_logits",
+            "Error": "AttributeError. `nn.losses` (in `flax.linen`) does not exist. Loss functions are typically found in `optax`.",
+            "Fix_info": "Use `optax.softmax_cross_entropy_with_integer_labels`.",
+            "Fixed_Code": "loss_fn = optax.softmax_cross_entropy_with_integer_labels"
+          },
+          {
+            "Error_Code": "grads = jax.grad(loss)(params)",
+            "Error": "TypeError. `jax.grad` expects a function, but `loss` here is the scalar result of the loss calculation. The Raw code attempts to differentiate a value, not a function.",
+            "Fix_info": "Pass the loss function (e.g., `lambda p: ...`) to `jax.grad`.",
+            "Fixed_Code": "grads = jax.grad(loss_fn)(params)"
+          }
+        ]
+      }
+    ]
+  }

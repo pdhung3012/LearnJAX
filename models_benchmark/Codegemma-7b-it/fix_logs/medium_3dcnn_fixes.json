@@ -1,0 +1,48 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "medium_3dcnn",
+      "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\nimport torchvision\nimport torchvision.transforms as transforms\n# ... (Data Gen) ...\nclass MedCNN(nn.Module):\n    def __init__(self, backbone, out_channel=1):\n        super(MedCNN, self).__init__()\n        self.backbone = backbone\n        self.conv1 = nn.Conv3d(512, 64, kernel_size=(3, 3, 3), padding=1)\n        # ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\nimport torchvision\n\n# ... (Data Gen) ...\n\nclass MedCNN(nn.Module):\n    backbone: nn.Module\n    out_channel: int = 1\n\n    @nn.compact\n    def __call__(self, x):\n        x = self.backbone(x)\n        x = nn.Conv3d(64, kernel_size=(3, 3, 3), padding='SAME')(x)\n        # ...\n\nresnet_model = jax.nn.Sequential(*list(torchvision.models.resnet18(pretrained=True).children())[:-2])\n\nmodel = MedCNN(backbone=resnet_model)\noptimizer = optax.adam(learning_rate=0.01)\n\n@jax.jit\ndef train_step(params, batch):\n    ct_images, segmentation_masks = batch\n    def loss_fn(params):\n        pred = model.apply({'params': params}, ct_images)\n        loss = compute_dice_loss(pred, segmentation_masks)\n        return loss\n    \n    loss, grads = jax.value_and_grad(loss_fn)(params)\n    updates, opt_state = optimizer.update(grads, opt_state)\n    params = optax.apply_updates(params, updates)\n    return loss, params",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nfrom flax.training import train_state\nimport optax\n\n# ... (Data Gen) ...\n\nclass MedCNN(nn.Module):\n    out_channel: int = 1\n\n    @nn.compact\n    def __call__(self, x, train: bool = True):\n        # 1. Pure Flax backbone implementation (omitted for brevity)\n        # 2. 3D Convolutions using generic nn.Conv\n        x = nn.Conv(features=64, kernel_size=(3, 3, 3), padding='SAME')(x)\n        x = nn.relu(x)\n        # ... (rest of model) ...\n        return nn.sigmoid(x)\n\n# ... (Training loop with batch_stats handling) ...",
+      "Errors": [
+        {
+          "Error_Code": "resnet_model = jax.nn.Sequential(*list(torchvision.models.resnet18(pretrained=True).children())[:-2])",
+          "Error": "Framework Mixing / API Error. First, you cannot wrap PyTorch `nn.Module` objects inside a JAX/Flax container; JAX cannot trace/differentiate them. Second, `jax.nn.Sequential` does not exist in current JAX versions (it is a hallucination of the old `stax` or PyTorch API).",
+          "Fix_info": "Implement the backbone in pure Flax or load weights from PyTorch into a matching Flax architecture definition manually.",
+          "Fixed_Code": "# Use a pure Flax implementation (e.g. from flax.models or custom BasicBlock implementation)"
+        },
+        {
+          "Error_Code": "x = nn.Conv3d(64, kernel_size=(3, 3, 3), padding='SAME')(x)",
+          "Error": "AttributeError. Flax Linen does not have explicit `Conv3d` classes. It uses a generic `nn.Conv` class that infers dimensionality from the `kernel_size` tuple (e.g., `(3, 3, 3)` implies 3D).",
+          "Fix_info": "Use `nn.Conv` instead of `nn.Conv3d`. Ensure `kernel_size` is a 3-tuple.",
+          "Fixed_Code": "x = nn.Conv(features=64, kernel_size=(3, 3, 3), padding='SAME')(x)"
+        },
+        {
+          "Error_Code": "pred = model.apply({'params': params}, ct_images)",
+          "Error": "Missing Batch Statistics (State Loss). ResNet backbones heavily rely on Batch Normalization. The Raw code only passes `params`, ignoring `batch_stats`. This means the model will use uninitialized or static mean/var, preventing convergence.",
+          "Fix_info": "Initialize and pass `batch_stats` in `model.apply`. Use `mutable=['batch_stats']` during training to update them.",
+          "Fixed_Code": "logits, updates = model.apply({'params': params, 'batch_stats': batch_stats}, x, mutable=['batch_stats'])"
+        },
+        {
+          "Error_Code": "x = self.backbone(x)  # Inside __call__",
+          "Error": "Dimensionality Mismatch. The input `x` is 3D volumetric data (5D tensor: Batch, Depth, Height, Width, Channels). The backbone is ResNet18 (2D). Passing a 5D tensor to a 2D CNN will cause a shape mismatch error.",
+          "Fix_info": "Reshape the 3D volume to merge Batch and Depth dimensions `(B*D, H, W, C)` before passing to the 2D backbone, then reshape back to 3D for the subsequent 3D convolutions.",
+          "Fixed_Code": "b, d, h, w, c = x.shape\nx = x.reshape(b * d, h, w, c)\nx = self.backbone(x)\nx = x.reshape(b, d, h // 32, w // 32, -1) # Example reshape back"
+        },
+        {
+          "Error_Code": "ct_images = jnp.random.randn(size=(batch, num_slices, channels, width, height))",
+          "Error": "Data Layout Mismatch. The PyTorch code generates `(N, D, C, H, W)`. Flax `nn.Conv` expects channel-last format `(N, D, H, W, C)`. Using PyTorch layout with Flax layers will result in the `height` dimension being interpreted as channels.",
+          "Fix_info": "Transpose the input data to match JAX's channel-last expectation.",
+          "Fixed_Code": "ct_images = jnp.transpose(ct_images, (0, 1, 3, 4, 2))"
+        },
+        {
+          "Error_Code": "updates, opt_state = optimizer.update(grads, opt_state)",
+          "Error": "Loss of Mutable State. Even if `batch_stats` were passed to the model, this update step only updates `params`. The updated `batch_stats` returned by `model.apply` (in `updates`) are discarded, so the model never learns the batch statistics.",
+          "Fix_info": "Capture the `updates` (containing new `batch_stats`) from `model.apply` and persist them to the next training step.",
+          "Fixed_Code": "batch_stats = updates['batch_stats']\nreturn loss, params, batch_stats"
+        }
+      ]
+    }
+  ]
+}
