@@ -1,0 +1,8 @@
+https://github.com/Exorust/TorchLeet/blob/main/torch/hard/GAN/GAN_SOLN.ipynb
+
+Step 1: Given the pytorch code P_1, read the description and find out:
+Description
+Input
+Output:
+Model
+Loss function.

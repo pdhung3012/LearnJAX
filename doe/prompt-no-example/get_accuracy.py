@@ -25,7 +25,7 @@ for i in range(0,len(json_labels)):
     predict_item=json_predicts[i]
     label_item=json_labels[i]
     # print('{}\n\nlabel: {}\n\npredict: {}'.format(i,str(label_item['standard_xml']),str(predict_item['predicted_xml'])))
-    score_obj=combined_similarity(str(label_item['standard_xml']),str(predict_item['predicted_xml']))
+    score_obj=combined_similarity(str(label_item['standard_xml']),str(predict_item['predicted_xml']),alpha=1)
     list_scores.append(score_obj['combined_similarity'])
     list_text_scores.append(score_obj['text_similarity'])
     list_tag_scores.append(score_obj['tag_similarity'])
