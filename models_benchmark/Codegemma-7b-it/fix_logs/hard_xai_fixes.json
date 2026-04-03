@@ -1,0 +1,30 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "hard_xai",
+        "Input_Code": "# Explain a CNN model's predictions using Grad-CAM in PyTorch\n# ...\n# Attach hooks to the target layer\ntarget_layer = model.layer4[1].conv2\ntarget_layer.register_backward_hook(save_gradients)\ntarget_layer.register_forward_hook(save_activations)\n# ...\n# Perform a backward pass for the predicted class\nmodel.zero_grad()\noutput[0, predicted_class].backward()\n# ...",
+        "LLM_weak_output": "import jax\n# ...\n# Attach hooks to the target layer\ntarget_layer = model.residual_block.conv2\ntarget_layer.grad_fn.register_hook(save_gradients)\ntarget_layer.register_forward_hook(save_activations)\n# ...\n# Perform a backward pass for the predicted class\nmodel.zero_grad()\noutput[0, predicted_class].backward()",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\n# ...\ndef compute_grad_cam(model, params, batch_stats, input_tensor, target_class):\n    variables = {\"params\": params, \"batch_stats\": batch_stats}\n\n    # 1. Forward pass to get activations at target layer\n    activations, identity = model.apply(\n        variables, input_tensor, method=ResNet18GradCAM.forward_to_target\n    )\n\n    # 2. Define function to compute class score from target activations\n    def class_score_fn(target_acts):\n        logits = model.apply(\n            variables, target_acts, identity, method=ResNet18GradCAM.forward_from_target\n        )\n        return logits[0, target_class]\n\n    # 3. Compute gradients w.r.t. activations\n    gradients = jax.grad(class_score_fn)(activations)\n    return activations, gradients\n# ...",
+        "Errors": [
+          {
+            "Error_Code": "target_layer.grad_fn.register_hook(save_gradients)",
+            "Error": "API Hallucination. Flax/JAX modules do not have PyTorch-style hooks (`register_hook`) or a `grad_fn` attribute. JAX uses functional transformations (`jax.grad`, `jax.vjp`) rather than imperative backward hooks.",
+            "Fix_info": "Rewrite the model or call structure to split the forward pass into two parts: (Input -> Target Layer) and (Target Layer -> Output). Use `jax.grad` on the second part to compute gradients with respect to the target layer's activations.",
+            "Fixed_Code": "activations = model_part1(x)\ngradients = jax.grad(model_part2)(activations)"
+          },
+          {
+            "Error_Code": "output[0, predicted_class].backward()",
+            "Error": "AttributeError. JAX arrays (`DeviceArray` or `Array`) do not have a `.backward()` method. JAX does not maintain a computational graph on tensors for imperative backpropagation.",
+            "Fix_info": "Use `jax.grad` or `jax.value_and_grad` on a scalar loss function to compute gradients.",
+            "Fixed_Code": "grads = jax.grad(loss_fn)(params)"
+          },
+          {
+            "Error_Code": "model.zero_grad()",
+            "Error": "AttributeError. JAX models are stateless configuration objects; they do not store gradients. There is no mutable state to zero out.",
+            "Fix_info": "Remove this call. In JAX, gradients are returned by the gradient function and are not accumulated in place.",
+            "Fixed_Code": "# (Line removed)"
+          }
+        ]
+      }
+    ]
+  }

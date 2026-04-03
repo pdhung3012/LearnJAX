@@ -1,0 +1,36 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "easy_rnn",
+        "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n\n# Generate synthetic sequential data\ntorch.manual_seed(42)\n# ... (Data gen) ...\n\n# Define the RNN Model\nclass RNNModel(nn.Module):\n    def __init__(self, input_dim=1, hidden_dim=50, output_dim=1):\n        super().__init__()\n        self.hidden_dim = hidden_dim\n        # Weight matrices\n        self.W_ih = nn.Parameter(torch.randn(input_dim, hidden_dim) * 0.1)\n        self.W_hh = nn.Parameter(torch.randn(hidden_dim, hidden_dim) * 0.1)\n        self.b_h = nn.Parameter(torch.zeros(hidden_dim))\n        self.output_layer = nn.Linear(hidden_dim, output_dim)\n        self.tanh = nn.Tanh()\n\n    def forward(self, x):\n        batch_size, seq_len, _ = x.size()\n        h_t = torch.zeros(batch_size, self.hidden_dim, device=x.device)\n        for t in range(seq_len):\n            x_t = x[:, t, :]\n            h_t = self.tanh(x_t @ self.W_ih + h_t @ self.W_hh + self.b_h)\n        output = self.output_layer(h_t)\n        return output\n\n# Initialize the model, loss function, and optimizer\nmodel = RNNModel()\ncriterion = nn.MSELoss()\noptimizer = optim.Adam(model.parameters(), lr=0.001)\n\n# Training loop\nepochs = 500\nfor epoch in range(epochs):\n    for sequences, labels in zip(X_seq, y_seq):\n        # ... (Forward) ...\n        outputs = model(sequences)\n        loss = criterion(outputs, labels)\n\n        # Backward pass and optimization\n        optimizer.zero_grad()\n        loss.backward()\n        optimizer.step()\n    # ... (Print) ...",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# ... (Data gen) ...\n\n# Define the RNN Model\nclass RNNModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        # ...\n        # Weight matrices\n        W_ih = self.param(\"W_ih\", (1, hidden_dim), jax.nn.initializers.glorot_uniform())\n        # ...\n        h_t = jnp.zeros((batch_size, hidden_dim))\n        for t in range(seq_len):\n            # ...\n            h_t = tanh(x_t @ W_ih + h_t @ W_hh + b_h)\n        output = output_layer(h_t)\n        return output\n\n# Initialize\nmodel = RNNModel()\ncriterion = jax.nn.MSELoss()\noptimizer = optax.adam(learning_rate=0.001)\n\n# Training loop\nfor epoch in range(epochs):\n    for sequences, labels in zip(X_seq, y_seq):\n        # ...\n        outputs = model(sequences)\n        loss = criterion(outputs, labels)\n\n        grad_fn = jax.value_and_grad(loss)\n        loss_value, grads = grad_fn(model.apply)\n        optimizer.apply_updates(model.state, grads)\n",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom jax import jit\nfrom flax import linen as nn\nfrom flax.training import train_state\nimport optax\n\n# ... (Data gen) ...\n\n# Define the RNN Model using Flax\nclass RNNModel(nn.Module):\n    hidden_dim: int = 50\n    output_dim: int = 1\n\n    @nn.compact\n    def __call__(self, x):\n        # Correct parameter definition\n        W_ih = self.param('W_ih', lambda rng, shape: jax.random.normal(rng, shape) * 0.1, (x.shape[-1], self.hidden_dim))\n        # ... (rest of logic) ...\n        return output\n\nmodel = RNNModel(hidden_dim=50, output_dim=1)\nvariables = model.init(jax.random.PRNGKey(42), dummy_input)\nstate = train_state.TrainState.create(apply_fn=model.apply, params=variables['params'], tx=optax.adam(0.001))\n\n@jit\ndef train_step(state, sequences, labels):\n    def loss_fn(params):\n        predictions = model.apply({'params': params}, sequences)\n        return jnp.mean((predictions - labels) ** 2)\n    loss, grads = jax.value_and_grad(loss_fn)(state.params)\n    state = state.apply_gradients(grads=grads)\n    return state, loss\n",
+        "Errors": [
+          {
+            "Error_Code": "outputs = model(sequences)",
+            "Error": "Incorrect Call Syntax. Flax Modules cannot be called directly like PyTorch models (`model(x)`). They must be called via the `apply` method (`model.apply(params, x)`).",
+            "Fix_info": "Use `model.apply({'params': params}, sequences)`.",
+            "Fixed_Code": "outputs = model.apply({'params': params}, sequences)"
+          },
+          {
+            "Error_Code": "grad_fn = jax.value_and_grad(loss)",
+            "Error": "Type Error. `jax.value_and_grad` expects a *function* to differentiate, but the code passes `loss`, which is a scalar value (the result of the loss calculation).",
+            "Fix_info": "Pass the loss function itself (e.g., `loss_fn` defined inside `train_step`) to `jax.value_and_grad`.",
+            "Fixed_Code": "loss_fn = lambda p: ...\nloss, grads = jax.value_and_grad(loss_fn)(params)"
+          },
+          {
+            "Error_Code": "optimizer.apply_updates(model.state, grads)",
+            "Error": "AttributeError / Hallucination. `optimizer` (Optax gradient transformation) does not have an `apply_updates` method, nor does the `model` object have a `state` attribute in this context. Flax models are stateless.",
+            "Fix_info": "Use `updates, opt_state = optimizer.update(grads, opt_state)` followed by `optax.apply_updates(params, updates)`.",
+            "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state)\nparams = optax.apply_updates(params, updates)"
+          },
+          {
+            "Error_Code": "criterion = jax.nn.MSELoss()",
+            "Error": "AttributeError. `jax.nn` does not have `MSELoss`. JAX is functional; loss functions are typically simple functions or available in `optax`.",
+            "Fix_info": "Use `optax.l2_loss` or define `jnp.mean((preds - targets) ** 2)` manually.",
+            "Fixed_Code": "loss = jnp.mean((outputs - labels) ** 2)"
+          }
+        ]
+      }
+    ]
+  }

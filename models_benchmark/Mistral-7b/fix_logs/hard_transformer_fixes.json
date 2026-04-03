@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "hard_transformer",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ...\nclass TransformerModel(nn.Module):\n    def __init__(self, ...):\n        self.encoder = nn.TransformerEncoder(...)\n        # ...\n    def forward(self, x):\n        # ...\n# ... (Standard Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nfrom optax import adam\n\n# ... (PositionalEncoding) ...\n\nclass TransformerModelParams(nn.Module):\n    def setup(self):\n        # ... (Hallucinating attributes from self.params) ...\n        self.cls_token = self.param(\"cls_token\", jnp.zeros((1, 1, self.embed_dim)))\n\nclass TransformerModelInit(nn.Module):\n    def __init__(self, params):\n        # ...\n\nclass TrainStep(nn.Module):\n    def setup(self):\n        self.model = self.params.model\n        self.optimizer = adam(self.model.init_params())\n\n    @nn.compact\n    def __call__(self, X, y):\n        with jax.grad():\n            logits = self.model(X)\n            loss = jnp.mean(jnp.cross_entropy(y, jnp.argmax(logits, axis=-1)))\n        grads = jax.value_and_grad(self.model.init_params, has_aux=True)(())[1]\n        self.optimizer.apply_update(grads)\n        return loss",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\nclass TransformerModel(nn.Module):\n    # ... (Correct linen definition) ...\n\n# ... (Standard functional train step) ...",
+      "Errors": [
+        {
+          "Error_Code": "with jax.grad():",
+          "Error": "Syntax Error / Hallucination. `jax.grad` returns a function transformation; it is not a context manager. You cannot use `with jax.grad():` to trace operations for gradient computation.",
+          "Fix_info": "Define a loss function and transform it: `grad_fn = jax.grad(loss_fn)`.",
+          "Fixed_Code": "grads = jax.grad(loss_fn)(params, ...)"
+        },
+        {
+          "Error_Code": "self.cls_token = self.param(\"cls_token\", jnp.zeros((1, 1, self.embed_dim)))",
+          "Error": "Invalid Parameter Initialization. `self.param` expects an initializer *function*, not a concrete JAX array. Passing `jnp.zeros(...)` directly will fail.",
+          "Fix_info": "Use a lambda or standard initializer: `lambda key, shape: jnp.zeros(shape)`.",
+          "Fixed_Code": "self.param('cls_token', nn.initializers.zeros, (1, 1, self.embed_dim))"
+        },
+        {
+          "Error_Code": "self.optimizer = adam(self.model.init_params())",
+          "Error": "API Hallucination. `optax.adam` (imported as `adam`) expects a learning rate, not parameters. Also, initializing an optimizer inside a Flax module's `setup` is a fundamental design error; optimization state must be managed externally.",
+          "Fix_info": "Initialize the optimizer outside the model definition using the parameters returned by `model.init`.",
+          "Fixed_Code": "optimizer = optax.adam(learning_rate=1e-4)\nopt_state = optimizer.init(params)"
+        },
+        {
+          "Error_Code": "jnp.cross_entropy(y, ...)",
+          "Error": "AttributeError. `jax.numpy` does not have a `cross_entropy` function. Loss functions are typically in `optax` or manually implemented.",
+          "Fix_info": "Use `optax.softmax_cross_entropy`.",
+          "Fixed_Code": "optax.softmax_cross_entropy(logits, one_hot_y)"
+        },
+        {
+          "Error_Code": "class TrainStep(nn.Module): ...",
+          "Error": "Architecture Hallucination. Wrapping the training step (forward/backward/update) inside a `nn.Module` is invalid in JAX. Modules define structure; training steps are pure functions.",
+          "Fix_info": "Replace `TrainStep` class with a `@jax.jit` decorated function `train_step(params, opt_state, batch)`.",
+          "Fixed_Code": "@jax.jit\ndef train_step(...): ..."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "easy_quantize_lm",
+      "Input_Code": "import torch\nfrom torch.quantization import quantize_dynamic\n# ... (Model Def) ...\nquantized_model = quantize_dynamic(model, {nn.Linear, nn.LSTM}, dtype=torch.qint8)\ntorch.save(quantized_model.state_dict(), \"quantized_language_model.pth\")",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport optax\nimport flax\nfrom flax import linen as nn\n\n# ... (Model Def) ...\n\nclass TrainStep(flax.training.TrainingStep):\n    # ... (Hallucinated class inheriting from non-existent module) ...\n\n# ... (Training Loop) ...\n\n# Quantization: Apply dynamic quantization to the language model\nquantized_model = jax.jit(jax.tree_util.tree_map(lambda x: x.astype(jnp.qint8), model))\n\n# Save the quantized model\njax.save(quantized_model.state_dict(), \"quantized_language_model.ckpt\")\n\n# Load the quantized model\nquantized_model.load_state_dict(jax.load(\"quantized_language_model.ckpt\"))",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nimport numpy as np\n# ...\n\n# Quantization function (manual int8 scaling)\ndef quantize_params(params):\n    quantized = {}\n    for k, v in params.items():\n        # ... (Quantization logic) ...\n    return quantized\n\n# Save/Load using numpy\nnp.savez(\"quantized_model.npz\", **quantized_params)",
+      "Errors": [
+        {
+          "Error_Code": "class TrainStep(flax.training.TrainingStep):",
+          "Error": "API Hallucination. `flax.training` does not have a `TrainingStep` class. Flax encourages functional training loops or usage of `TrainState`.",
+          "Fix_info": "Use `flax.training.train_state.TrainState` or simple functional loops.",
+          "Fixed_Code": "state = train_state.TrainState.create(...)"
+        },
+        {
+          "Error_Code": "x.astype(jnp.qint8)",
+          "Error": "AttributeError. `jnp` (jax.numpy) does not have a `qint8` data type. JAX does not support PyTorch-style quantized types natively in this manner.",
+          "Fix_info": "Simulate quantization using `int8` and scaling factors, or use a library like AQT.",
+          "Fixed_Code": "q = np.round(x / scale).astype(np.int8)"
+        },
+        {
+          "Error_Code": "jax.save(..., \"....ckpt\")",
+          "Error": "API Hallucination. `jax` does not have a `save` function for checkpoints. Saving requires `flax.serialization`, `orbax`, or `numpy`.",
+          "Fix_info": "Use `flax.serialization.to_bytes` or `np.savez`.",
+          "Fixed_Code": "with open('ckpt', 'wb') as f: f.write(flax.serialization.to_bytes(params))"
+        },
+        {
+          "Error_Code": "quantized_model.load_state_dict(...)",
+          "Error": "AttributeError. Flax models/variables are standard Python dictionaries (PyTrees) or FrozenDicts. They do not have PyTorch-like methods `load_state_dict` or `state_dict`.",
+          "Fix_info": "Load parameters directly into the dictionary structure.",
+          "Fixed_Code": "params = flax.serialization.from_bytes(target_params, loaded_bytes)"
+        },
+        {
+          "Error_Code": "model.grad(carry, X_batch)",
+          "Error": "AttributeError. The Flax module instance `model` does not have a `grad` method. Gradients are computed using `jax.grad` on a loss function.",
+          "Fix_info": "Use `jax.grad(loss_fn)(params)`.",
+          "Fixed_Code": "grads = jax.grad(loss_fn)(params, ...)"
+        }
+      ]
+    }
+  ]
+}

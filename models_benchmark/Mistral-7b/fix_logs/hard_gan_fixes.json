@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "hard_gan",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ...\nclass Discriminator(nn.Module):\n    def __init__(self, input_dim):\n        # ...\n        self.model = nn.Sequential(..., nn.Sigmoid())\n\n# ...\nloss_D.backward()\noptimizer_D.step()",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nfrom flax import optax\n\n# ... (Model Definitions) ...\n\ndef train_step(rng, G, D, real_data, ... criterion, opt_G, opt_D):\n    # ...\n    grads_D, _ = jax.value_and_grad(D.value)(real_data)(rng)\n    loss_D, grads_D = criterion.backward(real_labels, grads_D)\n    opt_D.update(D.parameters(), opt_D.get_update(grads_D))\n    # ...\n    loss_G = criterion.backward(real_labels, grads_G)\n\nfor epoch in range(epochs):\n    loss_D, loss_G = train_step(rng, G, D, real_data, ...)",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom jax import value_and_grad\nimport optax\n\n# ... (Functional Models) ...\n\n@jax.jit\ndef train_step_D(state_D, state_G, real_data, latent_samples):\n    def loss_d(params_d):\n        fake_data = state_G.apply_fn({'params': state_G.params}, latent_samples)\n        real_logits = state_D.apply_fn({'params': params_d}, real_data)\n        fake_logits = state_D.apply_fn({'params': params_d}, fake_data)\n        # ... (Loss logic) ...\n    # ... (Update logic) ...\n\n# ... (Separate train step for G) ...",
+      "Errors": [
+        {
+          "Error_Code": "grads_D, _ = jax.value_and_grad(D.value)(real_data)(rng)",
+          "Error": "API Hallucination. Flax modules do not have a `.value` method. `jax.value_and_grad` expects a Python function that computes a scalar loss, not a method on a module instance. This code attempts to differentiate a non-existent method.",
+          "Fix_info": "Define a dedicated loss function `loss_fn(params, ...)` and pass that to `value_and_grad`.",
+          "Fixed_Code": "loss_fn = lambda p: ...\nloss, grads = jax.value_and_grad(loss_fn)(params)"
+        },
+        {
+          "Error_Code": "criterion.backward(real_labels, grads_D)",
+          "Error": "Deep Framework Confusion. The Raw code tries to invoke `.backward()` on a loss object `criterion`. JAX does not use imperative backward calls on objects. It uses functional transformations (`grad`, `value_and_grad`) to compute gradients directly.",
+          "Fix_info": "Remove `.backward()`. Use `jax.value_and_grad` to compute gradients of the loss function with respect to parameters.",
+          "Fixed_Code": "# Gradients are computed by jax.value_and_grad, not .backward()"
+        },
+        {
+          "Error_Code": "opt_D.update(D.parameters(), opt_D.get_update(grads_D))",
+          "Error": "State Management Failure. Flax modules are stateless; `D.parameters()` does not exist (parameters are stored in external dictionaries/PyTrees). Furthermore, `opt_D` (likely an Optax optimizer) does not have a `get_update` method. The update syntax is completely hallucinated.",
+          "Fix_info": "Use the standard Optax update pattern: `updates, opt_state = optimizer.update(grads, opt_state)`.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state)"
+        },
+        {
+          "Error_Code": "fake_data = G.apply(latent_samples, rng)",
+          "Error": "Incorrect Module Call. `G.apply` requires the parameters dictionary as the first argument: `G.apply({'params': params}, inputs)`. Passing `latent_samples` first will cause a signature mismatch.",
+          "Fix_info": "Pass parameters explicitly.",
+          "Fixed_Code": "fake_data = G.apply({'params': params_G}, latent_samples)"
+        },
+        {
+          "Error_Code": "train_step(..., G, D, ...)",
+          "Error": "JIT Error (Passing Modules). Passing Flax Module instances (`G`, `D`) to a JIT-compiled function is generally problematic or useless because they are just configuration objects. The *parameters* (arrays) must be passed to be traced.",
+          "Fix_info": "Pass `params_G` and `params_D` (PyTrees of arrays) to the train step.",
+          "Fixed_Code": "train_step(params_G, params_D, ...)"
+        }
+      ]
+    }
+  ]
+}

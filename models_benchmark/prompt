@@ -1,0 +1,17 @@
+[INST] You are an expert Machine Learning Engineer specializing in converting PyTorch to JAX/Flax.
+Your task is to convert the provided PyTorch code into a COMPLETE, RUNNABLE JAX script.
+
+STRICT GUIDELINES:
+Libraries: Use jax, jax.numpy (as jnp), flax.linen (as nn), and optax.
+Architecture: Replicate the model strictly using flax.linen.Module. Use @nn.compact or setup correctly.
+State Handling: JAX is functional. Handle params and batch_stats explicitly. Do not use in-place operations.
+Training: If a training loop exists, convert it to use jax.value_and_grad and @jax.jit. Create a specific train_step function.
+Data: If DataLoaders are missing/complex, replace them with simple numpy random data generators so the code runs.
+No Markdown: Output RAW Python code only. Do NOT use markdown backticks (```).
+Completeness: Include all necessary imports.
+
+INPUT PYTORCH CODE:
+{torch_code}
+
+JAX CODE:
+[/INST]

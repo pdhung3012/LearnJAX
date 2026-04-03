@@ -1,0 +1,42 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "easy_quantize_lm",
+        "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.quantization import quantize_dynamic\n\n# Define a simple Language Model (e.g., an LSTM-based model)\nclass LanguageModel(nn.Module):\n    def __init__(self, vocab_size, embed_size, hidden_size, num_layers):\n        super(LanguageModel, self).__init__()\n        self.embedding = nn.Embedding(vocab_size, embed_size)\n        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)\n        self.fc = nn.Linear(hidden_size, vocab_size)\n        self.softmax = nn.Softmax(dim=1)\n\n    def forward(self, x):\n        embedded = self.embedding(x)\n        lstm_out, (hidden, cell) = self.lstm(embedded)\n        output = self.fc(lstm_out[:, -1, :])  # Use the last hidden state for prediction\n        return self.softmax(output)\n\n# Create synthetic training data\ntorch.manual_seed(42)\nvocab_size = 50\nseq_length = 10\nbatch_size = 32\nX_train = torch.randint(0, vocab_size, (batch_size, seq_length))  # Random integer input\ny_train = torch.randint(0, vocab_size, (batch_size,))  # Random target words\n\n# Initialize the model, loss function, and optimizer\n# ... (omitted standard training setup) ...\n\n# Quantization: Apply dynamic quantization to the language model\nquantized_model = quantize_dynamic(model, {nn.Linear, nn.LSTM}, dtype=torch.qint8)\n\n# Save the quantized model\ntorch.save(quantized_model.state_dict(), \"quantized_language_model.pth\")",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\nclass LanguageModel(nn.Module):\n    # ... (init logic) ...\n    def call(self, x):\n        # ... (forward logic) ...\n        return self.softmax(output)\n\n# ... (Training loop) ...\nfor epoch in range(epochs):\n    model.init(rng) \n    params = model.init(rng, jnp.ones((batch_size, seq_length)))\n    # ... (Training logic) ...\n\n# Quantization: Apply dynamic quantization to the language model\nquantized_model = jax.jit(jax.tree_util.tree_map(lambda x: x.astype(jnp.qint8), model))\n\n# Save the quantized model\njax.save(quantized_model.state_dict(), \"quantized_language_model.ckpt\")\n\n# Load the quantized model\nquantized_model.load_state_dict(jax.load(\"quantized_language_model.ckpt\"))\n",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\nimport numpy as np\n\n# (Model definition omitted)\n\n# Quantization: JAX equivalent of dynamic quantization\ndef quantize_params(params, path=\"\"):\n    \"\"\"Quantize only Dense/LSTM float weights to int8 and store scale factors.\"\"\"\n    quantized = {}\n    for k, v in params.items():\n        if isinstance(v, dict):\n            quantized[k] = quantize_params(v, f\"{path}/{k}\")\n        else:\n            # Simulate int8 quantization logic\n            arr = np.asarray(v)\n            max_val = np.max(np.abs(arr))\n            scale = max_val / 127.0 if max_val > 0 else 1.0\n            q = np.round(arr / scale).astype(np.int8)\n            quantized[k] = {\"quantized\": q, \"scale\": scale}\n    return quantized\n\n# Save quantized model\ndef save_quantized(qparams, filename):\n    # Custom serialization logic (e.g., using numpy or flax.serialization)\n    pass\n\n# Quantize the trained model\nquantized_params = quantize_params(jax.tree_util.tree_map(np.array, state.params))",
+        "Errors": [
+          {
+            "Error_Code": "params = model.init(rng, jnp.ones((batch_size, seq_length)))",
+            "Error": "Parameter re-initialization inside training loop. The parameters are reset to random initial values at the start of *every* epoch, causing the model to forget everything it learned in the previous epoch.",
+            "Fix_info": "Initialize `params` once before the loop starts.",
+            "Fixed_Code": "# Before loop:\nparams = model.init(rng, jnp.ones((batch_size, seq_length)))\n# In loop, just update params."
+          },
+          {
+            "Error_Code": "loss = criterion(logits, y)",
+            "Error": "Shape mismatch in loss function. `criterion` is `softmax_cross_entropy_with_logits`, which expects one-hot encoded targets. `y` contains integer labels. This will cause a calculation error.",
+            "Fix_info": "Use `optax.softmax_cross_entropy_with_integer_labels` for integer targets.",
+            "Fixed_Code": "loss = optax.softmax_cross_entropy_with_integer_labels(logits, y).mean()"
+          },
+          {
+            "Error_Code": "x.astype(jnp.qint8)",
+            "Error": "AttributeError / Hallucination. `jnp.qint8` does not exist in standard JAX/NumPy. JAX does not support PyTorch-style quantized data types directly in this manner.",
+            "Fix_info": "Implement quantization manually by casting to `int8` and storing a scaling factor (dequantization required for inference), or use a library like AQT (Apple Quantization Toolkit) for JAX.",
+            "Fixed_Code": "q = np.round(arr / scale).astype(np.int8)"
+          },
+          {
+            "Error_Code": "jax.save(..., \"....ckpt\")",
+            "Error": "AttributeError / Hallucination. `jax` has no top-level function `save`. Saving requires a specific library like `flax.training.checkpoints` or standard `pickle`/`numpy.save`.",
+            "Fix_info": "Use `numpy.savez` or `flax.serialization` to save the parameter dictionary.",
+            "Fixed_Code": "np.savez(\"quantized_model.npz\", **quantized_params)"
+          },
+          {
+            "Error_Code": "logits = model.call(x, params)",
+            "Error": "Incorrect Module usage. Flax Modules are typically called via the `apply` method (`model.apply(params, x)`), not by invoking a `call` method directly with params passed as an argument.",
+            "Fix_info": "Use `model.apply({'params': params}, x)`.",
+            "Fixed_Code": "logits = model.apply({'params': params}, x)"
+          }
+        ]
+      }
+    ]
+  }

@@ -1,0 +1,42 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "medium_3dcnn",
+      "Input_Code": "import torch\nimport torch.nn as nn\n# ...\nclass MedCNN(nn.Module):\n    def __init__(self, backbone, out_channel=1):\n        self.backbone = backbone\n        self.conv1 = nn.Conv3d(512, 64, kernel_size=(3, 3, 3), padding=1)\n        # ...\n    def forward(self, x):\n        # ... (Backbone logic) ...\n        x = self.relu(self.conv1(x))\n        # ...\nresnet_model = torchvision.models.resnet18(...)",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\nimport torchvision\n\n# ... (Data Gen) ...\n\nclass MedCNN(nn.Module):\n    def setup(self):\n        self.backbone = nn.Sequential(\n            *[nn.Conv3d(k, k*2, kernel_size=(3, 3, 3), padding=1) for k in [3, 64, 64, 16, 16]]\n        )\n        self.conv1 = nn.Conv3d(512, 64, kernel_size=(3, 3, 3), padding=1)\n        # ...\n\n    @nn.compact\n    def __call__(self, x):\n        x = self.backbone(x)\n        x = nn.relu(self.conv1(x))\n        # ...\n        return x.reshape((b, d, 1, w, h))\n\n# Compute Dice loss\n@jax.jit\ndef compute_dice_loss(pred, labels):\n    # ...\n\n# Initialize model and optimizer\nmodel = MedCNN()\noptimizer = optax.adam(params)\n\n@jax.jit\ndef train_step(params, ct_images, segmentation_masks):\n    grad_fn = jax.value_and_grad(model.apply, has_aux=True)(ct_images)\n    pred, grads = grad_fn[0], grad_fn[1]\n    loss = compute_dice_loss(pred, segmentation_masks)\n    grads = jnp.reshape(grads, (1, -1))\n    updates, new_params = optax.apply_updates(optimizer, params, grads)\n    return new_params, loss",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\n# ...\nclass MedCNN(nn.Module):\n    @nn.compact\n    def __call__(self, x, train: bool = True):\n        # 1. Pure Flax backbone implementation\n        # 2. 3D Convolutions using generic nn.Conv\n        x = nn.Conv(features=64, kernel_size=(3, 3, 3), padding='SAME')(x)\n        # ...\n# ...",
+      "Errors": [
+        {
+          "Error_Code": "self.backbone = nn.Sequential(*[nn.Conv3d(...)])",
+          "Error": "API Hallucination. Flax does not have `nn.Sequential` or `nn.Conv3d`. It uses functional composition inside `__call__` and the generic `nn.Conv` class. Furthermore, the loop logic trying to recreate a ResNet backbone with arbitrary `Conv3d` layers is logically incorrect and doesn't match the input `resnet18`.",
+          "Fix_info": "Implement the backbone explicitly using `nn.Conv` inside `__call__`.",
+          "Fixed_Code": "# Inside __call__:\nx = nn.Conv(features=64, kernel_size=(3, 3, 3))(x)"
+        },
+        {
+          "Error_Code": "grad_fn = jax.value_and_grad(model.apply, has_aux=True)(ct_images)",
+          "Error": "Differentiation Target Error. `model.apply` expects `(params, inputs)`. `jax.value_and_grad` differentiates with respect to the first argument. The code passes `ct_images` (data) as the first argument to the transformed function, implying it's trying to differentiate with respect to the *input image*, not the parameters. Also, `model.apply` returns predictions, not a scalar loss.",
+          "Fix_info": "Define a loss function `loss_fn(params)` that calls `model.apply` and returns a scalar. Differentiate that.",
+          "Fixed_Code": "loss_fn = lambda p: compute_dice_loss(model.apply({'params': p}, ct_images), masks)\nloss, grads = jax.value_and_grad(loss_fn)(params)"
+        },
+        {
+          "Error_Code": "optimizer = optax.adam(params)",
+          "Error": "Incorrect Initialization. `optax.adam` takes `learning_rate`, not `params`. It returns a gradient transformation, not an optimizer instance.",
+          "Fix_info": "Initialize properly: `optimizer = optax.adam(1e-3); opt_state = optimizer.init(params)`.",
+          "Fixed_Code": "optimizer = optax.adam(learning_rate=0.01)"
+        },
+        {
+          "Error_Code": "grads = jnp.reshape(grads, (1, -1))",
+          "Error": "Gradient Corruption. Reshaping the gradient PyTree into a single flat array destroys the structural mapping to the parameters. `optax.apply_updates` expects a PyTree of updates matching the structure of `params`, not a flat array.",
+          "Fix_info": "Remove the reshape. Gradients are automatically structured correctly by `jax.grad`/`value_and_grad`.",
+          "Fixed_Code": "# Remove reshape line"
+        },
+        {
+          "Error_Code": "updates, new_params = optax.apply_updates(optimizer, params, grads)",
+          "Error": "API Hallucination. `optax.apply_updates` takes `(params, updates)`. It does not take an optimizer object or gradients directly. The optimizer update step `optimizer.update(grads, opt_state)` is missing entirely.",
+          "Fix_info": "Compute updates using `optimizer.update`, then apply them.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)\nparams = optax.apply_updates(params, updates)"
+        }
+      ]
+    }
+  ]
+}

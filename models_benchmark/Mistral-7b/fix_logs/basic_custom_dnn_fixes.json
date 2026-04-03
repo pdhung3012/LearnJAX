@@ -1,0 +1,54 @@
+{
+  "Pytorch_to_JAX_Examples": [
+    {
+      "Example_id": "basic_custom_dnn",
+      "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n# ... (Data Gen) ...\nclass DNNModel(nn.Module):\n    def __init__(self):\n        super(DNNModel, self).__init__()\n        self.fc1 = nn.Linear(2, 10)\n        self.relu = nn.ReLU()\n        self.fc2 = nn.Linear(10, 1)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.relu(x)\n        x = self.fc2(x)\n        return x\n# ... (Training Loop) ...",
+      "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nimport jax.random as jr\nfrom flax import linen as nn\nfrom flax import optax\n\n# ... (Data Gen) ...\n\nclass DNNModel(nn.Module):\n    @nn.compact\n    def __call__(self, X):\n        x = self.fc1(X)\n        x = self.relu(x)\n        return self.fc2(x)\n\n    @nn.compact\n    def setup(self):\n        self.fc1 = nn.Dense(10)\n        self.relu = nn.ReLU()\n        self.fc2 = nn.Dense(1)\n\n# Initialize the model, loss function, and optimizer\nmodel = DNNModel()\nrng = jr.PRNGKey(42)\nparams = model.init(rng, jnp.ones((1, 2)))\noptimizer = optax.adam(1e-2)\n\n# Training loop\n@jax.jit\ndef train_step(params, X, y):\n    predictions = model.apply(params, X)\n    loss = jnp.mean((predictions - y) ** 2)\n    grads = jax.grad(loss)(params)\n    updates, _ = optimizer.update(params, grads)\n    return updates\n\n@jax.jit\ndef train(X, y, num_steps=1000):\n    rng = jr.PRNGKey(42)\n    params = jnp.asarray(params)\n    for i in jax.range(num_steps):\n        X_batch = X[jax.random.uniform(rng, (1,), (1, 100))]\n        updates = train_step(params, X_batch, y)\n        params = jnp.asarray(updates.apply(params))\n        if (i + 1) % 100 == 0:\n            print(f\"Epoch [{i + 1}/{1000}], Loss: ...\")",
+      "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\nclass DNNModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        x = nn.Dense(10)(x)\n        x = nn.relu(x)\n        x = nn.Dense(1)(x)\n        return x\n\n# ... (Standard init and loop) ...",
+      "Errors": [
+        {
+          "Error_Code": "class DNNModel(nn.Module): ... @nn.compact def setup(self):",
+          "Error": "Invalid Flax Definition. You cannot use `@nn.compact` on the `setup` method. `setup` is specifically for non-compact definitions where layers are initialized eagerly. Additionally, mixing `setup` with a compact `__call__` that relies on attributes defined in `setup` is a confused pattern that often leads to scope errors.",
+          "Fix_info": "Remove `setup`. Define layers inline within `__call__` using `@nn.compact`, or use `setup` without the decorator and without `@nn.compact` on `__call__`.",
+          "Fixed_Code": "@nn.compact\ndef __call__(self, x):\n    x = nn.Dense(10)(x)\n    x = nn.relu(x)\n    return nn.Dense(1)(x)"
+        },
+        {
+          "Error_Code": "grads = jax.grad(loss)(params)",
+          "Error": "TypeError in Gradient Computation. `loss` is a scalar value (computed in the line above), not a function. `jax.grad` requires a function to differentiate. This code attempts to take the gradient of a float.",
+          "Fix_info": "Encapsulate the forward pass and loss calculation into a single function (e.g., `loss_fn(params)`) and pass that function to `jax.grad`.",
+          "Fixed_Code": "def loss_fn(p): ...\ngrads = jax.grad(loss_fn)(params)"
+        },
+        {
+          "Error_Code": "updates, _ = optimizer.update(params, grads)",
+          "Error": "Incorrect Optimizer API Usage. `optimizer.update` expects arguments in the order `(grads, opt_state, params)`. The Raw code passes `params` first, which will cause immediate type errors or incorrect math.",
+          "Fix_info": "Pass arguments as `optimizer.update(grads, opt_state, params)`.",
+          "Fixed_Code": "updates, opt_state = optimizer.update(grads, opt_state, params)"
+        },
+        {
+          "Error_Code": "params = jnp.asarray(params)",
+          "Error": "PyTree Corruption. `params` is a nested dictionary (PyTree) of arrays. `jnp.asarray(params)` tries to convert this entire structure into a single JAX array, which will fail or destroy the parameter structure required by the model.",
+          "Fix_info": "Remove `jnp.asarray`. Treat `params` as a dictionary/PyTree throughout the pipeline.",
+          "Fixed_Code": "# Remove line"
+        },
+        {
+          "Error_Code": "params = jnp.asarray(updates.apply(params))",
+          "Error": "Hallucinated Method. `updates` (returned by `optimizer.update`) is a PyTree of gradient updates. It does not have an `.apply()` method. The correct function to apply updates is `optax.apply_updates`.",
+          "Fix_info": "Use `optax.apply_updates(params, updates)`.",
+          "Fixed_Code": "params = optax.apply_updates(params, updates)"
+        },
+        {
+          "Error_Code": "X_batch = X[jax.random.uniform(rng, (1,), (1, 100))]",
+          "Error": "Invalid Indexing. `jax.random.uniform` returns floats. Using floats to index into array `X` is invalid. Additionally, the shape/range arguments for `uniform` are malformed for generating integer indices.",
+          "Fix_info": "Use `jax.random.randint` to generate integer indices for sampling.",
+          "Fixed_Code": "idx = jax.random.randint(rng, (batch_size,), 0, len(X))\nX_batch = X[idx]"
+        },
+        {
+          "Error_Code": "if (i + 1) % 100 == 0: print(...)",
+          "Error": "JIT Side-effect Suppression. This `print` statement is inside a function decorated with `@jax.jit`. It will execute only once during the compilation phase (tracing), not during the actual training loop execution. The user will see no logs.",
+          "Fix_info": "Use `jax.debug.print` for printing from within JIT-compiled functions, or return metrics to the main Python loop and print there.",
+          "Fixed_Code": "# Move print outside JIT function or use jax.debug.print"
+        }
+      ]
+    }
+  ]
+}

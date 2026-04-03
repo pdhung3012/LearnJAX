@@ -1,0 +1,30 @@
+{
+    "Pytorch_to_JAX_Examples": [
+      {
+        "Example_id": "medium_cnn_scratch",
+        "Input_Code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n# ... (Data Loading) ...\n\n# Define the CNN Model (No pretrained layers)\nclass CNNModel(nn.Module):\n    def __init__(self):\n        super(CNNModel, self).__init__()\n        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)\n        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)\n        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)\n        self.fc1 = nn.Linear(64 * 8 * 8, 128)  # 64*8*8 = 4096\n        self.fc2 = nn.Linear(128, 10)\n        self.relu = nn.ReLU()\n\n    def forward(self, x):\n        x = self.relu(self.conv1(x))\n        x = self.pool(x)\n        x = self.relu(self.conv2(x))\n        x = self.pool(x)\n        x = x.view(x.size(0), -1)\n        x = self.relu(self.fc1(x))\n        x = self.fc2(x)\n        return x\n\n# ... (Training Loop) ...",
+        "LLM_weak_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# Define the CNN Model\nclass CNNModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        x = nn.relu(nn.Conv2d(32, (3, 3), padding='same')(x))\n        x = nn.max_pool(nn.relu(nn.Conv2d(64, (3, 3), padding='same')(x)), (2, 2))\n        x = x.reshape((x.shape[0], -1))\n        x = nn.relu(nn.Dense(128)(x))\n        x = nn.Dense(10)(x)\n        return x\n\n# Initialize the model, loss function, and optimizer\nmodel = CNNModel()\ncriterion = nn.CrossEntropyLoss()\noptimizer = optax.adam(learning_rate=0.001)\n\n# ... (Synthetic Data Generation & Loop) ...",
+        "LLM_fix_output": "import jax\nimport jax.numpy as jnp\nfrom flax import linen as nn\nimport optax\n\n# Define the CNN Model\nclass CNNModel(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        # 1. First Conv + ReLU + Pool\n        x = nn.Conv(features=32, kernel_size=(3, 3), padding='SAME')(x)\n        x = nn.relu(x)\n        x = nn.max_pool(x, window_shape=(2, 2), strides=(2, 2))\n\n        # 2. Second Conv + ReLU + Pool\n        x = nn.Conv(features=64, kernel_size=(3, 3), padding='SAME')(x)\n        x = nn.relu(x)\n        x = nn.max_pool(x, window_shape=(2, 2), strides=(2, 2))\n\n        # 3. Flatten and Dense Layers\n        x = x.reshape((x.shape[0], -1))\n        x = nn.Dense(features=128)(x)\n        x = nn.relu(x)\n        x = nn.Dense(features=10)(x)\n        return x\n\n# ... (Training Loop) ...",
+        "Errors": [
+          {
+            "Error_Code": "x = nn.max_pool(nn.relu(nn.Conv2d(64, ...)(x)), (2, 2))",
+            "Error": "Architecture Mismatch. The Input PyTorch code applies pooling *after* each convolution layer (Conv1 -> ReLU -> Pool -> Conv2 -> ReLU -> Pool). The Raw JAX code misses the first pooling layer entirely and only pools after the second convolution, altering the spatial dimensions and receptive field.",
+            "Fix_info": "Insert a max pooling layer after the first convolution block to match the PyTorch architecture.",
+            "Fixed_Code": "x = nn.max_pool(x, window_shape=(2, 2), strides=(2, 2)) # After Conv1"
+          },
+          {
+            "Error_Code": "criterion = nn.CrossEntropyLoss()",
+            "Error": "AttributeError. `nn.CrossEntropyLoss` is a PyTorch class. Flax/JAX do not have this class; they use functional losses.",
+            "Fix_info": "Use `optax.softmax_cross_entropy_with_integer_labels`.",
+            "Fixed_Code": "loss = optax.softmax_cross_entropy_with_integer_labels(logits, labels).mean()"
+          },
+          {
+            "Error_Code": "train_images = jnp.random.normal(0., 1., (100, 3, 32, 32))",
+            "Error": "Data Layout Mismatch. PyTorch uses `(N, C, H, W)`. JAX uses `(N, H, W, C)` for convolutions by default. The generated data is in NCHW format, which will cause JAX convolutions to interpret the channel dimension '3' as height/width.",
+            "Fix_info": "Generate data in `(N, H, W, C)` format or transpose it.",
+            "Fixed_Code": "train_images = jnp.random.normal(0., 1., (100, 32, 32, 3))"
+          }
+        ]
+      }
+    ]
+  }
