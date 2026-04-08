@@ -1,8 +1,18 @@
 from __future__ import annotations
 
+import os
+import re
+from pathlib import Path
+
+from dotenv import load_dotenv
 from openai import OpenAI
 
 from .base import ModelClient
+
+_INST_RE = re.compile(r"^\s*\[INST\]\s*", re.DOTALL)
+_INST_END_RE = re.compile(r"\s*\[/INST\]\s*$", re.DOTALL)
+
+load_dotenv(Path(__file__).resolve().parents[0] / ".env")
 
 
 class APIClient(ModelClient):
@@ -31,12 +41,20 @@ class APIClient(ModelClient):
         base_url: str,
         model: str,
         *,
-        api_key: str = "EMPTY",
+        api_key: str | None = None,
         use_chat: bool = False,
     ) -> None:
         self.model = model
         self._use_chat = use_chat
-        self._client = OpenAI(base_url=base_url, api_key=api_key)
+        resolved_key = api_key or os.getenv("API_KEY", "EMPTY")
+        self._client = OpenAI(base_url=base_url, api_key=resolved_key)
+
+    @staticmethod
+    def _strip_inst_tokens(text: str) -> str:
+        """Remove Llama-style [INST]...[/INST] wrappers that are redundant in chat mode."""
+        text = _INST_RE.sub("", text)
+        text = _INST_END_RE.sub("", text)
+        return text.strip()
 
     def generate(
         self,
@@ -47,9 +65,10 @@ class APIClient(ModelClient):
         **kwargs,
     ) -> str:
         if self._use_chat:
+            clean_prompt = self._strip_inst_tokens(prompt)
             response = self._client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "user", "content": clean_prompt}],
                 max_tokens=max_tokens,
                 temperature=temperature,
                 **kwargs,

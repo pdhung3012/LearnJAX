@@ -70,7 +70,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # ── API-specific ──────────────────────────────────────────────────
     api = p.add_argument_group("OpenAI-compatible API backend options")
     api.add_argument("--base-url", help="Server URL (e.g. http://localhost:8000/v1).")
-    api.add_argument("--api-key", default="EMPTY", help="API key (default: EMPTY).")
+    api.add_argument("--api-key", default=None, help="API key (falls back to .env / EMPTY).")
     api.add_argument("--model", dest="api_model", help="Model name the server expects.")
     api.add_argument("--use-chat", action="store_true", help="Use chat completions endpoint.")
 

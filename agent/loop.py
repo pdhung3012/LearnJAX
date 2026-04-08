@@ -59,6 +59,7 @@ class TranslationPipeline:
     def _validate_with_retries(
         self,
         jax_code: str,
+        torch_code: str,
         history: list[dict],
         syntax_retries: int,
         budget: int,
@@ -91,7 +92,8 @@ class TranslationPipeline:
             syntax_retries += 1
             self._log(f"debug_syntax: retry {syntax_retries}/{self.max_retries}")
             jax_code = self.debugger.fix(
-                jax_code, stderr=vr.syntax_error or "", stdout=""
+                jax_code, stderr=vr.syntax_error or "", stdout="",
+                torch_code=torch_code,
             )
             history.append({"phase": "debug_syntax", "retry": syntax_retries})
 
@@ -111,7 +113,8 @@ class TranslationPipeline:
 
         # ── Phase 1: validate (with syntax-debug retries) ────────────
         jax_code, vr, syntax_retries = self._validate_with_retries(
-            jax_code, history, syntax_retries, budget=self.max_retries,
+            jax_code, torch_code, history, syntax_retries,
+            budget=self.max_retries,
         )
 
         if not vr.ok:
@@ -167,12 +170,14 @@ class TranslationPipeline:
             self._log(f"debug_runtime: retry {runtime_retries}/{self.max_retries}")
             jax_code = self.debugger.fix(
                 jax_code, stderr=er.stderr, stdout=er.stdout,
+                torch_code=torch_code,
             )
             history.append({"phase": "debug_runtime", "retry": runtime_retries})
 
             remaining_syntax_budget = self.max_retries - syntax_retries
             jax_code, vr, syntax_retries = self._validate_with_retries(
-                jax_code, history, syntax_retries, budget=remaining_syntax_budget,
+                jax_code, torch_code, history, syntax_retries,
+                budget=remaining_syntax_budget,
             )
             if not vr.ok:
                 self._log("pipeline: debug patch failed validation, skipping execution")

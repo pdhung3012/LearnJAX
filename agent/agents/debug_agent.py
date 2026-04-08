@@ -4,8 +4,11 @@ from ..clients.base import ModelClient
 from .code_utils import strip_markdown_fences
 
 _DEBUG_PROMPT = """[INST] You are an expert Machine Learning Engineer specializing in JAX, Flax, and Optax.
-The following JAX code did not run successfully. Fix it so the script is complete, runnable, and preserves the intended behavior.
+The following JAX code was translated from PyTorch but did not run successfully. Fix it so the script is complete, runnable, and preserves the intended behavior of the original PyTorch code.
 Use jax, jax.numpy (as jnp), flax.linen (as nn), and optax as appropriate. Output RAW Python code only. Do NOT use markdown backticks (```).
+
+ORIGINAL PYTORCH CODE:
+{torch_code}
 
 EXECUTION STDERR:
 {stderr}
@@ -31,6 +34,7 @@ class DebugAgent:
         jax_code: str,
         stderr: str,
         stdout: str = "",
+        torch_code: str = "",
         *,
         prompt_template: str | None = None,
         max_tokens: int = 4096,
@@ -46,9 +50,11 @@ class DebugAgent:
             The JAX code that was run in the sandbox.
         stderr, stdout:
             Captured streams from :class:`ExecutionAgent` / :class:`DockerSandbox`.
+        torch_code:
+            The original PyTorch source so the model understands intended behavior.
         prompt_template:
-            Template with ``{jax_code}``, ``{stderr}``, and ``{stdout}`` placeholders.
-            If ``None``, a built-in Mistral-style template is used.
+            Template with ``{jax_code}``, ``{stderr}``, ``{stdout}``, and
+            ``{torch_code}`` placeholders.  If ``None``, a built-in template is used.
         """
         if prompt_template is None:
             prompt_template = _DEBUG_PROMPT
@@ -56,6 +62,7 @@ class DebugAgent:
             prompt_template.replace("{jax_code}", jax_code)
             .replace("{stderr}", stderr)
             .replace("{stdout}", stdout)
+            .replace("{torch_code}", torch_code)
         )
         raw = self._client.generate(
             filled,
