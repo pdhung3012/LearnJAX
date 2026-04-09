@@ -37,9 +37,15 @@ class Discriminator(nn.Module):
 # Generate synthetic data for training
 torch.manual_seed(42)
 # real_data = torch.rand(100, 1) * 2 - 1  # 100 samples in the range [-1, 1]
+# print(type(real_data))
+# input('aaaaa')
 
 import numpy as np
-real_data=np.load('input_data.pkl')
+# real_data=np.load('input_data.pkl.npy')
+real_data=torch.from_numpy(np.load("input_data.pkl.npy")).float()
+# print(type(real_data))
+# print(real_data)
+# input('abs')
 
 # Initialize models, loss, and optimizers
 latent_dim = 10
