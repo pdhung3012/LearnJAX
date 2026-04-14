@@ -1,1 +1,6 @@
+#Link of discussion:
+https://chatgpt.com/share/69dd8faf-9028-83ea-b52b-869c30fd838d
 
+#Create new data prompt:
+- from this pytorch code, can you can you get brief description of each function provided in this code.
+- from that code, can you generate an equivalent version of that code in JAX
