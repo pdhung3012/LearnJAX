@@ -1,5 +1,10 @@
 .DS_Store
 .venv/
 __pycache__/
+*.pyc
 tests/
 .env
+runs/
+data.csv
+model.pkl
+model.pth
