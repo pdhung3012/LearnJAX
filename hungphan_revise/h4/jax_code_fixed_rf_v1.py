@@ -122,5 +122,10 @@ def main():
     generated_data = G.apply({'params': G_params}, latent_samples)
     print(f"Generated data: {generated_data.tolist()}")
 
+import time
 if __name__ == "__main__":
+    start_time = time.perf_counter()
     main()
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+    print(f"Execution time: {elapsed_time:.4f} seconds")

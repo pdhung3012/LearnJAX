@@ -33,6 +33,9 @@ class Discriminator(nn.Module):
 
     def forward(self, x):
         return self.model(x)
+import time
+start_time = time.perf_counter()
+
 
 # Generate synthetic data for training
 torch.manual_seed(42)
@@ -90,3 +93,7 @@ latent_samples = torch.randn(5, latent_dim)
 with torch.no_grad():
     generated_data = G(latent_samples)
     print(f"Generated data: {generated_data.tolist()}")
+
+end_time = time.perf_counter()
+elapsed_time = end_time - start_time
+print(f"Execution time: {elapsed_time:.4f} seconds")
