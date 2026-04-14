@@ -1,0 +1,13 @@
+Epoch [100/1000], Loss: 1.0552
+Epoch [200/1000], Loss: 0.8031
+Epoch [300/1000], Loss: 0.7150
+Epoch [400/1000], Loss: 0.6826
+Epoch [500/1000], Loss: 0.6705
+Epoch [600/1000], Loss: 0.6659
+Epoch [700/1000], Loss: 0.6642
+Epoch [800/1000], Loss: 0.6635
+Epoch [900/1000], Loss: 0.6632
+Epoch [1000/1000], Loss: 0.6632
+Learned weight: 1.9557, Learned bias: 2.2181
+
+Predictions for [[4.0], [7.0]]: [[11.04088020324707], [16.907970428466797]]

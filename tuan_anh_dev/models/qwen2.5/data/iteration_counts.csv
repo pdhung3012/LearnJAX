@@ -1,0 +1,8 @@
+problem,iter_refactor,iter_translate,iter_verifier,failure_class,notes
+b1,1,1,1,,
+b2,1,1,1,,
+b3,1,2,1,,static_argnums fix for optax optimizer passed into @jit train_step
+b4,1,1,1,,
+b5,1,1,1,,
+b6,1,1,1,,
+b7,1,1,1,,
