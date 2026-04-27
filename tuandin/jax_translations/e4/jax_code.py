@@ -8,7 +8,27 @@ Speed notes: Same as e1; should be on par with or faster than PyTorch.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import optax
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Huber loss with caller-supplied delta.
+
+    Args:
+      inputs: dict with "y_pred", "y_true" (same shape), "delta" (0-d float).
+    Returns:
+      dict with "loss" (scalar).
+    """
+    pred = jnp.asarray(inputs["y_pred"])
+    true = jnp.asarray(inputs["y_true"])
+    delta = float(inputs["delta"])
+    err = jnp.abs(pred - true)
+    loss = jnp.mean(jnp.where(err <= delta,
+                              0.5 * err ** 2,
+                              delta * (err - 0.5 * delta)))
+    return {"loss": np.asarray(loss)}
 
 
 def init_linear(key, in_features, out_features):

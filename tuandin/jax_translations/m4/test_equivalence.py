@@ -1,35 +1,40 @@
-"""m4 equivalence test: dice loss formula matches across frameworks.
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
 
-The full pipeline (pretrained ResNet18 + 3D conv head + training) is too
-heavy to fully test here. We focus on the dice-loss formula equivalence,
-which is the core scoring metric in the original problem.
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
 """
 import sys
 from pathlib import Path
 import numpy as np
-import torch
-import jax.numpy as jnp
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 from _test_utils import assert_close
 
+sys.path.insert(0, str(HERE))
+from jax_code import compute
 
-def dice_pt(pred, label, eps=1e-8):
-    return (2 * torch.sum(pred * label)) / (torch.sum(pred) + torch.sum(label) + eps)
 
-
-def dice_jx(pred, label, eps=1e-8):
-    return (2 * jnp.sum(pred * label)) / (jnp.sum(pred) + jnp.sum(label) + eps)
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    rng = np.random.default_rng(0)
-    pred = np.abs(rng.standard_normal((2, 4, 1, 8, 8))).astype(np.float32)
-    label = (rng.standard_normal((2, 4, 1, 8, 8)) > 0).astype(np.float32)
-    l_pt = dice_pt(torch.from_numpy(pred), torch.from_numpy(label)).item()
-    l_jx = float(dice_jx(jnp.asarray(pred), jnp.asarray(label)))
-    assert_close(l_pt, l_jx, atol=1e-6, name="dice_loss")
-    print("[m4] PASS")
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
+
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":

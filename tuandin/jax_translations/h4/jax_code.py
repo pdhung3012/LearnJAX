@@ -14,8 +14,27 @@ Python overhead per step in PyTorch.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import flax.linen as nn
 import optax
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """BCE loss + LeakyReLU(0.2) + tanh activations.
+
+    Inputs: p (probabilities), t (targets), z (pre-activation), eps (BCE clamp).
+    Returns: bce (scalar), leaky_relu (z.shape), tanh (z.shape).
+    """
+    p = jnp.asarray(inputs["p"]); t = jnp.asarray(inputs["t"])
+    z = jnp.asarray(inputs["z"]); eps = float(inputs["eps"])
+    p_c = jnp.clip(p, eps, 1 - eps)
+    bce = -jnp.mean(t * jnp.log(p_c) + (1 - t) * jnp.log(1 - p_c))
+    return {
+        "bce":        np.asarray(bce),
+        "leaky_relu": np.asarray(jax.nn.leaky_relu(z, negative_slope=0.2)),
+        "tanh":       np.asarray(jnp.tanh(z)),
+    }
 
 
 class Generator(nn.Module):

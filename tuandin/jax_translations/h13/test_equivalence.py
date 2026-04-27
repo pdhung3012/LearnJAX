@@ -1,44 +1,40 @@
-"""h13 equivalence test: streaming-softmax flash attention vs vanilla SDPA.
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
 
-The PyTorch Triton kernel needs CUDA, so we can't run it on this CPU. We
-compare the JAX streaming flash implementation against vanilla attention
-(both in JAX) with the same Q/K/V — they must agree to within float32
-softmax precision.
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
 """
-import math
 import sys
 from pathlib import Path
 import numpy as np
-import jax
-import jax.numpy as jnp
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 from _test_utils import assert_close
 
-sys.path.insert(0, str(Path(__file__).parent))
-from jax_code import flash_attention_forward
+sys.path.insert(0, str(HERE))
+from jax_code import compute
+
+
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    rng = np.random.default_rng(0)
-    B, N_q, N_k, D = 1, 32, 64, 128
-    Q = rng.standard_normal((B, N_q, D)).astype(np.float32)
-    K = rng.standard_normal((B, N_k, D)).astype(np.float32)
-    V = rng.standard_normal((B, N_k, D)).astype(np.float32)
-    Qj, Kj, Vj = jnp.asarray(Q), jnp.asarray(K), jnp.asarray(V)
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
 
-    O_flash, L_flash = jax.jit(flash_attention_forward)(Qj, Kj, Vj)
-
-    scale = 1.0 / math.sqrt(D)
-    scores = (Qj @ jnp.swapaxes(Kj, -2, -1)) * scale
-    O_ref = jax.nn.softmax(scores, axis=-1) @ Vj
-    L_ref = jax.scipy.special.logsumexp(scores, axis=-1)
-
-    assert_close(np.asarray(O_flash), np.asarray(O_ref), atol=1e-3, rtol=1e-3,
-                 name="flash_O_vs_vanilla_O")
-    assert_close(np.asarray(L_flash), np.asarray(L_ref), atol=1e-3, rtol=1e-3,
-                 name="flash_L_vs_vanilla_L")
-    print("[h13] PASS")
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":

@@ -9,7 +9,26 @@ than PyTorch for this size on CPU.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import optax
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """2->10->1 MLP forward with caller-supplied weights (PyTorch nn.Linear layout).
+
+    Args:
+      inputs: dict with fc1_W (10, 2), fc1_b (10,), fc2_W (1, 10), fc2_b (1,), X (N, 2).
+    Returns:
+      dict with predictions (N, 1).
+    """
+    W1 = jnp.asarray(inputs["fc1_W"]).T
+    b1 = jnp.asarray(inputs["fc1_b"])
+    W2 = jnp.asarray(inputs["fc2_W"]).T
+    b2 = jnp.asarray(inputs["fc2_b"])
+    X = jnp.asarray(inputs["X"])
+    h = jnp.maximum(X @ W1 + b1, 0.0)
+    return {"predictions": np.asarray(h @ W2 + b2)}
 
 
 def init_linear(key, in_features, out_features):

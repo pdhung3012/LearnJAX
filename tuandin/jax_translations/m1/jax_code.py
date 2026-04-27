@@ -22,8 +22,31 @@ loop wrapped in autograd). Built-in model: roughly comparable on CPU.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import optax
 import flax.linen as nn
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Custom LSTM single-step forward with caller-supplied weights.
+
+    Inputs: dict with Wxi, Whi, bi, Wxf, Whf, bf, Wxo, Who, bo, Wxc, Whc, bc,
+            X_t (B, in_dim), H_prev (B, hidden), C_prev (B, hidden).
+    Returns: dict with H, C each (B, hidden).
+    """
+    W = {k: jnp.asarray(v) for k, v in inputs.items()
+         if k.startswith(("Wx", "Wh", "b"))}
+    X_t = jnp.asarray(inputs["X_t"])
+    H_prev = jnp.asarray(inputs["H_prev"])
+    C_prev = jnp.asarray(inputs["C_prev"])
+    I = jax.nn.sigmoid(X_t @ W["Wxi"] + H_prev @ W["Whi"] + W["bi"])
+    F_ = jax.nn.sigmoid(X_t @ W["Wxf"] + H_prev @ W["Whf"] + W["bf"])
+    O = jax.nn.sigmoid(X_t @ W["Wxo"] + H_prev @ W["Who"] + W["bo"])
+    C_tilde = jnp.tanh(X_t @ W["Wxc"] + H_prev @ W["Whc"] + W["bc"])
+    C = F_ * C_prev + I * C_tilde
+    H = O * jnp.tanh(C)
+    return {"H": np.asarray(H), "C": np.asarray(C)}
 import matplotlib.pyplot as plt
 
 

@@ -1,35 +1,40 @@
-"""e5 equivalence test: 2->10->1 MLP forward pass with shared weights."""
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
+
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
+"""
 import sys
 from pathlib import Path
 import numpy as np
-import torch
-import torch.nn as nn
-import jax.numpy as jnp
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from _test_utils import assert_close, torch_linear_to_jax
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
+from _test_utils import assert_close
+
+sys.path.insert(0, str(HERE))
+from jax_code import compute
+
+
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    rng = np.random.default_rng(0)
-    fc1_W = rng.standard_normal((10, 2)).astype(np.float32) * 0.3
-    fc1_b = rng.standard_normal((10,)).astype(np.float32) * 0.1
-    fc2_W = rng.standard_normal((1, 10)).astype(np.float32) * 0.3
-    fc2_b = rng.standard_normal((1,)).astype(np.float32) * 0.1
-    X = rng.uniform(0, 10, (100, 2)).astype(np.float32)
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
 
-    fc1 = nn.Linear(2, 10); fc2 = nn.Linear(10, 1)
-    with torch.no_grad():
-        fc1.weight.copy_(torch.from_numpy(fc1_W)); fc1.bias.copy_(torch.from_numpy(fc1_b))
-        fc2.weight.copy_(torch.from_numpy(fc2_W)); fc2.bias.copy_(torch.from_numpy(fc2_b))
-    out_pt = fc2(torch.relu(fc1(torch.from_numpy(X)))).detach().numpy()
-
-    W1j, b1j = torch_linear_to_jax(fc1.weight, fc1.bias)
-    W2j, b2j = torch_linear_to_jax(fc2.weight, fc2.bias)
-    h = jnp.maximum(jnp.asarray(X) @ W1j + b1j, 0.0)
-    out_jax = np.asarray(h @ W2j + b2j)
-    assert_close(out_pt, out_jax, atol=1e-5, name="mlp_forward")
-    print("[e5] PASS")
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":

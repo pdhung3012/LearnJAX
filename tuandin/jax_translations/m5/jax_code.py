@@ -20,8 +20,33 @@ dispatch cost on every step.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import flax.linen as nn
 import optax
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """SimpleRNN single-timestep forward with caller-supplied weights.
+
+    Inputs:
+        W_ih (hidden, in_dim), b_ih (hidden,)
+        W_hh (hidden, hidden), b_hh (hidden,)
+        x  (B, T, in_dim) — T is processed step-by-step
+        h0 (num_layers=1, B, hidden) — initial hidden state
+    Returns: {"out": (B, T, hidden)} — the output sequence.
+    """
+    W_ih = jnp.asarray(inputs["W_ih"])
+    b_ih = jnp.asarray(inputs["b_ih"])
+    W_hh = jnp.asarray(inputs["W_hh"])
+    b_hh = jnp.asarray(inputs["b_hh"])
+    x = jnp.asarray(inputs["x"])
+    h = jnp.asarray(inputs["h0"])[0]  # (B, hidden)
+    outs = []
+    for t in range(x.shape[1]):
+        h = jnp.tanh(x[:, t, :] @ W_ih.T + b_ih + h @ W_hh.T + b_hh)
+        outs.append(h)
+    return {"out": np.asarray(jnp.stack(outs, axis=1))}
 
 
 class FlaxSimpleRNN(nn.Module):

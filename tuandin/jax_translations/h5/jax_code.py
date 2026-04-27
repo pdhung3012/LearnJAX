@@ -21,6 +21,22 @@ overhead in the PyTorch decoder loop is significant; jit fuses it.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Cross-entropy loss (mean reduction) on raw logits with integer labels.
+
+    Inputs: logits (B, V), labels (B,) int64.
+    Returns: {"cross_entropy": scalar}.
+    """
+    import optax
+    logits = jnp.asarray(inputs["logits"])
+    labels = jnp.asarray(inputs["labels"].astype(np.int32))
+    return {"cross_entropy": np.asarray(
+        optax.softmax_cross_entropy_with_integer_labels(logits, labels).mean()
+    )}
 import flax.linen as nn
 import optax
 

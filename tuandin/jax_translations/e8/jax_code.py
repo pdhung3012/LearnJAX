@@ -13,7 +13,24 @@ on CPU for this workload (microseconds).
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import flax.linen as nn
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """RMSNorm forward with caller-supplied scale.
+
+    Args:
+      inputs: dict with "x" (..., dim), "scale" (dim,), "eps" (0-d float).
+    Returns:
+      dict with "output" same shape as x.
+    """
+    x = jnp.asarray(inputs["x"])
+    scale = jnp.asarray(inputs["scale"])
+    eps = float(inputs["eps"])
+    norm = jnp.sqrt(jnp.mean(x ** 2, axis=-1, keepdims=True) + eps)
+    return {"output": np.asarray((x / norm) * scale)}
 
 
 class RMSNorm(nn.Module):

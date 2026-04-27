@@ -20,7 +20,41 @@ Speed:
 """
 import jax
 import jax.numpy as jnp
-from transformers import AutoTokenizer, FlaxAutoModelForCausalLM
+import numpy as np
+
+# `transformers.FlaxAutoModelForCausalLM` is not available in every transformers
+# build — import lazily inside main() so the contract test (which only uses
+# compute()) keeps working when the symbol is missing.
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Masked mean of last hidden states + cosine similarity to a keyword embedding.
+
+    Inputs:
+        last_hidden: (B, S, H)
+        attention_mask: (B, S) int (1 for real, 0 for pad)
+        keyword_embed: (1, H)
+    Returns:
+        sentence_embed: (B, H), cos_sim: (B,)
+    """
+    last = jnp.asarray(inputs["last_hidden"])
+    mask = jnp.asarray(inputs["attention_mask"])
+    kw = jnp.asarray(inputs["keyword_embed"])
+
+    expanded = mask[..., None].astype(jnp.float32)
+    summed = jnp.sum(last * expanded, axis=1)
+    counts = jnp.maximum(jnp.sum(expanded, axis=1), 1e-9)
+    sentence_embed = summed / counts
+
+    a_n = sentence_embed / jnp.maximum(jnp.linalg.norm(sentence_embed, axis=-1, keepdims=True), 1e-8)
+    b_n = kw / jnp.maximum(jnp.linalg.norm(kw, axis=-1, keepdims=True), 1e-8)
+    cos_sim = jnp.sum(a_n * b_n, axis=-1)
+
+    return {
+        "sentence_embed": np.asarray(sentence_embed),
+        "cos_sim":        np.asarray(cos_sim),
+    }
 
 
 def cosine_similarity(a, b, eps=1e-8):
@@ -30,6 +64,7 @@ def cosine_similarity(a, b, eps=1e-8):
 
 
 def main():
+    from transformers import AutoTokenizer, FlaxAutoModelForCausalLM
     reviews = [
         "I love this product! Great quality and fast shipping.",
         "Terrible product, broke after one use. Do not buy.",

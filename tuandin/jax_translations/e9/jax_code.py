@@ -12,6 +12,30 @@ Speed: pure data construction; trivial.
 import math
 import jax
 import jax.numpy as jnp
+import numpy as np
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Build sinusoidal PE table and the slice for `seq_len`.
+
+    Args:
+      inputs: dict with 0-d int arrays "max_seq_len", "d_model", "seq_len".
+    Returns:
+      dict with "pe_table" (max_seq_len, d_model), "forward" (1, seq_len, d_model).
+    """
+    max_seq_len = int(inputs["max_seq_len"])
+    d_model = int(inputs["d_model"])
+    seq_len = int(inputs["seq_len"])
+
+    pos = jnp.arange(max_seq_len, dtype=jnp.float32)[:, None]
+    div = jnp.exp(jnp.arange(0, d_model, 2, dtype=jnp.float32)
+                  * (-math.log(10000.0) / d_model))
+    pe = jnp.zeros((max_seq_len, d_model), dtype=jnp.float32)
+    pe = pe.at[:, 0::2].set(jnp.sin(pos * div))
+    pe = pe.at[:, 1::2].set(jnp.cos(pos * div))
+    forward = pe[:seq_len, :][None, ...]
+    return {"pe_table": np.asarray(pe), "forward": np.asarray(forward)}
 
 
 def make_sinusoidal_pe(max_seq_len: int, d_model: int):

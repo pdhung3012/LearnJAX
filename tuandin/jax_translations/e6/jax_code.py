@@ -13,8 +13,18 @@ Speed notes:
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import optax
 from torch.utils.tensorboard import SummaryWriter
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Linear(1,1) forward with caller-supplied weights."""
+    W = jnp.asarray(inputs["W"]).T
+    b = jnp.asarray(inputs["b"])
+    X = jnp.asarray(inputs["X"])
+    return {"predictions": np.asarray(X @ W + b)}
 
 
 def init_linear(key, in_features, out_features):

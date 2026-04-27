@@ -23,7 +23,23 @@ JAX vs PyTorch quantization:
 import pickle
 import jax
 import jax.numpy as jnp
+import numpy as np
 import flax.linen as nn
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Per-tensor symmetric int8 quantize-dequantize.
+
+    Inputs: W (any shape), num_bits (0-d int).
+    Returns: {"W_quantized": same shape as W, post-Q/DQ}.
+    """
+    W = jnp.asarray(inputs["W"])
+    num_bits = int(inputs["num_bits"])
+    qmax = 2 ** (num_bits - 1) - 1
+    scale = jnp.maximum(jnp.max(jnp.abs(W)) / qmax, 1e-8)
+    q = jnp.round(W / scale).clip(-qmax - 1, qmax)
+    return {"W_quantized": np.asarray(q * scale)}
 import optax
 
 

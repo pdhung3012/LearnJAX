@@ -19,7 +19,42 @@ Speed:
 import math
 import jax
 import jax.numpy as jnp
+import numpy as np
 import flax.linen as nn
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """SmolLM building blocks: RMSNorm + SwiGLU MLP + rotate_half.
+
+    Inputs:
+        x (B, S, H), weight (H,)         — RMSNorm input + scale
+        W_gate (I, H), W_up (I, H), W_down (H, I)  — MLP weights (PT layout)
+        z (B, S, H)                       — rotate_half input
+        eps (0-d float)
+    Returns: rms_norm, swiglu_mlp, rotate_half (each same shape as x).
+    """
+    eps = float(inputs["eps"])
+    x = jnp.asarray(inputs["x"])
+    var = jnp.mean(x ** 2, axis=-1, keepdims=True)
+    rms = x * jax.lax.rsqrt(var + eps)
+    rms_out = jnp.asarray(inputs["weight"]) * rms
+
+    W_gate = jnp.asarray(inputs["W_gate"])
+    W_up   = jnp.asarray(inputs["W_up"])
+    W_down = jnp.asarray(inputs["W_down"])
+    swish = jax.nn.silu(x @ W_gate.T)
+    mlp_out = (swish * (x @ W_up.T)) @ W_down.T
+
+    z = jnp.asarray(inputs["z"])
+    half = z.shape[-1] // 2
+    rh = jnp.concatenate([-z[..., half:], z[..., :half]], axis=-1)
+
+    return {
+        "rms_norm":    np.asarray(rms_out),
+        "swiglu_mlp":  np.asarray(mlp_out),
+        "rotate_half": np.asarray(rh),
+    }
 
 
 def rotate_half(x):

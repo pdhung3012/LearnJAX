@@ -17,10 +17,22 @@ the gap closes substantially.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import flax.linen as nn
 import optax
 import torch
 import torchvision
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Dice score: 2 * sum(pred * label) / (sum(pred) + sum(label) + eps)."""
+    pred = jnp.asarray(inputs["pred"])
+    label = jnp.asarray(inputs["label"])
+    eps = float(inputs["eps"])
+    num = 2 * jnp.sum(pred * label)
+    den = jnp.sum(pred) + jnp.sum(label) + eps
+    return {"dice": np.asarray(num / den)}
 
 
 # ---- Flax ResNet18 backbone (matches torchvision arch up to layer4) ----------

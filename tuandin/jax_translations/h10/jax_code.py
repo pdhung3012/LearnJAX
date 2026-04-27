@@ -29,6 +29,24 @@ Speed notes:
 from PIL import Image
 import jax
 import jax.numpy as jnp
+import numpy as np
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Grad-CAM combine formula. Inputs in PyTorch's (B, C, H, W) convention.
+
+    weights = mean over (H, W) of gradients
+    heatmap = relu(sum_over_channels(weights * activations))
+    heatmap /= heatmap.max()
+    """
+    a = jnp.asarray(inputs["activations"])
+    g = jnp.asarray(inputs["gradients"])
+    weights = jnp.mean(g, axis=(2, 3), keepdims=True)
+    h = jnp.sum(weights * a, axis=1).squeeze()
+    h = jax.nn.relu(h)
+    h = h / (jnp.max(h) + 1e-8)
+    return {"heatmap": np.asarray(h)}
 import flax.linen as nn
 import matplotlib.pyplot as plt
 import torch

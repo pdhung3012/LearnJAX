@@ -26,6 +26,21 @@ Speed:
 import math
 import jax
 import jax.numpy as jnp
+import numpy as np
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Streaming-softmax flash-attention forward.
+
+    Inputs: Q (B, N_q, D), K (B, N_k, D), V (B, N_k, D).
+    Returns: O (attention output, same shape as Q) and L (row logsumexp, (B, N_q)).
+    """
+    Q = jnp.asarray(inputs["Q"])
+    K = jnp.asarray(inputs["K"])
+    V = jnp.asarray(inputs["V"])
+    O, L = jax.jit(flash_attention_forward)(Q, K, V)
+    return {"O": np.asarray(O), "L": np.asarray(L)}
 
 
 def flash_attention_forward(Q, K, V, block_size_k: int = 16):

@@ -1,35 +1,40 @@
-"""h5 equivalence test: per-step CE loss accumulation matches across
-frameworks for a single decoder timestep.
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
 
-Tests the cross-entropy formula used in the seq2seq teacher-forcing loop.
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
 """
 import sys
 from pathlib import Path
 import numpy as np
-import torch
-import torch.nn.functional as F
-import jax.numpy as jnp
-import optax
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 from _test_utils import assert_close
+
+sys.path.insert(0, str(HERE))
+from jax_code import compute
+
+
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    rng = np.random.default_rng(0)
-    B, V = 8, 20
-    logits = rng.standard_normal((B, V)).astype(np.float32) * 2
-    labels = rng.integers(0, V, (B,)).astype(np.int64)
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
 
-    # PyTorch: CrossEntropyLoss expects raw logits.
-    ce_pt = F.cross_entropy(torch.from_numpy(logits), torch.from_numpy(labels)).item()
-    # In the seq2seq script the per-step losses are *summed* via `+=`, so the
-    # mean reduction itself is what the optimizer differentiates. Here we test
-    # the mean-reduction equivalence.
-    ce_jx = float(optax.softmax_cross_entropy_with_integer_labels(
-        jnp.asarray(logits), jnp.asarray(labels.astype(np.int32))).mean())
-    assert_close(ce_pt, ce_jx, atol=1e-5, name="cross_entropy")
-    print("[h5] PASS")
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":

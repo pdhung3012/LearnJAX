@@ -1,34 +1,40 @@
-"""e9 equivalence test: sinusoidal positional embedding tables match exactly."""
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
+
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
+"""
 import sys
 from pathlib import Path
 import numpy as np
-import torch
-import jax.numpy as jnp
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 from _test_utils import assert_close
 
-sys.path.insert(0, str(Path(__file__).parent))
-from pytorch_code import SinusoidalPositionalEmbedding as PE_pt
-from jax_code import make_sinusoidal_pe, sinusoidal_pe_forward
+sys.path.insert(0, str(HERE))
+from jax_code import compute
+
+
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    max_seq_len, d_model = 100, 64
-    pe_pt = PE_pt(max_seq_len=max_seq_len, d_model=d_model)
-    pe_jax = make_sinusoidal_pe(max_seq_len, d_model)
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
 
-    # PE table itself.
-    assert_close(pe_pt.pe.numpy(), np.asarray(pe_jax), atol=1e-6, name="pe_table")
-
-    # forward(x) for an input of seq_len=50.
-    seq_len = 50
-    dummy_pt = torch.zeros(1, seq_len, d_model)
-    dummy_jx = jnp.zeros((1, seq_len, d_model))
-    out_pt = pe_pt(dummy_pt).numpy()
-    out_jax = np.asarray(sinusoidal_pe_forward(pe_jax, dummy_jx))
-    assert_close(out_pt, out_jax, atol=1e-6, name="forward")
-    print("[e9] PASS")
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":

@@ -1,39 +1,40 @@
-"""h6 equivalence test: emulated int8 weight quantization formula.
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
 
-PyTorch's torch.quantization.quantize_dynamic can't be tested on this CPU
-(no qnnpack engine). We test that JAX's per-tensor symmetric Q/DQ produces
-the expected values for known inputs.
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
 """
 import sys
 from pathlib import Path
 import numpy as np
-import jax.numpy as jnp
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 from _test_utils import assert_close
 
+sys.path.insert(0, str(HERE))
+from jax_code import compute
 
-def quantize_per_tensor_symmetric(x, num_bits=8):
-    qmax = 2 ** (num_bits - 1) - 1
-    scale = max(np.max(np.abs(x)) / qmax, 1e-8)
-    q = np.round(x / scale).clip(-qmax - 1, qmax)
-    return q * scale
+
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    sys.path.insert(0, str(Path(__file__).parent))
-    from jax_code import fake_quantize_dense
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
 
-    rng = np.random.default_rng(0)
-    W = rng.standard_normal((4, 5)).astype(np.float32) * 0.5
-    W_ref = quantize_per_tensor_symmetric(W, num_bits=8)
-    W_jx = np.asarray(fake_quantize_dense({"W": jnp.asarray(W)})["W"])
-    assert_close(W_ref, W_jx, atol=1e-6, name="quantize_dequantize_int8")
-    # Quantization error stays small relative to the max abs of W.
-    err = float(np.max(np.abs(W - W_jx)))
-    assert err < 0.01, f"quantization error too large: {err}"
-    print(f"[h6] quant max error: {err:.4f}")
-    print("[h6] PASS")
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":

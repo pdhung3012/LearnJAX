@@ -1,66 +1,40 @@
-"""m1 equivalence test: custom hand-rolled LSTM step with shared weights.
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
 
-Since PyTorch and JAX have different RNGs and the original re-samples (H, C)
-inside forward, we test only the deterministic per-step gate computation:
-given the same Wxi/Whi/bi/... and same H, C, X_t, both produce identical
-new H and C.
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
 """
 import sys
 from pathlib import Path
 import numpy as np
-import torch
-import jax.numpy as jnp
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 from _test_utils import assert_close
 
-
-def lstm_step_pt(W, X_t, H_prev, C_prev):
-    I = torch.sigmoid(X_t @ W["Wxi"] + H_prev @ W["Whi"] + W["bi"])
-    F_ = torch.sigmoid(X_t @ W["Wxf"] + H_prev @ W["Whf"] + W["bf"])
-    O = torch.sigmoid(X_t @ W["Wxo"] + H_prev @ W["Who"] + W["bo"])
-    C_tilde = torch.tanh(X_t @ W["Wxc"] + H_prev @ W["Whc"] + W["bc"])
-    C = F_ * C_prev + I * C_tilde
-    H = O * torch.tanh(C)
-    return H, C
+sys.path.insert(0, str(HERE))
+from jax_code import compute
 
 
-def lstm_step_jx(W, X_t, H_prev, C_prev):
-    import jax
-    I = jax.nn.sigmoid(X_t @ W["Wxi"] + H_prev @ W["Whi"] + W["bi"])
-    F_ = jax.nn.sigmoid(X_t @ W["Wxf"] + H_prev @ W["Whf"] + W["bf"])
-    O = jax.nn.sigmoid(X_t @ W["Wxo"] + H_prev @ W["Who"] + W["bo"])
-    C_tilde = jnp.tanh(X_t @ W["Wxc"] + H_prev @ W["Whc"] + W["bc"])
-    C = F_ * C_prev + I * C_tilde
-    H = O * jnp.tanh(C)
-    return H, C
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    rng = np.random.default_rng(0)
-    in_dim, hidden = 3, 4
-    keys = ["Wxi", "Whi", "bi", "Wxf", "Whf", "bf",
-            "Wxo", "Who", "bo", "Wxc", "Whc", "bc"]
-    shapes = {
-        "Wxi": (in_dim, hidden), "Whi": (hidden, hidden), "bi": (hidden,),
-        "Wxf": (in_dim, hidden), "Whf": (hidden, hidden), "bf": (hidden,),
-        "Wxo": (in_dim, hidden), "Who": (hidden, hidden), "bo": (hidden,),
-        "Wxc": (in_dim, hidden), "Whc": (hidden, hidden), "bc": (hidden,),
-    }
-    W_np = {k: rng.standard_normal(shapes[k]).astype(np.float32) * 0.3 for k in keys}
-    W_pt = {k: torch.from_numpy(v) for k, v in W_np.items()}
-    W_jx = {k: jnp.asarray(v) for k, v in W_np.items()}
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
 
-    X_t = rng.standard_normal((2, in_dim)).astype(np.float32)
-    H = rng.standard_normal((2, hidden)).astype(np.float32)
-    C = rng.standard_normal((2, hidden)).astype(np.float32)
-
-    H_pt, C_pt = lstm_step_pt(W_pt, torch.from_numpy(X_t),
-                              torch.from_numpy(H), torch.from_numpy(C))
-    H_jx, C_jx = lstm_step_jx(W_jx, jnp.asarray(X_t), jnp.asarray(H), jnp.asarray(C))
-    assert_close(H_pt.numpy(), np.asarray(H_jx), atol=1e-5, name="H_after_step")
-    assert_close(C_pt.numpy(), np.asarray(C_jx), atol=1e-5, name="C_after_step")
-    print("[m1] PASS")
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":

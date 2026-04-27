@@ -15,7 +15,32 @@ batches/seq_len because of XLA fusion, on GPU JAX vs cuDNN MHA is competitive.
 """
 import jax
 import jax.numpy as jnp
+import math
+import numpy as np
 import flax.linen as nn
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Multi-head attention forward with caller-supplied projection weights.
+
+    Inputs (PyTorch nn.Linear layout: (out, in)):
+        q, k, v: (B, S, d_model)
+        Q_w, K_w, V_w, W_out: (d_model, d_model)
+        d_model, num_heads: 0-d int arrays
+    Returns: {"output": (B, S, d_model)}.
+    """
+    q = jnp.asarray(inputs["q"]); k = jnp.asarray(inputs["k"]); v = jnp.asarray(inputs["v"])
+    d_model = int(inputs["d_model"]); num_heads = int(inputs["num_heads"])
+    d_head = d_model // num_heads
+    B, S, _ = q.shape
+    Q = (q @ jnp.asarray(inputs["Q_w"]).T).reshape(B, S, num_heads, d_head).transpose(0, 2, 1, 3)
+    K = (k @ jnp.asarray(inputs["K_w"]).T).reshape(B, S, num_heads, d_head).transpose(0, 2, 1, 3)
+    V = (v @ jnp.asarray(inputs["V_w"]).T).reshape(B, S, num_heads, d_head).transpose(0, 2, 1, 3)
+    scores = jnp.matmul(Q, jnp.swapaxes(K, -2, -1)) / math.sqrt(d_head)
+    attn = jax.nn.softmax(scores, axis=-1)
+    out = jnp.matmul(attn, V).transpose(0, 2, 1, 3).reshape(B, S, d_model)
+    return {"output": np.asarray(out @ jnp.asarray(inputs["W_out"]).T)}
 
 
 class MultiHeadAttention(nn.Module):

@@ -9,7 +9,27 @@ This file is identical to pytorch_code.py and exists only to keep the
 directory layout uniform across cases. The original file also imported nothing
 from torch.
 """
+import json
 from collections import defaultdict, Counter
+
+import numpy as np
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Run BPE on a corpus, return JSON-encoded merge sequence and vocab.
+
+    Args:
+      inputs: dict with "corpus" (object array of strings), "num_merges" (0-d int).
+    Returns:
+      dict with "merges_json", "vocab_json" (each a 0-d object array containing JSON).
+    """
+    corpus = list(inputs["corpus"])
+    final_vocab, merges = byte_pair_encoding(corpus, num_merges=int(inputs["num_merges"]))
+    return {
+        "merges_json": np.array(json.dumps([list(m) for m in merges])),
+        "vocab_json":  np.array(json.dumps({" ".join(k): v for k, v in final_vocab.items()})),
+    }
 
 
 def get_vocab(corpus):

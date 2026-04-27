@@ -14,10 +14,40 @@ will be similar because torchvision DataLoader feeds both implementations.
 """
 import numpy as np
 import jax
+import jax.lax as lax
 import jax.numpy as jnp
 import flax.linen as nn
 import optax
 import torch
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """VanillaCNN forward with caller-supplied weights (PyTorch NCHW + (out, in, kH, kW)).
+
+    Inputs:
+        c1_w (32, 3, 3, 3), c1_b (32,)
+        c2_w (64, 32, 3, 3), c2_b (64,)
+        f1_w (128, 64*16*16), f1_b (128,)
+        f2_w (10, 128), f2_b (10,)
+        x (B, 3, 32, 32) NCHW
+    Returns: dict with "logits" (B, 10).
+    """
+    # NCHW -> NHWC for JAX/Flax conv.
+    x = jnp.asarray(np.transpose(inputs["x"], (0, 2, 3, 1)))
+    c1_k = jnp.asarray(np.transpose(inputs["c1_w"], (2, 3, 1, 0)))  # HWIO
+    c2_k = jnp.asarray(np.transpose(inputs["c2_w"], (2, 3, 1, 0)))
+    def conv(x, k, b):
+        return lax.conv_general_dilated(
+            x, k, (1, 1), "SAME", dimension_numbers=("NHWC", "HWIO", "NHWC"),
+        ) + jnp.asarray(b)
+    h = jax.nn.relu(conv(x, c1_k, inputs["c1_b"]))
+    h = jax.nn.relu(conv(h, c2_k, inputs["c2_b"]))
+    h = nn.max_pool(h, (2, 2), strides=(2, 2))
+    # Match PyTorch's view: NHWC -> NCHW -> flatten.
+    h = jnp.transpose(h, (0, 3, 1, 2)).reshape(h.shape[0], -1)
+    h = jax.nn.relu(h @ jnp.asarray(inputs["f1_w"].T) + jnp.asarray(inputs["f1_b"]))
+    return {"logits": np.asarray(h @ jnp.asarray(inputs["f2_w"].T) + jnp.asarray(inputs["f2_b"]))}
 import torchvision
 import torchvision.transforms as transforms
 

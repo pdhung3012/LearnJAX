@@ -16,6 +16,21 @@ import time
 import numpy as np
 import jax
 import jax.numpy as jnp
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """SimpleNN forward (Flatten -> Linear -> ReLU -> Linear) with caller-supplied weights.
+
+    Inputs:
+        fc1_w (128, 784), fc1_b (128,)
+        fc2_w (10, 128), fc2_b (10,)
+        x (B, 1, 28, 28)
+    Returns: {"logits": (B, 10)}.
+    """
+    flat = jnp.asarray(inputs["x"]).reshape(-1, 28*28)
+    h = jax.nn.relu(flat @ jnp.asarray(inputs["fc1_w"].T) + jnp.asarray(inputs["fc1_b"]))
+    return {"logits": np.asarray(h @ jnp.asarray(inputs["fc2_w"].T) + jnp.asarray(inputs["fc2_b"]))}
 import flax.linen as nn
 import optax
 import torch

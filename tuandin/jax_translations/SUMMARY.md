@@ -12,13 +12,111 @@ The translations are organized into two batches:
    from a pre-trained SmolLM2-135M, full SmolLM-135M from scratch, Flash
    Attention v2.
 
-Every subdirectory holds two files:
+Every subdirectory holds these files:
 - `pytorch_code.py` — the (lightly cleaned) reference, runnable as a script.
-- `jax_code.py` — a faithful JAX translation written for this benchmark.
+- `jax_code.py` — a faithful JAX translation written for this benchmark. **It must expose a `compute(inputs: dict) -> dict` contract function** (see "Contract architecture" below).
+- `freeze_fixtures.py` — one-shot script that generates `inputs.npz` and `expected.npz` from the canonical PyTorch reference. Run once, output committed.
+- `inputs.npz` — frozen canonical inputs (data + weights + scalar config).
+- `expected.npz` — frozen PyTorch-reference outputs on those inputs. **This is the ground truth.**
+- `test_equivalence.py` — generic ~30-line harness: loads the two `.npz` files, calls `compute(inputs)`, asserts elementwise closeness on every output key.
 
 `run_bench.py` runs both files with `time.time()` around a `subprocess.run`, so the
 reported numbers are end-to-end wall-clock per script (process start, library
 imports, data generation, training, inference, `print` calls — everything).
+`run_tests.py` runs the per-case `test_equivalence.py` (sequentially or with
+`--random N --seed S` for sampling).
+
+## Contract architecture (test_equivalence)
+
+PyTorch and JAX have different RNGs, so end-to-end training equivalence isn't a
+meaningful target. Equivalence is instead defined as: **given the same canonical
+inputs, the JAX `compute()` must produce numerically the same outputs as the
+PyTorch reference**. The PyTorch outputs are computed once and frozen; tests
+compare against the frozen artifact, not against a live PyTorch run.
+
+```
+                  freeze_fixtures.py  (run ONCE, outputs committed)
+                     │
+                     ├──> generates canonical inputs from a fixed seed
+                     │       │
+                     │       └──> inputs.npz  ←─────────────┐
+                     │                                       │
+                     ├──> runs PyTorch reference(inputs)     │
+                     │       │                               │
+                     │       └──> expected.npz   (the        │
+                     │             "ground truth" frozen     │
+                     │             once and committed)       │
+                     ▼                                       │
+                  (script exits)                             │
+                                                             │
+                                                             │ same file,
+                                                             │ loaded at test time
+                                                             │
+                  test_equivalence.py                        │
+                     │                                       │
+                     ├──── load inputs.npz   ──────────────  ┘
+                     │
+                     ├──── call jax_code.compute(inputs)  ──> actual outputs
+                     │
+                     ├──── load expected.npz             ──> ground truth
+                     │
+                     └──── assert_close(actual, expected, atol/rtol)
+```
+
+**Three artifacts, two phases:**
+
+| Phase | Script | Reads | Writes |
+|---|---|---|---|
+| 1 (one-time) | `freeze_fixtures.py` | RNG seed + PyTorch ref code | `inputs.npz`, `expected.npz` |
+| 2 (every test run) | `test_equivalence.py` | `inputs.npz`, `expected.npz`, `jax_code.py` | (PASS / assertion error) |
+
+JAX never runs `freeze_fixtures.py`. It just reads the already-frozen
+`inputs.npz` via `compute(inputs)` and is judged against the already-frozen
+`expected.npz`.
+
+### The contract
+
+Each `jax_code.py` must define:
+
+```python
+def compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    """Run the case's deterministic core on canonical inputs.
+
+    Args:
+        inputs: dict whose keys match those of inputs.npz (data tensors,
+                weight tensors, and 0-d scalar config arrays).
+    Returns:
+        dict whose keys match those of expected.npz (output tensors).
+    """
+```
+
+The function takes numpy at the boundary and returns numpy at the boundary;
+internal JIT/Flax/equinox/raw-`jnp` choices are hidden. This makes the harness:
+
+- **Robust to renaming.** The cheap LLM is free to call its internal class `Foo`,
+  `Attention`, etc. — the harness only imports `compute`.
+- **Robust to JAX style.** A pure-`jax.numpy`, Flax, or `equinox` implementation
+  all satisfy the same contract.
+- **An actual oracle.** Bug-injection probes confirm the harness fails when
+  `compute()` is wrong (sign flip, argument swap, weight-layout error).
+
+### Why this matters for the cheap-LLM evaluation loop
+
+For the planned fine-tuning pipeline (cheap LLM / `t2j` tool produces JAX,
+expensive LLM iteratively fixes failures), the cheap model sees:
+
+- `pytorch_code.py` and the contract spec ("write `compute(inputs)` that maps
+  these input keys to these output keys").
+
+It does **not** see `freeze_fixtures.py` or `expected.npz` — those would leak
+the answer. After it emits a candidate, the harness loads `inputs.npz` +
+`expected.npz` (which the LLM never saw) and judges. So `inputs.npz` and
+`expected.npz` together act as a **held-out test set, per case**, with the
+same role as a hidden test in LeetCode.
+
+The pass/fail signal (plus the harness error message and per-output max-abs-
+diff) is the supervision the expensive LLM uses to emit a fix; each (broken
+candidate, fix diff, harness signal) tuple is direct training data.
 
 ## Hardware / software config
 
@@ -134,11 +232,17 @@ the translations document them in the per-file docstring:
 ## Reproducing
 
 ```bash
-# Run all benchmarked cases:
+# Run latency benchmarks:
 /opt/miniconda3/envs/t2j/bin/python run_bench.py
+/opt/miniconda3/envs/t2j/bin/python run_bench.py e1 e5 m5      # subset
 
-# Run a subset:
-/opt/miniconda3/envs/t2j/bin/python run_bench.py e1 e5 m5
+# Run equivalence tests (contract-based):
+/opt/miniconda3/envs/t2j/bin/python run_tests.py
+/opt/miniconda3/envs/t2j/bin/python run_tests.py --random 5 --seed 42
+
+# Regenerate fixtures for a single case (only after intentionally changing
+# the canonical inputs or the PyTorch reference):
+cd <case>/ && /opt/miniconda3/envs/t2j/bin/python freeze_fixtures.py
 ```
 
 `run_bench.py` sets `MPLBACKEND=Agg` so matplotlib `.show()` calls don't pop a

@@ -12,8 +12,25 @@ Speed notes:
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import optax
 import matplotlib.pyplot as plt
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Linear(1,1) -> tanh(z) + z forward, with caller-supplied weights.
+
+    Args:
+      inputs: dict with "W" (1,1), "b" (1,), "X" (N,1).
+    Returns:
+      dict with "predictions" (N, 1).
+    """
+    W = jnp.asarray(inputs["W"]).T
+    b = jnp.asarray(inputs["b"])
+    X = jnp.asarray(inputs["X"])
+    z = X @ W + b
+    return {"predictions": np.asarray(jnp.tanh(z) + z)}
 
 
 def init_linear(key, in_features, out_features):

@@ -10,6 +10,7 @@ PyTorch.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 
 
 def scaled_dot_product_attention(q, k, v, mask=None):
@@ -30,6 +31,27 @@ def scaled_dot_product_attention(q, k, v, mask=None):
     attn_weights = jax.nn.softmax(scores, axis=-1)
     output = jnp.matmul(attn_weights, v)
     return output, attn_weights
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Run e10's deterministic core: scaled-dot-product attention with mask.
+
+    Args:
+      inputs: dict with keys "q", "k", "v" each shape (B, S, D),
+              and "mask" shape (S, S) where 0 means "masked out".
+    Returns:
+      dict with keys "output" (B, S, D) and "attention_weights" (B, S, S).
+    """
+    q = jnp.asarray(inputs["q"])
+    k = jnp.asarray(inputs["k"])
+    v = jnp.asarray(inputs["v"])
+    mask = jnp.asarray(inputs["mask"]) if "mask" in inputs else None
+    out, attn = scaled_dot_product_attention(q, k, v, mask=mask)
+    return {
+        "output":            np.asarray(out),
+        "attention_weights": np.asarray(attn),
+    }
 
 
 if __name__ == "__main__":

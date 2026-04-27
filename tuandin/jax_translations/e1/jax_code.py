@@ -17,6 +17,7 @@ PRNGKey(42) which yields the same statistical distribution but different samples
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import optax
 
 
@@ -30,6 +31,27 @@ def init_linear(key, in_features, out_features):
 
 def model_apply(params, x):
     return x @ params["W"] + params["b"]
+
+
+# ---- Contract API used by test_equivalence.py and the eval harness ----------
+#
+# `compute(inputs)` is the single entry point a translation must implement.
+# It takes a dict of numpy arrays (matching the keys in inputs.npz) and returns
+# a dict of numpy arrays (matching the keys in expected.npz). Internal JAX
+# representation/jit choices are hidden from callers.
+def compute(inputs):
+    """Run e1's deterministic core: nn.Linear(1, 1) forward pass.
+
+    Args:
+      inputs: dict with keys "W" (out, in)=(1, 1), "b" (out,)=(1,), "X" (N, 1).
+    Returns:
+      dict with key "predictions" of shape (N, 1).
+    """
+    # PyTorch nn.Linear weight is (out, in); JAX kernel convention is (in, out).
+    W = jnp.asarray(inputs["W"]).T
+    b = jnp.asarray(inputs["b"])
+    X = jnp.asarray(inputs["X"])
+    return {"predictions": np.asarray(X @ W + b)}
 
 
 def loss_fn(params, x, y):

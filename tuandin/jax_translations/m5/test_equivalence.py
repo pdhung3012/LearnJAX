@@ -1,49 +1,40 @@
-"""m5 equivalence test: SimpleRNN forward step with shared weights.
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
 
-Tests that the elementwise tanh recurrence (h_t = tanh(W_ih x + b_ih + W_hh h + b_hh))
-matches between PyTorch nn.RNN and Flax SimpleCell.
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
 """
 import sys
 from pathlib import Path
 import numpy as np
-import torch
-import torch.nn as nn
-import jax
-import jax.numpy as jnp
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 from _test_utils import assert_close
+
+sys.path.insert(0, str(HERE))
+from jax_code import compute
+
+
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    rng = np.random.default_rng(0)
-    in_dim, hidden = 1, 8
-    W_ih = rng.standard_normal((hidden, in_dim)).astype(np.float32) * 0.3
-    b_ih = rng.standard_normal((hidden,)).astype(np.float32) * 0.1
-    W_hh = rng.standard_normal((hidden, hidden)).astype(np.float32) * 0.3
-    b_hh = rng.standard_normal((hidden,)).astype(np.float32) * 0.1
-    x = rng.standard_normal((1, 1, in_dim)).astype(np.float32)
-    h0 = rng.standard_normal((1, 1, hidden)).astype(np.float32)
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
 
-    rnn = nn.RNN(in_dim, hidden, num_layers=1, batch_first=True, nonlinearity="tanh")
-    with torch.no_grad():
-        rnn.weight_ih_l0.copy_(torch.from_numpy(W_ih))
-        rnn.bias_ih_l0.copy_(torch.from_numpy(b_ih))
-        rnn.weight_hh_l0.copy_(torch.from_numpy(W_hh))
-        rnn.bias_hh_l0.copy_(torch.from_numpy(b_hh))
-    out_pt, _ = rnn(torch.from_numpy(x), torch.from_numpy(h0))
-
-    # Hand-roll the JAX equivalent using the same formula.
-    h = jnp.asarray(h0[0])
-    out_jx_steps = []
-    for t in range(x.shape[1]):
-        h = jnp.tanh(jnp.asarray(x[:, t, :]) @ jnp.asarray(W_ih.T) + jnp.asarray(b_ih)
-                     + h @ jnp.asarray(W_hh.T) + jnp.asarray(b_hh))
-        out_jx_steps.append(h)
-    out_jx = jnp.stack(out_jx_steps, axis=1)
-    assert_close(out_pt.detach().numpy(), np.asarray(out_jx), atol=1e-5,
-                 name="rnn_step_forward")
-    print("[m5] PASS")
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":

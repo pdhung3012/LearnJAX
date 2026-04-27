@@ -15,6 +15,28 @@ the surrounding attention computation.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Apply rotary positional embeddings to (q, k) given matching cos/sin.
+
+    Inputs:
+        q, k: (B, S, H, D)
+        cos, sin: (1, S, 1, D) — must broadcast against (B, S, H, D)
+    Returns: {"q_rot": ..., "k_rot": ...} same shape as q, k.
+    """
+    q = jnp.asarray(inputs["q"]); k = jnp.asarray(inputs["k"])
+    cos = jnp.asarray(inputs["cos"]); sin = jnp.asarray(inputs["sin"])
+
+    def rh(x):
+        half = x.shape[-1] // 2
+        return jnp.concatenate([-x[..., half:], x[..., :half]], axis=-1)
+
+    q_rot = q * cos + rh(q) * sin
+    k_rot = k * cos + rh(k) * sin
+    return {"q_rot": np.asarray(q_rot), "k_rot": np.asarray(k_rot)}
 
 
 def make_rotary(dim, seq_len, base=10000.0):

@@ -13,8 +13,24 @@ Speed notes:
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
 import optax
 import pandas as pd
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """Run e2's deterministic core: Linear(1,1) forward with caller-supplied weights.
+
+    Args:
+      inputs: dict with keys "W" (out, in)=(1, 1), "b" (out,)=(1,), "X" (N, 1).
+    Returns:
+      dict with key "predictions" of shape (N, 1).
+    """
+    W = jnp.asarray(inputs["W"]).T
+    b = jnp.asarray(inputs["b"])
+    X = jnp.asarray(inputs["X"])
+    return {"predictions": np.asarray(X @ W + b)}
 
 
 def init_linear(key, in_features, out_features):

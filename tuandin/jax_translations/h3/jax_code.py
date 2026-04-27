@@ -14,6 +14,28 @@ optax + jit; expect comparable or slightly faster than PyTorch on CPU.
 """
 import jax
 import jax.numpy as jnp
+import numpy as np
+
+
+# ---- Contract API used by test_equivalence.py ------------------------------
+def compute(inputs):
+    """LayerNorm + FFN(Linear -> ReLU -> Linear) sub-block forward.
+
+    Inputs:
+        x (B, S, D)
+        gamma (D,), beta (D,)        — LayerNorm weight/bias
+        W1 (FF, D), b1 (FF,)         — FFN first linear (PyTorch nn.Linear: out, in)
+        W2 (D, FF), b2 (D,)          — FFN second linear
+    Returns: {"layer_norm": (B, S, D), "ffn": (B, S, D)}
+    """
+    x = jnp.asarray(inputs["x"])
+    gamma = jnp.asarray(inputs["gamma"]); beta = jnp.asarray(inputs["beta"])
+    mean = jnp.mean(x, axis=-1, keepdims=True)
+    var = jnp.var(x, axis=-1, keepdims=True)
+    ln_out = (x - mean) / jnp.sqrt(var + 1e-5) * gamma + beta
+    h = jax.nn.relu(x @ jnp.asarray(inputs["W1"]).T + jnp.asarray(inputs["b1"]))
+    ffn = h @ jnp.asarray(inputs["W2"]).T + jnp.asarray(inputs["b2"])
+    return {"layer_norm": np.asarray(ln_out), "ffn": np.asarray(ffn)}
 import flax.linen as nn
 import optax
 

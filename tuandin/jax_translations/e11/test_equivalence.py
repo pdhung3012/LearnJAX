@@ -1,23 +1,33 @@
-"""e11 equivalence test: BPE produces identical merges/vocabulary on both sides.
+"""e11 contract test: BPE merges/vocab match exactly (JSON string compare).
 
-The PyTorch and JAX files are byte-identical (BPE is pure Python). We still
-exercise the import and assert merge sequences match for a fresh corpus.
+The contract is the same as the other cases (compute(inputs) -> dict), but
+the outputs are JSON-encoded structures, not numpy tensors, so we compare
+strings rather than numerical closeness.
 """
 import sys
 from pathlib import Path
+import numpy as np
 
-sys.path.insert(0, str(Path(__file__).parent))
-import pytorch_code as pt_mod
-import jax_code as jax_mod
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE))
+from jax_code import compute
 
 
 def main():
-    corpus = ["lower", "lowest", "newer", "newest", "wider", "widest"]
-    vocab_pt, merges_pt = pt_mod.byte_pair_encoding(corpus, num_merges=8)
-    vocab_jx, merges_jx = jax_mod.byte_pair_encoding(corpus, num_merges=8)
-    assert merges_pt == merges_jx, f"merges differ:\n  pt:  {merges_pt}\n  jax: {merges_jx}"
-    assert vocab_pt == vocab_jx, f"vocab differs:\n  pt:  {vocab_pt}\n  jax: {vocab_jx}"
-    print("[e11] PASS")
+    inputs = dict(np.load(HERE / "inputs.npz", allow_pickle=True))
+    expected = dict(np.load(HERE / "expected.npz", allow_pickle=True))
+    actual = compute(inputs)
+
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        a = str(actual[k]); e = str(expected[k])
+        if a != e:
+            raise AssertionError(f"{k}: differs\n  actual:   {a}\n  expected: {e}")
+        print(f"  {k}: ✓")
+    print("[e11] contract PASS")
 
 
 if __name__ == "__main__":

@@ -1,49 +1,40 @@
-"""h4 equivalence test: BCE loss formula equivalence.
+"""Generic contract test (template). Copied verbatim into each case dir as
+test_equivalence.py — adjust ATOL/RTOL inline per case if numerical precision
+demands it.
 
-The full GAN training loop is RNG-sensitive (different latents per step), so
-we test the BCE loss formula and the LeakyReLU/Tanh activations used in the
-discriminator/generator.
+Contract: jax_code.compute(inputs: dict[str, np.ndarray]) -> dict[str, np.ndarray].
+The test loads frozen inputs.npz + expected.npz, calls compute(), and asserts
+elementwise closeness on every output key.
 """
 import sys
 from pathlib import Path
 import numpy as np
-import torch
-import jax.numpy as jnp
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 from _test_utils import assert_close
 
-
-def bce_pt(p, t, eps=1e-7):
-    p = torch.clamp(p, eps, 1 - eps)
-    return -(t * torch.log(p) + (1 - t) * torch.log(1 - p)).mean()
+sys.path.insert(0, str(HERE))
+from jax_code import compute
 
 
-def bce_jx(p, t, eps=1e-7):
-    p = jnp.clip(p, eps, 1 - eps)
-    return -jnp.mean(t * jnp.log(p) + (1 - t) * jnp.log(1 - p))
+ATOL = 1e-5
+RTOL = 1e-5
+CASE = HERE.name
 
 
 def main():
-    rng = np.random.default_rng(0)
-    p = np.clip(rng.uniform(0.0, 1.0, (32, 1)).astype(np.float32), 0.01, 0.99)
-    t = rng.integers(0, 2, (32, 1)).astype(np.float32)
-    l_pt = bce_pt(torch.from_numpy(p), torch.from_numpy(t)).item()
-    l_jx = float(bce_jx(jnp.asarray(p), jnp.asarray(t)))
-    assert_close(l_pt, l_jx, atol=1e-5, name="bce_loss")
+    inputs = dict(np.load(HERE / "inputs.npz"))
+    expected = dict(np.load(HERE / "expected.npz"))
+    actual = compute(inputs)
 
-    # LeakyReLU(0.2).
-    z = rng.standard_normal((10,)).astype(np.float32)
-    a_pt = torch.nn.functional.leaky_relu(torch.from_numpy(z), 0.2).numpy()
-    import jax
-    a_jx = np.asarray(jax.nn.leaky_relu(jnp.asarray(z), negative_slope=0.2))
-    assert_close(a_pt, a_jx, atol=1e-7, name="leaky_relu_0.2")
-
-    # Tanh.
-    a_pt = torch.tanh(torch.from_numpy(z)).numpy()
-    a_jx = np.asarray(jnp.tanh(jnp.asarray(z)))
-    assert_close(a_pt, a_jx, atol=1e-7, name="tanh")
-    print("[h4] PASS")
+    missing = set(expected) - set(actual)
+    extra = set(actual) - set(expected)
+    if missing or extra:
+        raise AssertionError(f"output key mismatch: missing={missing} extra={extra}")
+    for k in expected:
+        assert_close(np.asarray(actual[k]), expected[k], atol=ATOL, rtol=RTOL, name=k)
+    print(f"[{CASE}] contract PASS")
 
 
 if __name__ == "__main__":
