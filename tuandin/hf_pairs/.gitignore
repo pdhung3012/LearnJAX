@@ -1,0 +1,12 @@
+# uv-managed virtualenv (recreate via `uv sync`).
+.venv/
+
+# Per-case build artifacts that are regenerable via freeze_fixtures.py.
+# We intentionally COMMIT pt_weights/, inputs.npz, and expected.npz so the
+# tier is reproducible without rerunning PyTorch — these are the frozen
+# ground truth.
+
+# Cache.
+__pycache__/
+*.pyc
+.pytest_cache/
