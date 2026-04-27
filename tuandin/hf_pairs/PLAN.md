@@ -18,7 +18,7 @@ Each PT↔Flax pair gives us three valuable things at once:
    `FlaxAuto<X>.from_pretrained(pt_dir, from_pt=True)` already implements the
    PT→Flax weight conversion, so we don't have to hand-port layouts.
 
-## Contract (same as jax_translations/)
+## Contract (same as jax_translations/) — with one critical constraint
 
 Every subdirectory holds:
 
@@ -26,19 +26,59 @@ Every subdirectory holds:
   instantiates the PT model with a fixed seed, runs forward on a canonical
   input batch.
 - `freeze_fixtures.py` — runs the PyTorch reference, then:
-  - saves the PT weights via `model.save_pretrained("pt_weights/")` so the
-    Flax side can load them via `from_pt=True`,
-  - saves `inputs.npz` (input_ids + any other tensors) and `expected.npz`
-    (the PT forward output, e.g. last_hidden_state).
-- `pt_weights/` — committed if small (~few MB), gitignored if large.
-- `inputs.npz`, `expected.npz` — frozen ground truth as before.
-- `jax_code.py` — exposes `compute(inputs: dict) -> dict`. Internally loads
-  weights from `pt_weights/` via `Flax<Model>.from_pretrained(..., from_pt=True)`
-  and runs the Flax forward.
+  - saves the PT weights via `model.save_pretrained("pt_weights/")`,
+  - saves `inputs.npz` and `expected.npz` (the PT forward output).
+- `pt_weights/` — committed (~300 KB per case at the small config used).
+- `inputs.npz`, `expected.npz` — frozen ground truth.
+- **`jax_code.py`** — exposes `compute(inputs: dict) -> dict`. Loads raw PT
+  arrays from `pt_weights/` via the shared `_weight_loader.load_pt_safetensors`
+  helper, then **re-implements the model forward from scratch in
+  `jax.numpy` primitives**. See "What jax_code.py is allowed to do" below.
 - `test_equivalence.py` — generic contract test (same template as Tier 1).
 
 The cheap LLM is given `pytorch_code.py` and the contract spec. It does
 **not** see `freeze_fixtures.py`, `pt_weights/`, or `expected.npz`.
+
+### What `jax_code.py` is allowed to do (and why)
+
+**Allowed:**
+- `import jax`, `jax.numpy`, `numpy`, `flax.linen`, math, etc.
+- Read raw PT arrays via `_weight_loader.load_pt_safetensors(pt_dir)` (returns
+  a flat `dict[str, np.ndarray]` keyed on PT state_dict names).
+- Read `pt_weights/config.json` via `_weight_loader.load_pt_config(pt_dir)`.
+- Apply any layout transposes the candidate decides are needed (PT Linear
+  weight is `(out, in)`, Flax kernel is `(in, out)`; PT Conv2d is
+  `(out, in, kH, kW)`, JAX `lax.conv_general_dilated` with HWIO is
+  `(kH, kW, in, out)`; etc.).
+
+**Forbidden:**
+- `from transformers import Flax<X>Model` (or any `Flax<X>` class). The
+  whole point of the eval is to test whether the candidate can re-implement
+  the architecture, not whether it knows HuggingFace's pre-built Flax port.
+  Importing `Flax<X>Model` and calling it with `from_pt=True` would
+  collapse the case to "does the LLM know HF's API?" — a trivial signal.
+
+### Why this matters
+
+If we let the candidate import `FlaxBertModel` directly, the resulting
+`compute()` is one line:
+
+```python
+def compute(inputs):
+    model = FlaxBertModel.from_pretrained(pt_dir, from_pt=True)
+    return {"last_hidden_state": ...}
+```
+
+Pass rate ~100% for any LLM that's read the `transformers` docs. We learn
+nothing about translation skill.
+
+Forcing a from-scratch implementation makes the candidate confront every
+real translation challenge: weight layout transposes, attention mask
+broadcasting, axis ordering, model-specific quirks (RoBERTa's pad-offset
+position ids, T5's relative position bias and lack of QK scaling, GPT-2's
+`Conv1D`-vs-`Linear` weight convention, ViT's NCHW→NHWC for the patch
+conv). Pass rate drops to a meaningful range and every failure is
+algorithmic supervision data.
 
 ## Model selection (Tier 2.0 — initial 5)
 
