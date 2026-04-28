@@ -1,4 +1,4 @@
-"""Freeze fixtures for the GPT-2 case (symmetric design)."""
+"""Freeze fixtures for the DistilBERT case (symmetric design)."""
 import json
 import sys
 from pathlib import Path
@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import torch
 from safetensors.torch import save_file
-from transformers import GPT2Config as HFGPT2Config, GPT2Model as HFGPT2Model
+from transformers import DistilBertConfig as HFConfig, DistilBertModel as HFModel
 
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE))
@@ -29,18 +29,13 @@ def _save_pt_weights(model, pt_dir, config_dict):
 
 def _verify_against_hf(handwritten_model, inputs, expected, atol=1e-6):
     cfg = handwritten_model.config
-    hf_cfg = HFGPT2Config(
-        vocab_size=cfg.vocab_size, n_positions=cfg.n_positions,
-        n_embd=cfg.n_embd, n_layer=cfg.n_layer, n_head=cfg.n_head,
-        n_inner=cfg.n_inner, layer_norm_epsilon=cfg.layer_norm_epsilon,
+    hf_cfg = HFConfig(
+        vocab_size=cfg.vocab_size, dim=cfg.dim, n_layers=cfg.n_layers,
+        n_heads=cfg.n_heads, hidden_dim=cfg.hidden_dim,
+        max_position_embeddings=cfg.max_position_embeddings,
     )
-    hf_model = HFGPT2Model(hf_cfg)
-    # GPT-2's HF state dict has the same keys we use; load directly.
-    missing, unexpected = hf_model.load_state_dict(
-        handwritten_model.state_dict(), strict=False
-    )
-    # We expect HF to have additional buffers (attn.bias = causal mask buffer);
-    # those are non-parametric, so missing keys are OK.
+    hf_model = HFModel(hf_cfg)
+    hf_model.load_state_dict(handwritten_model.state_dict(), strict=True)
     hf_model.eval()
     with torch.no_grad():
         hf_out = hf_model(
@@ -48,25 +43,20 @@ def _verify_against_hf(handwritten_model, inputs, expected, atol=1e-6):
             attention_mask=torch.from_numpy(inputs["attention_mask"]),
         ).last_hidden_state.numpy()
     diff = np.abs(hf_out - expected["last_hidden_state"]).max()
-    assert diff < atol, f"hand-written PT diverges from HF GPT2: max abs diff = {diff:.3e}"
+    assert diff < atol, f"hand-written PT diverges: max abs diff = {diff:.3e}"
     print(f"  HF library equivalence check: ✓ max abs diff = {diff:.3e}")
 
 
 def main():
     inputs = make_inputs()
     model = build_pt_model()
-
+    cfg = model.config
     config_dict = {
-        "vocab_size":         model.config.vocab_size,
-        "n_positions":        model.config.n_positions,
-        "n_embd":             model.config.n_embd,
-        "n_layer":            model.config.n_layer,
-        "n_head":             model.config.n_head,
-        "n_inner":            model.config.n_inner,
-        "layer_norm_epsilon": model.config.layer_norm_epsilon,
+        "vocab_size": cfg.vocab_size, "dim": cfg.dim, "n_layers": cfg.n_layers,
+        "n_heads": cfg.n_heads, "hidden_dim": cfg.hidden_dim,
+        "max_position_embeddings": cfg.max_position_embeddings,
     }
     _save_pt_weights(model, HERE / "pt_weights", config_dict)
-
     with torch.no_grad():
         out = model(
             input_ids=torch.from_numpy(inputs["input_ids"]),
@@ -75,9 +65,8 @@ def main():
     expected = {"last_hidden_state": out.numpy()}
     np.savez(HERE / "inputs.npz", **inputs)
     np.savez(HERE / "expected.npz", **expected)
-
     _verify_against_hf(model, inputs, expected)
-    print("gpt2: fixtures written")
+    print("distilbert: fixtures written")
 
 
 if __name__ == "__main__":
