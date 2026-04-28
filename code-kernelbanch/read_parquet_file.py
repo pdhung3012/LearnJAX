@@ -37,9 +37,9 @@ def safe_filename(text):
 for _, row in combined_df.iterrows():
     problem_id = safe_filename(row["problem_id"])
     level = safe_filename(row["level"])
-    name = safe_filename(row["name"])
+    name = safe_filename(row["name"]).replace('_','--',1)
 
-    file_name = f"{problem_id}_{level}_{name}.py"
+    file_name = f"{name}--{level}.py"
     file_path = output_dir / file_name
 
     code_content = row["code"]
