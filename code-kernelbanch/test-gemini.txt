@@ -1,0 +1,48 @@
+Question:
+What are the top-rated movies released in 2026?
+
+Answer:
+A summary could not be generated for your search query. Here are some search results.
+
+Full response:
+answer {
+  state: SUCCEEDED
+  answer_text: "A summary could not be generated for your search query. Here are some search results."
+  steps {
+    state: SUCCEEDED
+    description: "Rephrase the query and search."
+    actions {
+      search_action {
+        query: " What are the top-rated movies released in 2026?"
+      }
+      observation {
+      }
+    }
+  }
+  answer_skipped_reasons: OUT_OF_DOMAIN_QUERY_IGNORED
+}
+answer_query_token: "NMwKDAiRjc_PBhDnjvOFAxIkNjlmM2Q0ZDUtMDAwMC0yODI0LTgzNmQtMDg5ZTA4MmRmNTI4"
+Question:
+What are the top-rated movies released in 2026?
+
+Answer:
+A summary could not be generated for your search query. Here are some search results.
+
+Full response:
+answer {
+  state: SUCCEEDED
+  answer_text: "A summary could not be generated for your search query. Here are some search results."
+  steps {
+    state: SUCCEEDED
+    description: "Rephrase the query and search."
+    actions {
+      search_action {
+        query: " What are the top-rated movies released in 2026?"
+      }
+      observation {
+      }
+    }
+  }
+  answer_skipped_reasons: OUT_OF_DOMAIN_QUERY_IGNORED
+}
+answer_query_token: "NMwKDAiRjc_PBhDnjvOFAxIkNjlmM2Q0ZDUtMDAwMC0yODI0LTgzNmQtMDg5ZTA4MmRmNTI4"
