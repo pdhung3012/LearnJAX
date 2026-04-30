@@ -1,0 +1,7 @@
+{
+  "in_channels": 16,
+  "expansion_factor": 4,
+  "out_channels": 16,
+  "image_size": 16,
+  "bn_eps": 1e-05
+}

@@ -1,0 +1,6 @@
+{
+  "in_channels": 3,
+  "num_classes": 10,
+  "image_size": 32,
+  "bn_eps": 1e-05
+}

@@ -127,7 +127,10 @@ def compute(inputs):
     input_ids = jnp.asarray(inputs["input_ids"])
     attention_mask = jnp.asarray(inputs["attention_mask"])
 
-    x = w["shared.weight"][input_ids]   # token embeddings (no abs pos embed in T5)
+    # T5's embedding table is tied (`shared` and `encoder.embed_tokens` are
+    # the same Parameter). safetensors save_model dedups; the surviving key
+    # here is `encoder.embed_tokens.weight`.
+    x = w["encoder.embed_tokens.weight"][input_ids]
 
     # Position bias is computed once from layer 0's relative_attention_bias
     # and reused across all layers in HF's implementation.
