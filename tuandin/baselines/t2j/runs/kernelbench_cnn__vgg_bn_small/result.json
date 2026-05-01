@@ -1,0 +1,11 @@
+{
+  "case": "kernelbench_cnn/vgg_bn_small",
+  "status": "PASS",
+  "max_diff": 2.682209014892578e-07,
+  "max_diffs_per_output": {
+    "logits": 2.682209014892578e-07
+  },
+  "error_category": "",
+  "tool": "torch2jax",
+  "tool_version": "0.1.0"
+}

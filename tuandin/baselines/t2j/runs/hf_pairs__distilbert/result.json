@@ -1,0 +1,9 @@
+{
+  "case": "hf_pairs/distilbert",
+  "status": "RUNTIME_ERROR",
+  "max_diff": null,
+  "max_diffs_per_output": {},
+  "error_category": "missing_attr:device",
+  "tool": "torch2jax",
+  "tool_version": "0.1.0"
+}

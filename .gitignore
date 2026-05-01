@@ -4,7 +4,12 @@ __pycache__/
 *.pyc
 tests/
 .env
-runs/
+# `runs/` was originally added to ignore TensorBoard event files in
+# tuandin/jax_translations/e6/. Keep ignoring those, but explicitly
+# allow the baseline-recording `runs/` trees that capture per-case
+# fix-trajectory artifacts.
+tuandin/jax_translations/*/runs/
+!tuandin/baselines/*/runs/
 data.csv
 model.pkl
 model.pth

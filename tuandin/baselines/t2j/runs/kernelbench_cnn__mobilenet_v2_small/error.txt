@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/baselines/t2j/run_baseline.py", line 146, in evaluate_case
+    actual = compute(inputs)
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/baselines/t2j/adapter.py", line 67, in compute
+    out = jax_forward(*args, state_dict=state_dict)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch2jax/__init__.py", line 1125, in f
+    out = t2j_function(m)(*args, rng=rng)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch2jax/__init__.py", line 1056, in f_jax
+    out = f(*torch_args)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/kernelbench_cnn/mobilenet_v2_small/pytorch_code.py", line 74, in forward
+    return self.block(x)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/kernelbench_cnn/mobilenet_v2_small/pytorch_code.py", line 56, in forward
+    out = _relu6(self.expand_bn(self.expand_conv(x)))
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/kernelbench_cnn/mobilenet_v2_small/pytorch_code.py", line 34, in _relu6
+    return torch.clamp(x, 0.0, 6.0)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch2jax/__init__.py", line 1025, in __torch_function__
+    raise NotImplementedError(
+NotImplementedError: Unhandled function call: torch.clamp(*(<torch2jax.Torchish object at 0x13d35bd90>, 0.0, 6.0), **{}) with types (<class 'torch2jax.Torchish'>,). Please submit a bug report at https://github.com/samuela/torch2jax/issues.

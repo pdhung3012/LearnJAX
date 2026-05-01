@@ -1,0 +1,9 @@
+{
+  "case": "kernelbench_cnn/mobilenet_v2_small",
+  "status": "RUNTIME_ERROR",
+  "max_diff": null,
+  "max_diffs_per_output": {},
+  "error_category": "missing_op:torch.clamp",
+  "tool": "torch2jax",
+  "tool_version": "0.1.0"
+}

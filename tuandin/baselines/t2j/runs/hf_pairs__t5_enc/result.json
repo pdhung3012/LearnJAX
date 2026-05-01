@@ -1,0 +1,9 @@
+{
+  "case": "hf_pairs/t5_enc",
+  "status": "RUNTIME_ERROR",
+  "max_diff": null,
+  "max_diffs_per_output": {},
+  "error_category": "unhashable",
+  "tool": "torch2jax",
+  "tool_version": "0.1.0"
+}
