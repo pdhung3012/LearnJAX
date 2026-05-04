@@ -1,0 +1,148 @@
+{
+  "tool": "torch2jax",
+  "tool_version": "0.1.0",
+  "atol": 1e-05,
+  "rtol": 1e-05,
+  "pass_at_1": 0.06666666666666667,
+  "n_cases": 15,
+  "n_passes": 1,
+  "cases": [
+    {
+      "case": "hf_pairs/bert",
+      "tier": "hf_pairs",
+      "case_name": "bert",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_attr:device"
+    },
+    {
+      "case": "hf_pairs/gpt2",
+      "tier": "hf_pairs",
+      "case_name": "gpt2",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_attr:device"
+    },
+    {
+      "case": "hf_pairs/roberta",
+      "tier": "hf_pairs",
+      "case_name": "roberta",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_attr:long"
+    },
+    {
+      "case": "hf_pairs/distilbert",
+      "tier": "hf_pairs",
+      "case_name": "distilbert",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_attr:device"
+    },
+    {
+      "case": "hf_pairs/albert",
+      "tier": "hf_pairs",
+      "case_name": "albert",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_attr:device"
+    },
+    {
+      "case": "hf_pairs/t5_enc",
+      "tier": "hf_pairs",
+      "case_name": "t5_enc",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "unhashable"
+    },
+    {
+      "case": "hf_pairs/vit",
+      "tier": "hf_pairs",
+      "case_name": "vit",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_op:torch.matmul"
+    },
+    {
+      "case": "hf_pairs/bart_enc",
+      "tier": "hf_pairs",
+      "case_name": "bart_enc",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_op:torch.nn.functional.embedding"
+    },
+    {
+      "case": "hf_pairs/mistral",
+      "tier": "hf_pairs",
+      "case_name": "mistral",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_op:torch.nn.functional.embedding"
+    },
+    {
+      "case": "hf_pairs/wav2vec2",
+      "tier": "hf_pairs",
+      "case_name": "wav2vec2",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_attr:unsqueeze"
+    },
+    {
+      "case": "kernelbench_cnn/simple_bn_block",
+      "tier": "kernelbench_cnn",
+      "case_name": "simple_bn_block",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_kwarg:dim"
+    },
+    {
+      "case": "kernelbench_cnn/resnet18_small",
+      "tier": "kernelbench_cnn",
+      "case_name": "resnet18_small",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_kwarg:dim"
+    },
+    {
+      "case": "kernelbench_cnn/vgg_bn_small",
+      "tier": "kernelbench_cnn",
+      "case_name": "vgg_bn_small",
+      "status": "PASS",
+      "max_diff": 2.682209014892578e-07,
+      "max_diffs_per_output": {
+        "logits": 2.682209014892578e-07
+      },
+      "error_category": ""
+    },
+    {
+      "case": "kernelbench_cnn/mobilenet_v2_small",
+      "tier": "kernelbench_cnn",
+      "case_name": "mobilenet_v2_small",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_op:torch.clamp"
+    },
+    {
+      "case": "kernelbench_cnn/effnet_mb_block",
+      "tier": "kernelbench_cnn",
+      "case_name": "effnet_mb_block",
+      "status": "RUNTIME_ERROR",
+      "max_diff": null,
+      "max_diffs_per_output": {},
+      "error_category": "missing_op:torch.nn.functional.silu"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/baselines/t2j/run_baseline.py", line 146, in evaluate_case
+    actual = compute(inputs)
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/baselines/t2j/adapter.py", line 67, in compute
+    out = jax_forward(*args, state_dict=state_dict)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch2jax/__init__.py", line 1125, in f
+    out = t2j_function(m)(*args, rng=rng)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch2jax/__init__.py", line 1056, in f_jax
+    out = f(*torch_args)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/hf_pairs/wav2vec2/pytorch_code.py", line 207, in forward
+    x = self.feature_extractor(input_values)            # (B, conv_dim[-1], T)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/opt/miniconda3/envs/t2j/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/Users/tuandinh/repo/LearnJAX/tuandin/hf_pairs/wav2vec2/pytorch_code.py", line 86, in forward
+    x = x.unsqueeze(1)
+AttributeError: 'Torchish' object has no attribute 'unsqueeze'
