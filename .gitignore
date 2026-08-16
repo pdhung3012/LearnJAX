@@ -13,3 +13,9 @@ tuandin/jax_translations/*/runs/
 data.csv
 model.pkl
 model.pth
+
+# OpenRouter API key — never commit
+tuandin/open_router.txt
+
+# T2J-Bench pipeline local artifacts (per-run trajectories, workdirs)
+tuandin/t2j_bench/runs/
